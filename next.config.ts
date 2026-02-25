@@ -1,8 +1,11 @@
 import type { NextConfig } from "next";
 
 const nextConfig: NextConfig = {
-  /* config options here */
-  reactCompiler: true,
+  reactStrictMode: true,
+  swcMinify: true,
 };
+
+const { withSentryConfig } = require('@sentry/nextjs');
+export default withSentryConfig(nextConfig, { silent: true });
 
 export default nextConfig;
