@@ -1,0 +1,92 @@
+'use client';
+
+import Image from 'next/image';
+import Link from 'next/link';
+import { Product } from '@/types/product';
+import { ShoppingCart } from 'lucide-react';
+import { useCartStore } from '@/lib/store/cartStore';
+import { useState } from 'react';
+import { useLanguage } from '@/lib/LanguageContext';
+import PriceWithTooltip from './PriceWithTooltip';
+
+interface ProductCardProps {
+    product: Product;
+}
+
+export default function ProductCard({ product }: ProductCardProps) {
+    const { language, t, formatPrice } = useLanguage();
+    const addItem = useCartStore(state => state.addItem);
+    const [added, setAdded] = useState(false);
+
+    // Ottieni nome e descrizione tradotti se disponibili
+    const productName = product.translations?.name?.[language] || product.name;
+    const productDescription = product.translations?.description?.[language] || product.description;
+
+    const handleAddToCart = () => {
+        addItem(product);
+        setAdded(true);
+        setTimeout(() => setAdded(false), 2000);
+    };
+    return (
+        <div className="group rounded-2xl shadow-lg overflow-hidden hover:shadow-2xl transition-all duration-500 transform hover:-translate-y-2 h-full flex flex-col" style={{ backgroundColor: 'var(--color-card-bg)', borderColor: 'var(--color-border)', borderWidth: '1px' }}>
+            <Link href={`/prodotti/${product.id}`}>
+                <div className="relative h-64 sm:h-72 md:h-80 lg:h-64 xl:h-72 overflow-hidden" style={{ backgroundColor: 'var(--color-background)' }}>
+                    {product.images && product.images.length > 0 ? (
+                        <Image
+                            src={product.images[0].url}
+                            alt={productName}
+                            fill
+                            className="object-cover w-full h-full group-hover:scale-110 transition-transform duration-500"
+                            sizes="(max-width: 768px) 100vw, 33vw"
+                            priority={false}
+                        />
+                    ) : (
+                        <div className="w-full h-full flex items-center justify-center text-gray-400 group-hover:scale-110 transition-transform duration-500">
+                            <span className="text-6xl sm:text-7xl md:text-8xl lg:text-6xl xl:text-7xl filter drop-shadow-lg">🔑</span>
+                        </div>
+                    )}
+                    <div className="absolute inset-0 bg-linear-to-t from-black/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
+                </div>
+            </Link>
+
+            <div className="p-4 sm:p-5 md:p-6 flex-1 flex flex-col">
+                <Link href={`/prodotti/${product.id}`}>
+                    <h3 className="text-lg sm:text-xl font-bold hover:opacity-80 transition-all duration-300 line-clamp-1" style={{ color: 'var(--color-text)' }}>
+                        {productName}
+                    </h3>
+                </Link>
+
+                <p className="text-xs sm:text-sm mt-2 line-clamp-2 leading-relaxed flex-1" style={{ color: 'var(--color-text)', opacity: 0.7 }}>
+                    {productDescription}
+                </p>
+
+                <div className="mt-4 flex items-center justify-between gap-2">
+                    <PriceWithTooltip
+                        priceInEuro={product.price}
+                        className="text-xl sm:text-2xl md:text-3xl lg:text-2xl font-bold"
+                    />
+
+                    <button
+                        onClick={handleAddToCart}
+                        disabled={!product.inStock}
+                        className={`${added ? 'bg-green-600 scale-105' : ''} px-2.5 sm:px-3 md:px-4 py-1.5 sm:py-2 md:py-2.5 rounded-xl hover:scale-105 hover:shadow-lg transition-all duration-300 flex items-center space-x-1 sm:space-x-1.5 md:space-x-2 disabled:bg-gray-400 disabled:cursor-not-allowed disabled:hover:scale-100 text-xs sm:text-sm md:text-base font-semibold`}
+                        style={{
+                            backgroundColor: added ? '#16a34a' : 'var(--color-primary)',
+                            color: 'var(--color-button-text)'
+                        }}
+                    >
+                        <ShoppingCart className="w-3.5 h-3.5 sm:w-4 sm:h-4" />
+                        <span className="hidden sm:inline">{added ? t('addedToCart').split('!')[0] + '!' : t('addToCart')}</span>
+                        <span className="sm:hidden">{added ? '✓' : '+'}</span>
+                    </button>
+                </div>
+
+                {!product.inStock && (
+                    <div className="mt-3 text-xs sm:text-sm text-red-500 font-bold bg-red-50 py-1.5 px-3 rounded-lg text-center">
+                        {t('outOfStock')}
+                    </div>
+                )}
+            </div>
+        </div>
+    );
+}
