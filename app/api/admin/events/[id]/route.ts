@@ -4,11 +4,12 @@ import { prisma } from '@/lib/prisma';
 // GET - Singolo evento
 export async function GET(
     request: NextRequest,
-    { params }: { params: { id: string } }
+    { params }: { params: Promise<{ id: string }> }
 ) {
     try {
+        const resolvedParams = await params;
         const event = await prisma.event.findUnique({
-            where: { id: params.id }
+            where: { id: resolvedParams.id }
         });
 
         if (!event) {
@@ -25,13 +26,14 @@ export async function GET(
 // PUT - Aggiorna evento
 export async function PUT(
     request: NextRequest,
-    { params }: { params: { id: string } }
+    { params }: { params: Promise<{ id: string }> }
 ) {
     try {
+        const resolvedParams = await params;
         const body = await request.json();
 
         const event = await prisma.event.update({
-            where: { id: params.id },
+            where: { id: resolvedParams.id },
             data: {
                 title: body.title,
                 description: body.description,
@@ -57,11 +59,12 @@ export async function PUT(
 // DELETE - Elimina evento
 export async function DELETE(
     request: NextRequest,
-    { params }: { params: { id: string } }
+    { params }: { params: Promise<{ id: string }> }
 ) {
     try {
+        const resolvedParams = await params;
         await prisma.event.delete({
-            where: { id: params.id }
+            where: { id: resolvedParams.id }
         });
 
         return NextResponse.json({ message: 'Evento eliminato con successo' });

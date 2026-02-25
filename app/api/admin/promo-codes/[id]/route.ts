@@ -4,11 +4,12 @@ import { prisma } from '@/lib/prisma';
 // GET - Singolo codice promo
 export async function GET(
     request: NextRequest,
-    { params }: { params: { id: string } }
+    { params }: { params: Promise<{ id: string }> }
 ) {
     try {
+        const resolvedParams = await params;
         const code = await prisma.discountCode.findUnique({
-            where: { id: params.id }
+            where: { id: resolvedParams.id }
         });
 
         if (!code) {
@@ -25,13 +26,14 @@ export async function GET(
 // PUT - Aggiorna codice promo
 export async function PUT(
     request: NextRequest,
-    { params }: { params: { id: string } }
+    { params }: { params: Promise<{ id: string }> }
 ) {
     try {
+        const resolvedParams = await params;
         const body = await request.json();
 
         const promoCode = await prisma.discountCode.update({
-            where: { id: params.id },
+            where: { id: resolvedParams.id },
             data: {
                 code: body.code.toUpperCase(),
                 type: body.type,
@@ -54,11 +56,12 @@ export async function PUT(
 // DELETE - Elimina codice promo
 export async function DELETE(
     request: NextRequest,
-    { params }: { params: { id: string } }
+    { params }: { params: Promise<{ id: string }> }
 ) {
     try {
+        const resolvedParams = await params;
         await prisma.discountCode.delete({
-            where: { id: params.id }
+            where: { id: resolvedParams.id }
         });
 
         return NextResponse.json({ message: 'Codice promo eliminato con successo' });
