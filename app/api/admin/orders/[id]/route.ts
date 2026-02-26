@@ -3,10 +3,11 @@ import { prisma } from '@/lib/prisma';
 
 export async function GET(
     req: NextRequest,
-    context: { params: { id: string } }
+    context: { params: { id: string } | Promise<{ id: string }> }
 ) {
     try {
-        const { id } = context.params;
+        const rawParams = context.params
+        const { id } = rawParams instanceof Promise ? await rawParams : rawParams
 
         const order = await prisma.order.findUnique({
             where: { id },
@@ -39,10 +40,11 @@ export async function GET(
 
 export async function PUT(
     req: NextRequest,
-    context: { params: { id: string } }
+    context: { params: { id: string } | Promise<{ id: string }> }
 ) {
     try {
-        const { id } = context.params;
+        const rawParams = context.params
+        const { id } = rawParams instanceof Promise ? await rawParams : rawParams
         const body = await req.json();
 
         const updateData: any = {};
