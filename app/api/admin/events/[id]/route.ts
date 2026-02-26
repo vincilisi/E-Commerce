@@ -4,11 +4,14 @@ import { prisma } from '@/lib/prisma';
 // GET - Singolo evento
 export async function GET(
     request: NextRequest,
-    { params }: { params: { id: string } }
+    context: { params: { id: string } | Promise<{ id: string }> }
 ) {
     try {
+        const rawParams = context.params;
+        const { id } = rawParams instanceof Promise ? await rawParams : rawParams;
+
         const event = await prisma.event.findUnique({
-            where: { id: params.id }
+            where: { id }
         });
 
         if (!event) {
@@ -25,13 +28,16 @@ export async function GET(
 // PUT - Aggiorna evento
 export async function PUT(
     request: NextRequest,
-    { params }: { params: { id: string } }
+    context: { params: { id: string } | Promise<{ id: string }> }
 ) {
     try {
+        const rawParams = context.params;
+        const { id } = rawParams instanceof Promise ? await rawParams : rawParams;
+
         const body = await request.json();
 
         const event = await prisma.event.update({
-            where: { id: params.id },
+            where: { id },
             data: {
                 title: body.title,
                 description: body.description,
@@ -57,11 +63,14 @@ export async function PUT(
 // DELETE - Elimina evento
 export async function DELETE(
     request: NextRequest,
-    { params }: { params: { id: string } }
+    context: { params: { id: string } | Promise<{ id: string }> }
 ) {
     try {
+        const rawParams = context.params;
+        const { id } = rawParams instanceof Promise ? await rawParams : rawParams;
+
         await prisma.event.delete({
-            where: { id: params.id }
+            where: { id }
         });
 
         return NextResponse.json({ message: 'Evento eliminato con successo' });
