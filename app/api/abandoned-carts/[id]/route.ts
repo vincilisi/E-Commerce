@@ -1,13 +1,13 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { prisma } from '@/lib/prisma'
 
-// PUT - Aggiorna stato carrello (es. segna come recuperato)
+// PUT - Aggiorna stato carrello
 export async function PUT(
     request: NextRequest,
-    { params }: { params: { id: string } }
+    context: { params: { id: string } }
 ) {
     try {
-        const { id } = params
+        const { id } = context.params
         const body = await request.json()
         const { reminderSent, recovered, email } = body
 
@@ -31,10 +31,11 @@ export async function PUT(
 // DELETE - Elimina carrello
 export async function DELETE(
     request: NextRequest,
-    { params }: { params: { id: string } }
+    context: { params: { id: string } }
 ) {
     try {
-        const { id } = params
+        const { id } = context.params
+
         await prisma.abandonedCart.delete({
             where: { id }
         })
@@ -49,11 +50,10 @@ export async function DELETE(
 // POST - Invia email di recupero
 export async function POST(
     request: NextRequest,
-    context: any
+    context: { params: { id: string } }
 ) {
     try {
-        const params = context?.params
-        const { id } = params instanceof Promise ? await params : params
+        const { id } = context.params
 
         const cart = await prisma.abandonedCart.findUnique({
             where: { id }
@@ -63,29 +63,36 @@ export async function POST(
             return NextResponse.json({ error: 'Carrello non trovato' }, { status: 404 })
         }
 
-        if (!cart.email) {
+       if (!(cart as any).email) {
             return NextResponse.json({ error: 'Email non disponibile' }, { status: 400 })
         }
 
-        // Simula invio email (in produzione userebbe un servizio email reale)
         const items = JSON.parse(cart.items || '[]')
-        const total = items.reduce((sum: number, item: any) => sum + (item.price * item.quantity), 0)
+        const total = items.reduce(
+            (sum: number, item: any) => sum + item.price * item.quantity,
+            0
+        )
 
-        // Crea codice sconto per incentivare il recupero
         const discountCode = `TORNA-${cart.id.slice(-6).toUpperCase()}`
 
-        // Log dell'email che verrebbe inviata
         console.log(`
 📧 EMAIL DI RECUPERO CARRELLO (Simulata)
 ----------------------------------------
-A: ${cart.email}
+A: ${(cart as any).email}
 Oggetto: Hai dimenticato qualcosa nel carrello! 🛒
 
 Ciao!
 
 Abbiamo notato che hai lasciato alcuni articoli nel carrello:
 
-${items.map((item: any) => `- ${item.name} x${item.quantity}: €${(item.price * item.quantity).toFixed(2)}`).join('\n')}
+${items
+    .map(
+        (item: any) =>
+            `- ${item.name} x${item.quantity}: €${(
+                item.price * item.quantity
+            ).toFixed(2)}`
+    )
+    .join('\n')}
 
 Totale: €${total.toFixed(2)}
 
@@ -96,29 +103,31 @@ Usa il codice sconto ${discountCode} per ottenere il 10% di sconto!
 A presto!
         `)
 
-        // Aggiorna lo stato del carrello
         await prisma.abandonedCart.update({
             where: { id },
             data: { reminderSent: true }
         })
 
-        // Salva il codice sconto nel database (se il modello PromoCode esiste)
         try {
-            await prisma.promoCode.create({
-                data: {
-                    code: discountCode,
-                    type: 'percentage',
-                    value: 10,
-                    minOrder: 0,
-                    maxUses: 1,
-                    usedCount: 0,
-                    active: true,
-                    expiresAt: new Date(Date.now() + 7 * 24 * 60 * 60 * 1000) // 7 giorni
-                }
-            })
-        } catch (e) {
-            // Il modello potrebbe non esistere
-            console.log('Codice sconto non salvato (modello non disponibile)')
+            const promoClient = (prisma as any).promoCode
+            if (promoClient && typeof promoClient.create === 'function') {
+                await promoClient.create({
+                    data: {
+                        code: discountCode,
+                        type: 'percentage',
+                        value: 10,
+                        minOrder: 0,
+                        maxUses: 1,
+                        usedCount: 0,
+                        active: true,
+                        expiresAt: new Date(Date.now() + 7 * 24 * 60 * 60 * 1000)
+                    }
+                })
+            } else {
+                console.log('Codice sconto non salvato (modello non disponibile)')
+            }
+        } catch (err) {
+            console.log('Errore salvataggio codice sconto:', err)
         }
 
         return NextResponse.json({
