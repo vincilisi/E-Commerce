@@ -18,18 +18,17 @@ interface BlogPost {
     createdAt: string
 }
 
-export default function BlogPostPage({ params }: { params: Promise<{ slug: string }> }) {
-    const resolvedParams = use(params)
+export default function BlogPostPage({ params }: { params: { slug: string } }) {
     const [post, setPost] = useState<BlogPost | null>(null)
     const [loading, setLoading] = useState(true)
     
     useEffect(() => {
         fetchPost()
-    }, [resolvedParams.slug])
+    }, [params.slug])
     
     const fetchPost = async () => {
         try {
-            const res = await fetch(`/api/blog?slug=${resolvedParams.slug}`)
+            const res = await fetch(`/api/blog?slug=${params.slug}`)
             const data = await res.json()
             setPost(data)
         } catch (error) {

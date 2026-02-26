@@ -17,18 +17,17 @@ const icons: Record<string, React.ReactNode> = {
     'resi': <RotateCcw className="w-8 h-8" />
 }
 
-export default function LegalPageComponent({ params }: { params: Promise<{ slug: string }> }) {
-    const resolvedParams = use(params)
+export default function LegalPageComponent({ params }: { params: { slug: string } }) {
     const [page, setPage] = useState<LegalPage | null>(null)
     const [loading, setLoading] = useState(true)
 
     useEffect(() => {
         fetchPage()
-    }, [resolvedParams.slug])
+    }, [params.slug])
 
     const fetchPage = async () => {
         try {
-            const res = await fetch(`/api/legal?slug=${resolvedParams.slug}`)
+            const res = await fetch(`/api/legal?slug=${params.slug}`)
             const data = await res.json()
             setPage(data)
         } catch (error) {

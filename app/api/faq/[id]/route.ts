@@ -4,10 +4,10 @@ import { prisma } from '@/lib/prisma'
 // PUT - Modifica FAQ
 export async function PUT(
     request: NextRequest,
-    { params }: { params: Promise<{ id: string }> }
+    { params }: { params: { id: string } }
 ) {
     try {
-        const { id } = await params
+        const { id } = params
         const body = await request.json()
         const { question, answer, category, order, active } = body
 
@@ -33,10 +33,10 @@ export async function PUT(
 // DELETE - Elimina FAQ
 export async function DELETE(
     request: NextRequest,
-    { params }: { params: Promise<{ id: string }> }
+    { params }: { params: { id: string } }
 ) {
     try {
-        const { id } = await params
+        const { id } = params
         await prisma.fAQ.delete({
             where: { id }
         })
