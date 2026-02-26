@@ -4,10 +4,12 @@ import { prisma } from '@/lib/prisma'
 // PUT - Aggiorna stato carrello
 export async function PUT(
     request: NextRequest,
-    context: { params: { id: string } }
+    context: { params: { id: string } | Promise<{ id: string }> }
 ) {
     try {
-        const { id } = context.params
+        const rawParams = context.params
+        const { id } = rawParams instanceof Promise ? await rawParams : rawParams
+
         const body = await request.json()
         const { reminderSent, recovered, email } = body
 
@@ -31,10 +33,11 @@ export async function PUT(
 // DELETE - Elimina carrello
 export async function DELETE(
     request: NextRequest,
-    context: { params: { id: string } }
+    context: { params: { id: string } | Promise<{ id: string }> }
 ) {
     try {
-        const { id } = context.params
+        const rawParams = context.params
+        const { id } = rawParams instanceof Promise ? await rawParams : rawParams
 
         await prisma.abandonedCart.delete({
             where: { id }
@@ -50,10 +53,11 @@ export async function DELETE(
 // POST - Invia email di recupero
 export async function POST(
     request: NextRequest,
-    context: { params: { id: string } }
+    context: { params: { id: string } | Promise<{ id: string }> }
 ) {
     try {
-        const { id } = context.params
+        const rawParams = context.params
+        const { id } = rawParams instanceof Promise ? await rawParams : rawParams
 
         const cart = await prisma.abandonedCart.findUnique({
             where: { id }
@@ -63,7 +67,7 @@ export async function POST(
             return NextResponse.json({ error: 'Carrello non trovato' }, { status: 404 })
         }
 
-       if (!(cart as any).email) {
+        if (!(cart as any).email) {
             return NextResponse.json({ error: 'Email non disponibile' }, { status: 400 })
         }
 
@@ -81,10 +85,6 @@ export async function POST(
 A: ${(cart as any).email}
 Oggetto: Hai dimenticato qualcosa nel carrello! 🛒
 
-Ciao!
-
-Abbiamo notato che hai lasciato alcuni articoli nel carrello:
-
 ${items
     .map(
         (item: any) =>
@@ -96,11 +96,7 @@ ${items
 
 Totale: €${total.toFixed(2)}
 
-Usa il codice sconto ${discountCode} per ottenere il 10% di sconto!
-
-[Completa il tuo ordine]
-
-A presto!
+Codice sconto: ${discountCode}
         `)
 
         await prisma.abandonedCart.update({
