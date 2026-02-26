@@ -3,10 +3,10 @@ import { prisma } from '@/lib/prisma';
 
 export async function GET(
     req: NextRequest,
-    { params }: { params: { id: string } }
+    context: { params: { id: string } }
 ) {
     try {
-        const { id } = params;
+        const { id } = context.params;
 
         const order = await prisma.order.findUnique({
             where: { id },
@@ -39,22 +39,16 @@ export async function GET(
 
 export async function PUT(
     req: NextRequest,
-    { params }: { params: { id: string } }
+    context: { params: { id: string } }
 ) {
     try {
-        const { id } = params;
+        const { id } = context.params;
         const body = await req.json();
 
-        // Costruisci i dati da aggiornare dinamicamente
         const updateData: any = {};
 
-        if (body.status !== undefined) {
-            updateData.status = body.status;
-        }
-
-        if (body.trackingNumber !== undefined) {
-            updateData.trackingNumber = body.trackingNumber;
-        }
+        if (body.status !== undefined) updateData.status = body.status;
+        if (body.trackingNumber !== undefined) updateData.trackingNumber = body.trackingNumber;
 
         const order = await prisma.order.update({
             where: { id },

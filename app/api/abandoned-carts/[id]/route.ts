@@ -49,10 +49,11 @@ export async function DELETE(
 // POST - Invia email di recupero
 export async function POST(
     request: NextRequest,
-    { params }: { params: { id: string } }
+    context: any
 ) {
     try {
-        const { id } = params
+        const params = context?.params
+        const { id } = params instanceof Promise ? await params : params
 
         const cart = await prisma.abandonedCart.findUnique({
             where: { id }
