@@ -4,10 +4,11 @@ import { prisma } from '@/lib/prisma';
 // GET - Singolo template
 export async function GET(
     request: NextRequest,
-    { params }: { params: { id: string } }
+    context: { params: { id: string } | Promise<{ id: string }> }
 ) {
     try {
-        const { id } = params;
+        const rawParams = context.params;
+        const { id } = rawParams instanceof Promise ? await rawParams : rawParams;
 
         const template = await prisma.emailTemplate.findUnique({
             where: { id }
@@ -27,10 +28,12 @@ export async function GET(
 // PUT - Aggiorna template
 export async function PUT(
     request: NextRequest,
-    { params }: { params: { id: string } }
+    context: { params: { id: string } | Promise<{ id: string }> }
 ) {
     try {
-        const { id } = params;
+        const rawParams = context.params;
+        const { id } = rawParams instanceof Promise ? await rawParams : rawParams;
+
         const body = await request.json();
 
         const template = await prisma.emailTemplate.update({
@@ -52,10 +55,11 @@ export async function PUT(
 // DELETE - Elimina template
 export async function DELETE(
     request: NextRequest,
-    { params }: { params: { id: string } }
+    context: { params: { id: string } | Promise<{ id: string }> }
 ) {
     try {
-        const { id } = params;
+        const rawParams = context.params;
+        const { id } = rawParams instanceof Promise ? await rawParams : rawParams;
 
         await prisma.emailTemplate.delete({
             where: { id }
