@@ -92,10 +92,10 @@ export async function PUT(
 
 export async function DELETE(
     req: NextRequest,
-    { params }: { params: Promise<{ id: string }> }
+    { params }: { params: { id: string } }
 ) {
     try {
-        const { id } = await params;
+        const { id } = params;
         await prisma.product.delete({
             where: { id }
         });

@@ -4,10 +4,10 @@ import { prisma } from '@/lib/prisma'
 // GET - Singolo post
 export async function GET(
     request: NextRequest,
-    { params }: { params: Promise<{ id: string }> }
+    { params }: { params: { id: string } }
 ) {
     try {
-        const { id } = await params
+        const { id } = params
         const post = await prisma.blogPost.findUnique({
             where: { id }
         })
@@ -26,10 +26,10 @@ export async function GET(
 // PUT - Modifica post
 export async function PUT(
     request: NextRequest,
-    { params }: { params: Promise<{ id: string }> }
+    { params }: { params: { id: string } }
 ) {
     try {
-        const { id } = await params
+        const { id } = params
         const body = await request.json()
         const { title, content, excerpt, image, tags, published, featured } = body
 
@@ -63,10 +63,10 @@ export async function PUT(
 // DELETE - Elimina post
 export async function DELETE(
     request: NextRequest,
-    { params }: { params: Promise<{ id: string }> }
+    { params }: { params: { id: string } }
 ) {
     try {
-        const { id } = await params
+        const { id } = params
         await prisma.blogPost.delete({
             where: { id }
         })

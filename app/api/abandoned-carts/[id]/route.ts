@@ -4,10 +4,10 @@ import { prisma } from '@/lib/prisma'
 // PUT - Aggiorna stato carrello (es. segna come recuperato)
 export async function PUT(
     request: NextRequest,
-    { params }: { params: Promise<{ id: string }> }
+    { params }: { params: { id: string } }
 ) {
     try {
-        const { id } = await params
+        const { id } = params
         const body = await request.json()
         const { reminderSent, recovered, email } = body
 
@@ -31,10 +31,10 @@ export async function PUT(
 // DELETE - Elimina carrello
 export async function DELETE(
     request: NextRequest,
-    { params }: { params: Promise<{ id: string }> }
+    { params }: { params: { id: string } }
 ) {
     try {
-        const { id } = await params
+        const { id } = params
         await prisma.abandonedCart.delete({
             where: { id }
         })
@@ -49,10 +49,10 @@ export async function DELETE(
 // POST - Invia email di recupero
 export async function POST(
     request: NextRequest,
-    { params }: { params: Promise<{ id: string }> }
+    { params }: { params: { id: string } }
 ) {
     try {
-        const { id } = await params
+        const { id } = params
 
         const cart = await prisma.abandonedCart.findUnique({
             where: { id }
