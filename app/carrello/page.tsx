@@ -51,7 +51,7 @@ export default function CarrelloPage() {
                                     </div>
                                     <div className="flex-1">
                                         <h3 className="font-semibold text-base sm:text-lg" style={{ color: 'var(--color-text)' }}>
-                                            {item.translations?.name?.[language] || item.name}
+                                            {(item as any).translations?.name?.[language] || item.name}
                                         </h3>
                                         <p style={{ color: 'var(--color-text)', opacity: 0.7 }}>{formatPrice(item.price)}</p>
                                     </div>

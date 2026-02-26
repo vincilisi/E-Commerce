@@ -1,3 +1,6 @@
+export const runtime = "nodejs";
+export const dynamic = "force-dynamic";
+
 import { NextRequest, NextResponse } from 'next/server'
 import { prisma } from '@/lib/prisma'
 
@@ -74,11 +77,13 @@ export async function POST(request: NextRequest) {
 
         if (existing) {
             // Aggiorna il carrello esistente
+            const total = items.reduce((s: number, i: any) => s + (i.price * i.quantity), 0)
             const cart = await prisma.abandonedCart.update({
                 where: { id: existing.id },
                 data: {
-                    email: email || existing.email,
+                    customerEmail: email || existing.customerEmail,
                     items: JSON.stringify(items),
+                    totalAmount: total,
                     updatedAt: new Date()
                 }
             })
@@ -89,8 +94,9 @@ export async function POST(request: NextRequest) {
         const cart = await prisma.abandonedCart.create({
             data: {
                 sessionId,
-                email: email || null,
+                customerEmail: email || null,
                 items: JSON.stringify(items),
+                totalAmount: items.reduce((s: number, i: any) => s + (i.price * i.quantity), 0),
                 reminderSent: false,
                 recovered: false
             }

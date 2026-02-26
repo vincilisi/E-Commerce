@@ -1,3 +1,6 @@
+export const runtime = "nodejs";
+export const dynamic = "force-dynamic";
+
 import { NextRequest, NextResponse } from 'next/server';
 import { prisma } from '@/lib/prisma';
 
@@ -89,6 +92,7 @@ export async function POST(req: NextRequest) {
                     currency: 'eur',
                     product_data: {
                         name: 'Spedizione',
+                        description: 'Spedizione',
                     },
                     unit_amount: 500,
                 },

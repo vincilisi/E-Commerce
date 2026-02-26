@@ -1,10 +1,8 @@
-'use client';
-
+﻿'use client';
 import { useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import Link from 'next/link';
 import { User, Package, MapPin, Calendar, Loader2, Eye } from 'lucide-react';
-import toast from 'react-hot-toast';
 
 interface Order {
     id: string;
@@ -206,7 +204,7 @@ export default function AccountPage() {
                                             <div className="text-right">
                                                 {getStatusBadge(order.status)}
                                                 <p className="text-2xl font-bold mt-2" style={{ color: 'var(--color-primary)' }}>
-                                                    €{order.totalAmount.toFixed(2)}
+                                                    â‚¬{order.totalAmount.toFixed(2)}
                                                 </p>
                                             </div>
                                         </div>
@@ -222,7 +220,7 @@ export default function AccountPage() {
                                                             {item.product.name} x {item.quantity}
                                                         </span>
                                                         <span className="font-semibold" style={{ color: 'var(--color-text)' }}>
-                                                            €{(item.price * item.quantity).toFixed(2)}
+                                                            â‚¬{(item.price * item.quantity).toFixed(2)}
                                                         </span>
                                                     </div>
                                                 ))}
@@ -249,3 +247,4 @@ export default function AccountPage() {
         </div>
     );
 }
+

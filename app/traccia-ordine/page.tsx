@@ -1,5 +1,4 @@
-'use client';
-
+﻿'use client';
 import { useState } from 'react';
 import Link from 'next/link';
 import { Search, Package, Truck, CheckCircle, Clock, XCircle, ArrowLeft, MapPin, Calendar, Euro, ChevronRight } from 'lucide-react';
@@ -120,7 +119,7 @@ export default function TrackingPage() {
                         Torna al sito
                     </Link>
                     <h1 className="text-3xl md:text-4xl font-bold text-gray-900 mb-2">
-                        📦 Traccia il tuo Ordine
+                        ðŸ“¦ Traccia il tuo Ordine
                     </h1>
                     <p className="text-gray-600">
                         Inserisci il numero d&apos;ordine per vedere lo stato della spedizione
@@ -293,9 +292,9 @@ export default function TrackingPage() {
                                             )}
                                             <div className="flex-1">
                                                 <p className="font-medium text-gray-900">{item.product.name}</p>
-                                                <p className="text-sm text-gray-500">Quantità: {item.quantity}</p>
+                                                <p className="text-sm text-gray-500">QuantitÃ : {item.quantity}</p>
                                             </div>
-                                            <p className="font-semibold text-purple-600">€{(item.price * item.quantity).toFixed(2)}</p>
+                                            <p className="font-semibold text-purple-600">â‚¬{(item.price * item.quantity).toFixed(2)}</p>
                                         </div>
                                     );
                                 })}
@@ -321,7 +320,7 @@ export default function TrackingPage() {
                                     <Euro className="w-5 h-5 text-gray-400 flex-shrink-0 mt-0.5" />
                                     <div>
                                         <p className="text-sm text-gray-500">Totale Ordine</p>
-                                        <p className="text-2xl font-bold text-purple-600">€{order.totalAmount.toFixed(2)}</p>
+                                        <p className="text-2xl font-bold text-purple-600">â‚¬{order.totalAmount.toFixed(2)}</p>
                                     </div>
                                 </div>
                             </div>
@@ -343,7 +342,7 @@ export default function TrackingPage() {
                 {/* Help Text */}
                 {!order && !error && (
                     <div className="text-center text-gray-500">
-                        <p className="mb-2">📧 Hai ricevuto il numero d&apos;ordine via email dopo l&apos;acquisto</p>
+                        <p className="mb-2">ðŸ“§ Hai ricevuto il numero d&apos;ordine via email dopo l&apos;acquisto</p>
                         <p className="text-sm">Non riesci a trovarlo? Controlla anche la cartella spam!</p>
                     </div>
                 )}
@@ -361,3 +360,4 @@ export default function TrackingPage() {
         </div>
     );
 }
+

@@ -1,10 +1,13 @@
+export const runtime = "nodejs";
+export const dynamic = "force-dynamic";
+
 import { NextRequest, NextResponse } from 'next/server';
 import { prisma } from '@/lib/prisma';
 import { cookies } from 'next/headers';
 
 export async function POST(
     req: NextRequest,
-    { params }: { params: { id: string } }
+    context: { params: Promise<{ id: string }> }
 ) {
     try {
         const cookieStore = await cookies();
@@ -25,9 +28,10 @@ export async function POST(
             return NextResponse.json({ error: 'Commento richiesto' }, { status: 400 });
         }
 
+        const { id } = await context.params
         const review = await prisma.review.create({
             data: {
-                productId: parseInt(params.id),
+                productId: id,
                 userId: user.id,
                 userName: user.name,
                 rating,

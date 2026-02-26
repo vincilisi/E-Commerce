@@ -75,7 +75,7 @@ export default function LegalPageComponent({ params }: { params: { slug: string 
                             className="p-3 rounded-xl"
                             style={{ backgroundColor: 'var(--color-primary)', color: 'white' }}
                         >
-                            {icons[resolvedParams.slug] || <FileText className="w-8 h-8" />}
+                            {icons[params.slug] || <FileText className="w-8 h-8" />}
                         </div>
                         <h1 className="text-3xl md:text-4xl font-bold" style={{ color: 'var(--color-text)' }}>
                             {page.title}

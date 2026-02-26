@@ -1,3 +1,4 @@
+﻿import { formatPrice } from '@/lib/utils';
 'use client'
 
 import { useState, useEffect } from 'react'
@@ -93,7 +94,7 @@ export default function RelatedProducts({ currentProductId, category }: RelatedP
     return (
         <div className="mt-16">
             <h2 className="text-2xl font-bold mb-6" style={{ color: 'var(--color-text)' }}>
-                🛍️ Potrebbe piacerti anche
+                ðŸ›ï¸ Potrebbe piacerti anche
             </h2>
 
             <div className="grid grid-cols-2 md:grid-cols-4 gap-4 md:gap-6">
@@ -122,7 +123,7 @@ export default function RelatedProducts({ currentProductId, category }: RelatedP
                                 {product.name}
                             </h3>
                             <p className="font-bold" style={{ color: 'var(--color-primary)' }}>
-                                €{product.price.toFixed(2)}
+                                â‚¬{product.price.toFixed(2)}
                             </p>
                         </div>
                     </Link>
@@ -131,3 +132,4 @@ export default function RelatedProducts({ currentProductId, category }: RelatedP
         </div>
     )
 }
+

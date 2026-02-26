@@ -1,14 +1,16 @@
+export const runtime = "nodejs";
+export const dynamic = "force-dynamic";
+
 import { NextRequest, NextResponse } from 'next/server';
 import { prisma } from '@/lib/prisma';
 
 // GET - Singolo evento
 export async function GET(
     request: NextRequest,
-    context: { params: { id: string } | Promise<{ id: string }> }
+    context: { params: Promise<{ id: string }> }
 ) {
     try {
-        const rawParams = context.params;
-        const { id } = rawParams instanceof Promise ? await rawParams : rawParams;
+        const { id } = await context.params;
 
         const event = await prisma.event.findUnique({
             where: { id }
@@ -28,11 +30,10 @@ export async function GET(
 // PUT - Aggiorna evento
 export async function PUT(
     request: NextRequest,
-    context: { params: { id: string } | Promise<{ id: string }> }
+    context: { params: Promise<{ id: string }> }
 ) {
     try {
-        const rawParams = context.params;
-        const { id } = rawParams instanceof Promise ? await rawParams : rawParams;
+        const { id } = await context.params;
 
         const body = await request.json();
 
@@ -63,11 +64,10 @@ export async function PUT(
 // DELETE - Elimina evento
 export async function DELETE(
     request: NextRequest,
-    context: { params: { id: string } | Promise<{ id: string }> }
+    context: { params: Promise<{ id: string }> }
 ) {
     try {
-        const rawParams = context.params;
-        const { id } = rawParams instanceof Promise ? await rawParams : rawParams;
+        const { id } = await context.params;
 
         await prisma.event.delete({
             where: { id }

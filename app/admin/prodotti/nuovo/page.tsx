@@ -1,5 +1,4 @@
-'use client';
-
+﻿'use client';
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { Save, ArrowLeft } from 'lucide-react';
@@ -143,9 +142,9 @@ export default function NuovoProdotto() {
                                 </svg>
                             </div>
                             <div className="flex-1">
-                                <h3 className="text-sm font-semibold text-blue-800 mb-1">🌍 Traduzioni Automatiche Attive</h3>
+                                <h3 className="text-sm font-semibold text-blue-800 mb-1">ðŸŒ Traduzioni Automatiche Attive</h3>
                                 <p className="text-sm text-blue-700">
-                                    Il prodotto verrà tradotto automaticamente in <strong>8 lingue</strong>: Italiano, Inglese, Francese, Spagnolo, Tedesco, Portoghese, Russo e Cinese.
+                                    Il prodotto verrÃ  tradotto automaticamente in <strong>8 lingue</strong>: Italiano, Inglese, Francese, Spagnolo, Tedesco, Portoghese, Russo e Cinese.
                                 </p>
                             </div>
                         </div>
@@ -176,7 +175,7 @@ export default function NuovoProdotto() {
 
                         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                             <div>
-                                <label className="block text-gray-700 font-semibold mb-2">Prezzo (€) *</label>
+                                <label className="block text-gray-700 font-semibold mb-2">Prezzo (â‚¬) *</label>
                                 <input
                                     type="number"
                                     step="0.01"
@@ -199,7 +198,7 @@ export default function NuovoProdotto() {
                                     <option value="Personalizzati">Personalizzati</option>
                                     <option value="Colorati">Colorati</option>
                                     <option value="Eleganti">Eleganti</option>
-                                    <option value="Novità">Novità</option>
+                                    <option value="NovitÃ ">NovitÃ </option>
                                 </select>
                             </div>
                         </div>
@@ -354,3 +353,4 @@ export default function NuovoProdotto() {
         </div>
     );
 }
+

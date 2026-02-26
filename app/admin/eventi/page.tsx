@@ -1,5 +1,4 @@
-'use client';
-
+﻿'use client';
 import { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import Link from 'next/link';
@@ -168,7 +167,7 @@ export default function EventiAdmin() {
 
                 <div className="flex justify-between items-center mb-8">
                     <h1 className="text-3xl font-bold" style={{ color: 'var(--color-text)' }}>
-                        🎉 Gestione Eventi
+                        ðŸŽ‰ Gestione Eventi
                     </h1>
                     <button
                         onClick={() => setShowForm(!showForm)}
@@ -184,7 +183,7 @@ export default function EventiAdmin() {
                 {showForm && (
                     <div className="rounded-lg shadow-md p-6 mb-8" style={{ backgroundColor: 'var(--color-card-bg)', borderColor: 'var(--color-border)' }}>
                         <h2 className="text-xl font-bold mb-4" style={{ color: 'var(--color-text)' }}>
-                            {editingEvent ? '✏️ Modifica Evento' : '➕ Nuovo Evento'}
+                            {editingEvent ? 'âœï¸ Modifica Evento' : 'âž• Nuovo Evento'}
                         </h2>
                         <form onSubmit={handleSubmit} className="space-y-4">
                             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
@@ -272,7 +271,7 @@ export default function EventiAdmin() {
                                 </div>
                                 <div>
                                     <label className="block text-sm font-medium mb-1" style={{ color: 'var(--color-text)' }}>
-                                        Prezzo (€)
+                                        Prezzo (â‚¬)
                                     </label>
                                     <input
                                         type="number"
@@ -317,7 +316,7 @@ export default function EventiAdmin() {
                                         onChange={(e) => setFormData({ ...formData, featured: e.target.checked })}
                                         className="w-4 h-4"
                                     />
-                                    <span style={{ color: 'var(--color-text)' }}>⭐ In Evidenza</span>
+                                    <span style={{ color: 'var(--color-text)' }}>â­ In Evidenza</span>
                                 </label>
                             </div>
 
@@ -374,7 +373,7 @@ export default function EventiAdmin() {
                                 <div className="p-4">
                                     <div className="flex items-start justify-between mb-2">
                                         <h3 className="text-lg font-bold" style={{ color: 'var(--color-text)' }}>
-                                            {event.featured && <span className="text-yellow-500 mr-1">⭐</span>}
+                                            {event.featured && <span className="text-yellow-500 mr-1">â­</span>}
                                             {event.title}
                                         </h3>
                                         <span
@@ -405,7 +404,7 @@ export default function EventiAdmin() {
                                         )}
                                         <div className="flex items-center gap-2">
                                             <Euro className="w-4 h-4" />
-                                            {event.price === 0 ? 'Gratuito' : `€${event.price.toFixed(2)}`}
+                                            {event.price === 0 ? 'Gratuito' : `â‚¬${event.price.toFixed(2)}`}
                                         </div>
                                     </div>
 
@@ -442,3 +441,4 @@ export default function EventiAdmin() {
         </div>
     );
 }
+

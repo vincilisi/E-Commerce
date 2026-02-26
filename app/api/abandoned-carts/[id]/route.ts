@@ -1,14 +1,16 @@
+export const runtime = "nodejs";
+export const dynamic = "force-dynamic";
+
 import { NextRequest, NextResponse } from 'next/server'
 import { prisma } from '@/lib/prisma'
 
 // PUT - Aggiorna stato carrello
 export async function PUT(
     request: NextRequest,
-    context: { params: { id: string } | Promise<{ id: string }> }
+    context: { params: Promise<{ id: string }> }
 ) {
     try {
-        const rawParams = context.params
-        const { id } = rawParams instanceof Promise ? await rawParams : rawParams
+        const { id } = await context.params
 
         const body = await request.json()
         const { reminderSent, recovered, email } = body
@@ -16,7 +18,7 @@ export async function PUT(
         const updateData: Record<string, unknown> = {}
         if (reminderSent !== undefined) updateData.reminderSent = reminderSent
         if (recovered !== undefined) updateData.recovered = recovered
-        if (email !== undefined) updateData.email = email
+        if (email !== undefined) updateData.customerEmail = email
 
         const cart = await prisma.abandonedCart.update({
             where: { id },
@@ -33,11 +35,10 @@ export async function PUT(
 // DELETE - Elimina carrello
 export async function DELETE(
     request: NextRequest,
-    context: { params: { id: string } | Promise<{ id: string }> }
+    context: { params: Promise<{ id: string }> }
 ) {
     try {
-        const rawParams = context.params
-        const { id } = rawParams instanceof Promise ? await rawParams : rawParams
+        const { id } = await context.params
 
         await prisma.abandonedCart.delete({
             where: { id }
@@ -53,11 +54,10 @@ export async function DELETE(
 // POST - Invia email di recupero
 export async function POST(
     request: NextRequest,
-    context: { params: { id: string } | Promise<{ id: string }> }
+    context: { params: Promise<{ id: string }> }
 ) {
     try {
-        const rawParams = context.params
-        const { id } = rawParams instanceof Promise ? await rawParams : rawParams
+        const { id } = await context.params
 
         const cart = await prisma.abandonedCart.findUnique({
             where: { id }
@@ -67,7 +67,7 @@ export async function POST(
             return NextResponse.json({ error: 'Carrello non trovato' }, { status: 404 })
         }
 
-        if (!(cart as any).email) {
+        if (!(cart as any).customerEmail) {
             return NextResponse.json({ error: 'Email non disponibile' }, { status: 400 })
         }
 
@@ -82,7 +82,7 @@ export async function POST(
         console.log(`
 📧 EMAIL DI RECUPERO CARRELLO (Simulata)
 ----------------------------------------
-A: ${(cart as any).email}
+A: ${(cart as any).customerEmail}
 Oggetto: Hai dimenticato qualcosa nel carrello! 🛒
 
 ${items

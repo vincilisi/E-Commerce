@@ -1,13 +1,16 @@
+export const runtime = "nodejs";
+export const dynamic = "force-dynamic";
+
 import { NextRequest, NextResponse } from 'next/server'
 import { prisma } from '@/lib/prisma'
 
 // PUT - Modifica FAQ
 export async function PUT(
     request: NextRequest,
-    { params }: { params: { id: string } }
+    context: { params: Promise<{ id: string }> }
 ) {
     try {
-        const { id } = params
+        const { id } = await context.params
         const body = await request.json()
         const { question, answer, category, order, active } = body
 
@@ -33,10 +36,10 @@ export async function PUT(
 // DELETE - Elimina FAQ
 export async function DELETE(
     request: NextRequest,
-    { params }: { params: { id: string } }
+    context: { params: Promise<{ id: string }> }
 ) {
     try {
-        const { id } = params
+        const { id } = await context.params
         await prisma.fAQ.delete({
             where: { id }
         })

@@ -1,13 +1,15 @@
+export const runtime = "nodejs";
+export const dynamic = "force-dynamic";
+
 import { NextRequest, NextResponse } from 'next/server';
 import { prisma } from '@/lib/prisma';
 
 export async function GET(
     req: NextRequest,
-    context: { params: { id: string } | Promise<{ id: string }> }
+    context: { params: Promise<{ id: string }> }
 ) {
     try {
-        const rawParams = context.params
-        const { id } = rawParams instanceof Promise ? await rawParams : rawParams
+        const { id } = await context.params
 
         const order = await prisma.order.findUnique({
             where: { id },
@@ -40,11 +42,10 @@ export async function GET(
 
 export async function PUT(
     req: NextRequest,
-    context: { params: { id: string } | Promise<{ id: string }> }
+    context: { params: Promise<{ id: string }> }
 ) {
     try {
-        const rawParams = context.params
-        const { id } = rawParams instanceof Promise ? await rawParams : rawParams
+        const { id } = await context.params
         const body = await req.json();
 
         const updateData: any = {};

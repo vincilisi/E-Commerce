@@ -142,7 +142,7 @@ export default function CheckoutPage() {
                 // Vecchia modalità con sessionId
                 const stripe = await stripePromise;
                 if (stripe) {
-                    await stripe.redirectToCheckout({ sessionId: data.sessionId });
+                    await (stripe as any).redirectToCheckout({ sessionId: data.sessionId });
                 }
             } else {
                 toast.error('Errore nella creazione del pagamento');
@@ -287,7 +287,7 @@ export default function CheckoutPage() {
                                 {items.map((item) => (
                                     <div key={item.id} className="flex justify-between text-sm">
                                         <span className="text-gray-600">
-                                            {item.translations?.name?.[language] || item.name} x {item.quantity}
+                                            {(item as any).translations?.name?.[language] || item.name} x {item.quantity}
                                         </span>
                                         <span className="font-semibold">{formatPrice(item.price * item.quantity)}</span>
                                     </div>
