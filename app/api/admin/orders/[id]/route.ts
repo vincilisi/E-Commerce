@@ -39,10 +39,10 @@ export async function GET(
 
 export async function PUT(
     req: NextRequest,
-    context: { params: Promise<{ id: string }> }
+    { params }: { params: { id: string } }
 ) {
     try {
-        const { id } = await context.params;
+        const { id } = params;
         const body = await req.json();
 
         // Costruisci i dati da aggiornare dinamicamente
