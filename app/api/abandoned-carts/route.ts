@@ -3,6 +3,7 @@ export const dynamic = "force-dynamic";
 
 import { NextRequest, NextResponse } from 'next/server'
 import { prisma } from '@/lib/prisma'
+import type { AbandonedCart } from '@prisma/client'
 
 // GET - Lista carrelli abbandonati
 export async function GET(request: NextRequest) {
@@ -22,30 +23,30 @@ export async function GET(request: NextRequest) {
             where.recovered = true
         }
 
-        const carts = await prisma.abandonedCart.findMany({
+        const carts: AbandonedCart[] = await prisma.abandonedCart.findMany({
             where,
             orderBy: { createdAt: 'desc' }
         })
 
         // Calcola statistiche
-        const allCarts = await prisma.abandonedCart.findMany()
+        const allCarts: AbandonedCart[] = await prisma.abandonedCart.findMany()
         const stats = {
             total: allCarts.length,
-            pending: allCarts.filter(c => !c.reminderSent && !c.recovered).length,
-            reminded: allCarts.filter(c => c.reminderSent && !c.recovered).length,
-            recovered: allCarts.filter(c => c.recovered).length,
-            totalValue: allCarts.reduce((sum, c) => {
+            pending: allCarts.filter((c: AbandonedCart) => !c.reminderSent && !c.recovered).length,
+            reminded: allCarts.filter((c: AbandonedCart) => c.reminderSent && !c.recovered).length,
+            recovered: allCarts.filter((c: AbandonedCart) => c.recovered).length,
+            totalValue: allCarts.reduce((sum: number, c: AbandonedCart) => {
                 const items = JSON.parse(c.items || '[]')
                 return sum + items.reduce((s: number, i: any) => s + (i.price * i.quantity), 0)
             }, 0),
-            recoveredValue: allCarts.filter(c => c.recovered).reduce((sum, c) => {
+            recoveredValue: allCarts.filter((c: AbandonedCart) => c.recovered).reduce((sum: number, c: AbandonedCart) => {
                 const items = JSON.parse(c.items || '[]')
                 return sum + items.reduce((s: number, i: any) => s + (i.price * i.quantity), 0)
             }, 0)
         }
 
         return NextResponse.json({
-            carts: carts.map(c => ({
+            carts: carts.map((c: AbandonedCart) => ({
                 ...c,
                 items: JSON.parse(c.items || '[]')
             })),
@@ -68,7 +69,7 @@ export async function POST(request: NextRequest) {
         }
 
         // Verifica se esiste già un carrello per questa sessione
-        const existing = await prisma.abandonedCart.findFirst({
+        const existing: AbandonedCart | null = await prisma.abandonedCart.findFirst({
             where: {
                 sessionId,
                 recovered: false
