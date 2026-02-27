@@ -1,8 +1,5 @@
-﻿import { formatPrice } from '@/lib/utils';
-'use client'
-
+﻿'use client'
 import { useState, useEffect } from 'react'
-import { ShoppingCart, Heart, Star } from 'lucide-react'
 import Link from 'next/link'
 import Image from 'next/image'
 
