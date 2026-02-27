@@ -6,90 +6,101 @@ import { prisma } from '@/lib/prisma'
 
 // GET - Analytics
 export async function GET(request: NextRequest) {
-  try {
-    const { searchParams } = new URL(request.url)
-    const period = searchParams.get('period') || '30' // giorni
+    try {
+        const { searchParams } = new URL(request.url)
+        const period = searchParams.get('period') || '30' // giorni
 
-    const startDate = new Date()
-    startDate.setDate(startDate.getDate() - parseInt(period))
+        const startDate = new Date()
+        startDate.setDate(startDate.getDate() - parseInt(period))
 
-    // Ordini nel periodo
-    const orders: Awaited<ReturnType<typeof prisma.order.findMany>> = await prisma.order.findMany({
-      where: {
-        createdAt: { gte: startDate },
-        status: { not: 'cancelled' }
-      },
-      include: { orderItems: true }
-    })
+        // Ordini nel periodo
+        const orders: Awaited<ReturnType<typeof prisma.order.findMany>> = await prisma.order.findMany({
+            where: {
+                createdAt: { gte: startDate },
+                status: { not: 'cancelled' }
+            },
+            include: { orderItems: true }
+        })
 
-    // Statistiche generali
-    const totalOrders = orders.length
-    const totalRevenue = orders.reduce((sum: number, o) => sum + o.totalAmount, 0)
-    const avgOrderValue = totalOrders > 0 ? totalRevenue / totalOrders : 0
+        // Statistiche generali
+        const totalOrders = orders.length
+        const totalRevenue = orders.reduce(
+            (sum: number, o: typeof orders[number]) => sum + o.totalAmount,
+            0
+        )
+        const avgOrderValue = totalOrders > 0 ? totalRevenue / totalOrders : 0
 
-    // Ordini per stato
-    const ordersByStatus = await prisma.order.groupBy({
-      by: ['status'],
-      _count: { status: true },
-      where: { createdAt: { gte: startDate } }
-    })
+        // Ordini per stato
+        const ordersByStatus = await prisma.order.groupBy({
+            by: ['status'],
+            _count: { status: true },
+            where: { createdAt: { gte: startDate } }
+        })
 
-    // Prodotti più venduti
-    const topProducts = await prisma.orderItem.groupBy({
-      by: ['productId'],
-      _sum: { quantity: true },
-      _count: { productId: true },
-      orderBy: { _sum: { quantity: 'desc' } },
-      take: 10
-    })
+        // Prodotti più venduti
+        const topProducts = await prisma.orderItem.groupBy({
+            by: ['productId'],
+            _sum: { quantity: true },
+            _count: { productId: true },
+            orderBy: { _sum: { quantity: 'desc' } },
+            take: 10
+        })
 
-    const productIds = topProducts.map(p => p.productId)
-    const products: Awaited<ReturnType<typeof prisma.product.findMany>> = await prisma.product.findMany({
-      where: { id: { in: productIds } }
-    })
+        // Dettagli prodotti top
+        const productIds = topProducts.map(p => p.productId)
+        const products = await prisma.product.findMany({
+            where: { id: { in: productIds } }
+        })
 
-    const topProductsWithDetails = topProducts.map(tp => ({
-      ...tp,
-      product: products.find(p => p.id === tp.productId) || null
-    }))
+        const topProductsWithDetails = topProducts.map(tp => ({
+            ...tp,
+            product: products.find(p => p.id === tp.productId)
+        }))
 
-    // Ordini per giorno
-    const dailyOrders = orders.reduce((acc, order) => {
-      const date = order.createdAt.toISOString().split('T')[0]
-      if (!acc[date]) acc[date] = { orders: 0, revenue: 0 }
-      acc[date].orders++
-      acc[date].revenue += order.totalAmount
-      return acc
-    }, {} as Record<string, { orders: number; revenue: number }>)
+        // Ordini per giorno (ultimi 30 giorni)
+        const dailyOrders = orders.reduce((acc, order) => {
+            const date = order.createdAt.toISOString().split('T')[0]
+            if (!acc[date]) {
+                acc[date] = { orders: 0, revenue: 0 }
+            }
+            acc[date].orders++
+            acc[date].revenue += order.totalAmount
+            return acc
+        }, {} as Record<string, { orders: number; revenue: number }>)
 
-    // Clienti unici
-    const uniqueCustomers = new Set(orders.map(o => o.customerEmail)).size
+        // Clienti unici
+        const uniqueCustomers = new Set(
+            orders.map(o => o.customerEmail).filter(Boolean)
+        ).size
 
-    // Newsletter iscritti
-    const newsletterCount = await prisma.newsletter.count({ where: { subscribed: true } })
+        // Newsletter iscritti
+        const newsletterCount = await prisma.newsletter.count({
+            where: { subscribed: true }
+        })
 
-    // Recensioni
-    const reviewsCount = await prisma.review.count()
-    const avgRatingResult = await prisma.review.aggregate({ _avg: { rating: true } })
-    const avgRating = avgRatingResult._avg.rating || 0
+        // Recensioni
+        const reviewsCount = await prisma.review.count()
+        const avgRating = await prisma.review.aggregate({
+            _avg: { rating: true }
+        })
 
-    return NextResponse.json({
-      summary: {
-        totalOrders,
-        totalRevenue,
-        avgOrderValue,
-        uniqueCustomers,
-        newsletterSubscribers: newsletterCount,
-        totalReviews: reviewsCount,
-        avgRating
-      },
-      ordersByStatus,
-      topProducts: topProductsWithDetails,
-      dailyOrders,
-      period: parseInt(period)
-    })
-  } catch (error) {
-    console.error('Errore analytics:', error)
-    return NextResponse.json({ error: 'Errore server' }, { status: 500 })
-  }
+        return NextResponse.json({
+            summary: {
+                totalOrders,
+                totalRevenue,
+                avgOrderValue,
+                uniqueCustomers,
+                newsletterSubscribers: newsletterCount,
+                totalReviews: reviewsCount,
+                avgRating: avgRating._avg.rating || 0
+            },
+            ordersByStatus,
+            topProducts: topProductsWithDetails,
+            dailyOrders,
+            period: parseInt(period)
+        })
+    } catch (error) {
+        console.error('Errore analytics:', error)
+        return NextResponse.json({ error: 'Errore server' }, { status: 500 })
+    }
 }
