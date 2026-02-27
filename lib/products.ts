@@ -7,7 +7,10 @@ export const products: Product[] = [
         description: 'Elegante portachiavi fatto a mano con stella dorata e perline cristallo',
         price: 12.99,
         images: [
-            { url: '/products/stella-dorata.jpg' }
+            {
+                url: '/products/stella-dorata.jpg',
+                alt: 'Portachiavi Stella Dorata'
+            }
         ],
         category: 'Classici',
         inStock: true,
@@ -20,7 +23,10 @@ export const products: Product[] = [
         description: 'Portachiavi artigianale con ciondolo luna e charm stelline',
         price: 10.99,
         images: [
-            { url: '/products/luna-argentata.jpg' }
+            {
+                url: '/products/luna-argentata.jpg',
+                alt: 'Portachiavi Luna Argentata'
+            }
         ],
         category: 'Classici',
         inStock: true,
@@ -33,7 +39,10 @@ export const products: Product[] = [
         description: 'Design unico con perline che formano una costellazione personalizzabile',
         price: 15.99,
         images: [
-            { url: '/products/costellazione.jpg' }
+            {
+                url: '/products/costellazione.jpg',
+                alt: 'Portachiavi Costellazione'
+            }
         ],
         category: 'Personalizzati',
         inStock: true,
@@ -46,7 +55,10 @@ export const products: Product[] = [
         description: 'Set di mini stelle colorate con dettagli brillanti',
         price: 9.99,
         images: [
-            { url: '/products/stelle-colorate.jpg' }
+            {
+                url: '/products/stelle-colorate.jpg',
+                alt: 'Portachiavi Stelle Colorate'
+            }
         ],
         category: 'Colorati',
         inStock: true,
