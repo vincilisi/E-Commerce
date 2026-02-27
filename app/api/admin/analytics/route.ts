@@ -14,7 +14,7 @@ export async function GET(request: NextRequest) {
         startDate.setDate(startDate.getDate() - parseInt(period))
 
         // Ordini nel periodo
-        const orders: Awaited<ReturnType<typeof prisma.order.findMany>> = await prisma.order.findMany({
+        const orders = await prisma.order.findMany({
             where: {
                 createdAt: { gte: startDate },
                 status: { not: 'cancelled' }
@@ -24,10 +24,7 @@ export async function GET(request: NextRequest) {
 
         // Statistiche generali
         const totalOrders = orders.length
-        const totalRevenue = orders.reduce(
-            (sum: number, o: typeof orders[number]) => sum + o.totalAmount,
-            0
-        )
+        const totalRevenue = orders.reduce((sum: number, o) => sum + o.totalAmount, 0)
         const avgOrderValue = totalOrders > 0 ? totalRevenue / totalOrders : 0
 
         // Ordini per stato
@@ -46,18 +43,20 @@ export async function GET(request: NextRequest) {
             take: 10
         })
 
-        // Dettagli prodotti top
-        const productIds = topProducts.map(p => p.productId)
+        // Tipizza gli elementi della map
+        const productIds = topProducts.map((p: typeof topProducts[number]) => p.productId)
+
+        // Dettagli prodotti
         const products = await prisma.product.findMany({
             where: { id: { in: productIds } }
         })
 
-        const topProductsWithDetails = topProducts.map(tp => ({
+        const topProductsWithDetails = topProducts.map((tp: typeof topProducts[number]) => ({
             ...tp,
             product: products.find(p => p.id === tp.productId)
         }))
 
-        // Ordini per giorno (ultimi 30 giorni)
+        // Ordini per giorno
         const dailyOrders = orders.reduce((acc, order) => {
             const date = order.createdAt.toISOString().split('T')[0]
             if (!acc[date]) {
@@ -66,12 +65,10 @@ export async function GET(request: NextRequest) {
             acc[date].orders++
             acc[date].revenue += order.totalAmount
             return acc
-        }, {} as Record<string, { orders: number; revenue: number }>)
+        }, {} as Record<string, { orders: number, revenue: number }>)
 
         // Clienti unici
-        const uniqueCustomers = new Set(
-            orders.map(o => o.customerEmail).filter(Boolean)
-        ).size
+        const uniqueCustomers = new Set(orders.map(o => o.customerEmail)).size
 
         // Newsletter iscritti
         const newsletterCount = await prisma.newsletter.count({
