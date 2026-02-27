@@ -3,7 +3,6 @@ export const dynamic = "force-dynamic";
 
 import { NextRequest, NextResponse } from 'next/server'
 import { prisma } from '@/lib/prisma'
-import type { Order, OrderItem, Product } from '@prisma/client'
 
 // GET - Analytics
 export async function GET(request: NextRequest) {
@@ -15,7 +14,7 @@ export async function GET(request: NextRequest) {
     startDate.setDate(startDate.getDate() - parseInt(period))
 
     // Ordini nel periodo
-    const orders: (Order & { orderItems: OrderItem[] })[] = await prisma.order.findMany({
+    const orders: Awaited<ReturnType<typeof prisma.order.findMany>> = await prisma.order.findMany({
       where: {
         createdAt: { gte: startDate },
         status: { not: 'cancelled' }
@@ -24,9 +23,9 @@ export async function GET(request: NextRequest) {
     })
 
     // Statistiche generali
-    const totalOrders: number = orders.length
-    const totalRevenue: number = orders.reduce((sum: number, o: Order) => sum + o.totalAmount, 0)
-    const avgOrderValue: number = totalOrders > 0 ? totalRevenue / totalOrders : 0
+    const totalOrders = orders.length
+    const totalRevenue = orders.reduce((sum: number, o) => sum + o.totalAmount, 0)
+    const avgOrderValue = totalOrders > 0 ? totalRevenue / totalOrders : 0
 
     // Ordini per stato
     const ordersByStatus = await prisma.order.groupBy({
@@ -44,9 +43,8 @@ export async function GET(request: NextRequest) {
       take: 10
     })
 
-    // Dettagli prodotti top
-    const productIds: string[] = topProducts.map(p => p.productId)
-    const products: Product[] = await prisma.product.findMany({
+    const productIds = topProducts.map(p => p.productId)
+    const products: Awaited<ReturnType<typeof prisma.product.findMany>> = await prisma.product.findMany({
       where: { id: { in: productIds } }
     })
 
@@ -55,8 +53,8 @@ export async function GET(request: NextRequest) {
       product: products.find(p => p.id === tp.productId) || null
     }))
 
-    // Ordini per giorno (ultimi 30 giorni)
-    const dailyOrders: Record<string, { orders: number; revenue: number }> = orders.reduce((acc, order: Order) => {
+    // Ordini per giorno
+    const dailyOrders = orders.reduce((acc, order) => {
       const date = order.createdAt.toISOString().split('T')[0]
       if (!acc[date]) acc[date] = { orders: 0, revenue: 0 }
       acc[date].orders++
@@ -65,19 +63,15 @@ export async function GET(request: NextRequest) {
     }, {} as Record<string, { orders: number; revenue: number }>)
 
     // Clienti unici
-    const uniqueCustomers: number = new Set(orders.map(o => o.customerEmail)).size
+    const uniqueCustomers = new Set(orders.map(o => o.customerEmail)).size
 
     // Newsletter iscritti
-    const newsletterCount: number = await prisma.newsletter.count({
-      where: { subscribed: true }
-    })
+    const newsletterCount = await prisma.newsletter.count({ where: { subscribed: true } })
 
     // Recensioni
-    const reviewsCount: number = await prisma.review.count()
-    const avgRatingResult = await prisma.review.aggregate({
-      _avg: { rating: true }
-    })
-    const avgRating: number = avgRatingResult._avg.rating || 0
+    const reviewsCount = await prisma.review.count()
+    const avgRatingResult = await prisma.review.aggregate({ _avg: { rating: true } })
+    const avgRating = avgRatingResult._avg.rating || 0
 
     return NextResponse.json({
       summary: {
