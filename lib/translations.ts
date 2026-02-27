@@ -1,3 +1,4 @@
+
 export const translations = {
     us: {
         // Navbar
@@ -229,7 +230,7 @@ export const translations = {
         // Order Status
         pending: 'In Attesa',
         paid: 'Pagato',
-        processing: 'In Lavorazione',
+        orderProcessing: 'In Lavorazione',
         shipped: 'Spedito',
         delivered: 'Consegnato',
         cancelled: 'Annullato',
@@ -416,7 +417,7 @@ export const translations = {
         // Order Status
         pending: 'Pending',
         paid: 'Paid',
-        processing: 'Processing',
+        orderProcessing: 'Processing',
         shipped: 'Shipped',
         delivered: 'Delivered',
         cancelled: 'Cancelled',
@@ -1351,7 +1352,7 @@ export const translations = {
         // Order Status
         pending: 'Ожидается',
         paid: 'Оплачено',
-        processing: 'Обрабатывается',
+        orderProcessing: 'Обрабатывается',
         shipped: 'Отправлено',
         delivered: 'Доставлено',
         cancelled: 'Отменено',
@@ -1607,7 +1608,7 @@ export const translations = {
             talkToOperator: '与客服通话',
         },
     },
-};
+} as const;
 
 export type Language = keyof typeof translations;
-export type TranslationKeys = typeof translations.it;
+export type TranslationKeys = keyof typeof translations.it;
