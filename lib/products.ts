@@ -6,7 +6,9 @@ export const products: Product[] = [
         name: 'Portachiavi Stella Dorata',
         description: 'Elegante portachiavi fatto a mano con stella dorata e perline cristallo',
         price: 12.99,
-        images: ['/products/stella-dorata.jpg'],
+        images: [
+            { url: '/products/stella-dorata.jpg' }
+        ],
         category: 'Classici',
         inStock: true,
         materials: ['Metallo dorato', 'Perline cristallo', 'Catena'],
@@ -17,7 +19,9 @@ export const products: Product[] = [
         name: 'Portachiavi Luna Argentata',
         description: 'Portachiavi artigianale con ciondolo luna e charm stelline',
         price: 10.99,
-        images: ['/products/luna-argentata.jpg'],
+        images: [
+            { url: '/products/luna-argentata.jpg' }
+        ],
         category: 'Classici',
         inStock: true,
         materials: ['Metallo argentato', 'Charm decorativi'],
@@ -28,7 +32,9 @@ export const products: Product[] = [
         name: 'Portachiavi Costellazione',
         description: 'Design unico con perline che formano una costellazione personalizzabile',
         price: 15.99,
-        images: ['/products/costellazione.jpg'],
+        images: [
+            { url: '/products/costellazione.jpg' }
+        ],
         category: 'Personalizzati',
         inStock: true,
         materials: ['Perline vetro', 'Filo metallico', 'Moschettone'],
@@ -39,7 +45,9 @@ export const products: Product[] = [
         name: 'Portachiavi Stelle Colorate',
         description: 'Set di mini stelle colorate con dettagli brillanti',
         price: 9.99,
-        images: ['/products/stelle-colorate.jpg'],
+        images: [
+            { url: '/products/stelle-colorate.jpg' }
+        ],
         category: 'Colorati',
         inStock: true,
         materials: ['Resina colorata', 'Glitter', 'Anello portachiavi'],
