@@ -1,4 +1,9 @@
+<<<<<<< HEAD
 ﻿'use client';
+=======
+'use client';
+
+>>>>>>> master
 import { useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { Plus, Edit, Trash2, Eye } from 'lucide-react';
@@ -90,7 +95,11 @@ export default function AdminProdotti() {
                                             {product.name}
                                         </td>
                                         <td className="px-6 py-4 whitespace-nowrap text-gray-600">
+<<<<<<< HEAD
                                             â‚¬{product.price.toFixed(2)}
+=======
+                                            €{product.price.toFixed(2)}
+>>>>>>> master
                                         </td>
                                         <td className="px-6 py-4 whitespace-nowrap text-gray-600">
                                             {product.category}
@@ -140,4 +149,7 @@ export default function AdminProdotti() {
         </div>
     );
 }
+<<<<<<< HEAD
 
+=======
+>>>>>>> master

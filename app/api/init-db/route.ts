@@ -1,6 +1,9 @@
+<<<<<<< HEAD
 export const runtime = "nodejs";
 export const dynamic = "force-dynamic";
 
+=======
+>>>>>>> master
 import { NextResponse } from 'next/server';
 import { prisma } from '@/lib/prisma';
 import bcrypt from 'bcryptjs';
@@ -83,6 +86,7 @@ export async function GET() {
         ];
 
         for (const product of productsData) {
+<<<<<<< HEAD
             const images = JSON.parse(product.images || '[]');
             const materials = JSON.parse(product.materials || '[]');
 
@@ -104,6 +108,12 @@ export async function GET() {
                         create: materials.map((name: string) => ({ name }))
                     }
                 }
+=======
+            await prisma.product.upsert({
+                where: { id: product.id },
+                update: {},
+                create: product
+>>>>>>> master
             });
         }
 

@@ -8,6 +8,7 @@ import { Package, Settings, ShoppingBag, Palette, Plus, LogOut, BookOpen, Calend
 export default function AdminDashboard() {
     const [user, setUser] = useState<any>(null);
     const [loading, setLoading] = useState(true);
+<<<<<<< HEAD
     const router = useRouter();
 
     useEffect(() => {
@@ -23,6 +24,76 @@ export default function AdminDashboard() {
             });
     }, [router]);
 
+=======
+    const [assistantPhone, setAssistantPhone] = useState('+39 02 1234 5678');
+    const [assistantWhatsapp, setAssistantWhatsapp] = useState('+39 02 1234 5678');
+    const [assistantEmail, setAssistantEmail] = useState('info@ildesiderio.it');
+    const [contactsSaving, setContactsSaving] = useState(false);
+    const [contactsMessage, setContactsMessage] = useState('');
+    const router = useRouter();
+
+    useEffect(() => {
+        const loadDashboardData = async () => {
+            try {
+                const authRes = await fetch('/api/auth/me');
+                const authData = await authRes.json();
+
+                if (!authData.user || authData.user.role !== 'admin') {
+                    router.push('/login');
+                    return;
+                }
+
+                setUser(authData.user);
+
+                const settingsRes = await fetch('/api/admin/settings');
+                const settingsData = await settingsRes.json();
+                if (settingsData.settings) {
+                    setAssistantPhone(settingsData.settings.assistantPhone || '+39 02 1234 5678');
+                    setAssistantWhatsapp(settingsData.settings.assistantWhatsapp || '+39 02 1234 5678');
+                    setAssistantEmail(settingsData.settings.assistantEmail || 'info@ildesiderio.it');
+                }
+            } finally {
+                setLoading(false);
+            }
+        };
+
+        loadDashboardData();
+    }, [router]);
+
+    const saveContacts = async () => {
+        if (!assistantPhone.trim() || !assistantWhatsapp.trim() || !assistantEmail.trim()) {
+            setContactsMessage('Inserisci telefono, WhatsApp ed email validi.');
+            return;
+        }
+
+        setContactsSaving(true);
+        setContactsMessage('');
+
+        try {
+            const res = await fetch('/api/admin/settings', {
+                method: 'PUT',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({
+                    assistantPhone,
+                    assistantWhatsapp,
+                    assistantEmail,
+                }),
+            });
+
+            if (!res.ok) {
+                setContactsMessage('Errore durante il salvataggio.');
+                return;
+            }
+
+            setContactsMessage('Contatti aggiornati con successo.');
+        } catch {
+            setContactsMessage('Errore durante il salvataggio.');
+        } finally {
+            setContactsSaving(false);
+        }
+    };
+
+>>>>>>> master
     if (loading) {
         return (
             <div className="flex items-center justify-center min-h-screen">
@@ -180,6 +251,64 @@ export default function AdminDashboard() {
                 </div>
 
                 <div className="mt-8 rounded-lg shadow-md p-6" style={{ backgroundColor: 'var(--color-card-bg)' }}>
+<<<<<<< HEAD
+=======
+                    <h3 className="text-xl font-bold mb-4" style={{ color: 'var(--color-text)' }}>Contatti Assistenza</h3>
+                    <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
+                        <div>
+                            <label className="block text-sm font-semibold mb-2" style={{ color: 'var(--color-text)' }}>Numero telefono</label>
+                            <input
+                                type="text"
+                                value={assistantPhone}
+                                onChange={(e) => setAssistantPhone(e.target.value)}
+                                className="w-full px-4 py-2 border rounded-lg focus:outline-none"
+                                style={{ borderColor: 'var(--color-border)', backgroundColor: 'var(--color-background)', color: 'var(--color-text)' }}
+                                placeholder="+39 02 1234 5678"
+                            />
+                        </div>
+                        <div>
+                            <label className="block text-sm font-semibold mb-2" style={{ color: 'var(--color-text)' }}>Numero WhatsApp</label>
+                            <input
+                                type="text"
+                                value={assistantWhatsapp}
+                                onChange={(e) => setAssistantWhatsapp(e.target.value)}
+                                className="w-full px-4 py-2 border rounded-lg focus:outline-none"
+                                style={{ borderColor: 'var(--color-border)', backgroundColor: 'var(--color-background)', color: 'var(--color-text)' }}
+                                placeholder="+39 02 1234 5678"
+                            />
+                        </div>
+                        <div>
+                            <label className="block text-sm font-semibold mb-2" style={{ color: 'var(--color-text)' }}>Email assistenza</label>
+                            <input
+                                type="email"
+                                value={assistantEmail}
+                                onChange={(e) => setAssistantEmail(e.target.value)}
+                                className="w-full px-4 py-2 border rounded-lg focus:outline-none"
+                                style={{ borderColor: 'var(--color-border)', backgroundColor: 'var(--color-background)', color: 'var(--color-text)' }}
+                                placeholder="info@ildesiderio.it"
+                            />
+                        </div>
+                        <div className="flex items-end">
+                            <button
+                                type="button"
+                                onClick={saveContacts}
+                                disabled={contactsSaving}
+                                className="w-full px-4 py-2 rounded-lg font-semibold disabled:opacity-50"
+                                style={{ backgroundColor: 'var(--color-primary)', color: 'var(--color-button-text)' }}
+                            >
+                                {contactsSaving ? 'Salvataggio...' : 'Salva Contatti'}
+                            </button>
+                        </div>
+                    </div>
+                    {contactsMessage && (
+                        <p className="mt-3 text-sm" style={{ color: contactsMessage.includes('successo') ? '#16a34a' : '#dc2626' }}>
+                            {contactsMessage}
+                        </p>
+                    )}
+                </div>
+
+                <div className="mt-8 rounded-lg shadow-md p-6" style={{ backgroundColor: 'var(--color-card-bg)' }}>
+>>>>>>> master
                     <h3 className="text-xl font-bold mb-4" style={{ color: 'var(--color-text)' }}>Statistiche Rapide</h3>
                     <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
                         <div className="rounded-lg p-4" style={{ backgroundColor: 'var(--color-background)' }}>

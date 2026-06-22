@@ -310,7 +310,11 @@ export default function GuidaAdmin() {
                                         <div className="space-y-3 text-sm text-gray-700">
                                             <div className="p-3 bg-gray-50 rounded-lg">
                                                 <strong className="block mb-2">Nome del Sito</strong>
+<<<<<<< HEAD
                                                 <p className="text-gray-600 text-xs">Cambia il nome che appare nella navbar, nel footer e nel titolo della pagina. Default: "Il Desiderio di una Stella"</p>
+=======
+                                                <p className="text-gray-600 text-xs">Cambia il nome che appare nella navbar, nel footer e nel titolo della pagina. Usa il nome del tuo brand.</p>
+>>>>>>> master
                                             </div>
                                             <div className="p-3 bg-gray-50 rounded-lg">
                                                 <strong className="block mb-2">Meta Description</strong>
@@ -568,10 +572,37 @@ export default function GuidaAdmin() {
                                             💳 Sistema Pagamenti
                                         </h2>
                                         <p className="text-sm sm:text-base text-gray-600 mb-4 sm:mb-6">
+<<<<<<< HEAD
                                             Il sito supporta due modalità di pagamento: Test (per sviluppo) e Stripe Reale (per produzione). Scopri come funzionano e come configurarle.
                                         </p>
                                     </div>
 
+=======
+                                            Il sito supporta <strong>PayPal</strong> e <strong>Stripe</strong> come metodi di pagamento reali, più una modalità test automatica quando nessun provider è configurato.
+                                            In checkout il cliente sceglie il metodo preferito.
+                                        </p>
+                                    </div>
+
+                                    {/* PANORAMICA */}
+                                    <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                                        <div className="border-2 rounded-lg p-4 text-center" style={{ borderColor: 'var(--color-accent)' }}>
+                                            <div className="text-3xl mb-2">🧪</div>
+                                            <h3 className="font-bold text-sm" style={{ color: 'var(--color-text)' }}>Modalità Test</h3>
+                                            <span className="text-xs px-2 py-1 bg-green-100 text-green-800 rounded">Attiva se nessun provider è configurato</span>
+                                        </div>
+                                        <div className="border-2 rounded-lg p-4 text-center" style={{ borderColor: '#0070ba' }}>
+                                            <div className="text-3xl mb-2">🅿️</div>
+                                            <h3 className="font-bold text-sm" style={{ color: 'var(--color-text)' }}>PayPal</h3>
+                                            <span className="text-xs px-2 py-1 bg-blue-100 text-blue-800 rounded">Richiede credenziali PayPal Developer</span>
+                                        </div>
+                                        <div className="border-2 rounded-lg p-4 text-center" style={{ borderColor: 'var(--color-primary)' }}>
+                                            <div className="text-3xl mb-2">💳</div>
+                                            <h3 className="font-bold text-sm" style={{ color: 'var(--color-text)' }}>Stripe</h3>
+                                            <span className="text-xs px-2 py-1 bg-purple-100 text-purple-800 rounded">Richiede chiavi Stripe</span>
+                                        </div>
+                                    </div>
+
+>>>>>>> master
                                     {/* MODALITÀ TEST */}
                                     <div className="border-2 rounded-lg p-4 sm:p-6" style={{ borderColor: 'var(--color-accent)' }}>
                                         <div className="flex items-center mb-4">
@@ -580,6 +611,7 @@ export default function GuidaAdmin() {
                                             </div>
                                             <div>
                                                 <h3 className="text-xl font-bold" style={{ color: 'var(--color-text)' }}>Modalità Test</h3>
+<<<<<<< HEAD
                                                 <span className="text-sm px-2 py-1 bg-green-100 text-green-800 rounded font-semibold">✓ ATTIVA PER DEFAULT</span>
                                             </div>
                                         </div>
@@ -606,21 +638,119 @@ export default function GuidaAdmin() {
                                             <div className="p-4 bg-blue-50 rounded-lg">
                                                 <strong className="block mb-2 text-blue-800">🔍 Come Verificare:</strong>
                                                 <p className="text-blue-700">Se nel file <code className="bg-blue-100 px-1 rounded">.env.local</code> NON ci sono le variabili <code className="bg-blue-100 px-1 rounded">STRIPE_SECRET_KEY</code> e <code className="bg-blue-100 px-1 rounded">NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY</code>, la modalità test è attiva.</p>
+=======
+                                                <span className="text-sm px-2 py-1 bg-green-100 text-green-800 rounded font-semibold">✓ ATTIVA SE NESSUN PROVIDER CONFIGURATO</span>
+                                            </div>
+                                        </div>
+                                        <div className="space-y-3 text-sm text-gray-700">
+                                            <div className="p-4 bg-gray-50 rounded-lg">
+                                                <strong className="block mb-2">Come funziona:</strong>
+                                                <ol className="space-y-1 ml-4 list-decimal">
+                                                    <li>Il cliente compila il checkout normalmente</li>
+                                                    <li>Clicca su &quot;Paga con Stripe&quot; senza chiavi configurate</li>
+                                                    <li>L&apos;ordine viene creato automaticamente come <strong>Pagato</strong></li>
+                                                    <li>Nessun addebito reale viene effettuato</li>
+                                                </ol>
+                                            </div>
+                                            <div className="p-4 bg-yellow-50 rounded-lg text-yellow-800">
+                                                <strong className="block mb-1">⚠️ Usala solo per:</strong>
+                                                sviluppo, demo e test del flusso ordine. Non accetta denaro reale.
+>>>>>>> master
                                             </div>
                                         </div>
                                     </div>
 
+<<<<<<< HEAD
                                     {/* STRIPE REALE */}
+=======
+                                    {/* PAYPAL */}
+                                    <div className="border-2 rounded-lg p-4 sm:p-6" style={{ borderColor: '#0070ba' }}>
+                                        <div className="flex items-center mb-4">
+                                            <div className="w-12 h-12 rounded-full flex items-center justify-center text-2xl mr-3 shrink-0 bg-blue-100">
+                                                🅿️
+                                            </div>
+                                            <div>
+                                                <h3 className="text-xl font-bold" style={{ color: 'var(--color-text)' }}>PayPal — Configurazione</h3>
+                                                <span className="text-sm px-2 py-1 bg-gray-200 text-gray-800 rounded">DA CONFIGURARE</span>
+                                            </div>
+                                        </div>
+                                        <div className="space-y-4 text-sm text-gray-700">
+                                            <div className="p-4 bg-blue-50 rounded-lg">
+                                                <strong className="block mb-3 text-blue-800">📋 Passo-Passo per Attivare PayPal:</strong>
+                                                <ol className="space-y-3 ml-4 list-decimal">
+                                                    <li>
+                                                        <strong>Crea account PayPal Developer</strong>
+                                                        <p className="text-gray-600 mt-1">Vai su <a href="https://developer.paypal.com" target="_blank" rel="noopener noreferrer" className="text-blue-600 underline">developer.paypal.com</a> e accedi con il tuo account PayPal</p>
+                                                    </li>
+                                                    <li>
+                                                        <strong>Crea una REST app</strong>
+                                                        <p className="text-gray-600 mt-1">Dashboard → My Apps &amp; Credentials → Create App → scegli un nome (es. &quot;Shop Pagamenti&quot;) → Create App</p>
+                                                    </li>
+                                                    <li>
+                                                        <strong>Copia le credenziali Sandbox</strong>
+                                                        <p className="text-gray-600 mt-1">Nella pagina dell&apos;app trovi Client ID e Secret. Inizia sempre in Sandbox per i test.</p>
+                                                    </li>
+                                                    <li>
+                                                        <strong>Inserisci nel file .env</strong>
+                                                        <div className="bg-gray-800 text-green-400 p-3 rounded mt-2 font-mono text-xs overflow-x-auto">
+                                                            <div>PAYPAL_CLIENT_ID=&quot;il_tuo_client_id&quot;</div>
+                                                            <div>PAYPAL_CLIENT_SECRET=&quot;il_tuo_client_secret&quot;</div>
+                                                            <div>PAYPAL_ENVIRONMENT=&quot;sandbox&quot;</div>
+                                                        </div>
+                                                    </li>
+                                                    <li>
+                                                        <strong>Riavvia il server</strong>
+                                                        <p className="text-gray-600 mt-1">Ferma e riavvia con <code className="bg-gray-100 px-1 rounded">npm run dev</code></p>
+                                                    </li>
+                                                </ol>
+                                            </div>
+                                            <div className="p-4 bg-gray-50 rounded-lg">
+                                                <strong className="block mb-2">✅ Come testare in Sandbox:</strong>
+                                                <ol className="space-y-1 ml-4 list-decimal text-gray-700">
+                                                    <li>Vai su <a href="https://developer.paypal.com/tools/sandbox/accounts/" target="_blank" rel="noopener noreferrer" className="text-blue-600 underline">Sandbox Accounts</a> e crea un account acquirente di test</li>
+                                                    <li>In checkout scegli <strong>PayPal</strong></li>
+                                                    <li>Accedi con le credenziali del Sandbox account</li>
+                                                    <li>Approva il pagamento</li>
+                                                    <li>Torna al sito e verifica l&apos;ordine in <Link href="/admin/ordini" className="text-blue-600 underline">Gestione Ordini</Link></li>
+                                                </ol>
+                                            </div>
+                                            <div className="p-4 bg-green-50 rounded-lg">
+                                                <strong className="block mb-2 text-green-800">🚀 Passaggio a Produzione:</strong>
+                                                <ol className="space-y-1 ml-4 list-decimal text-green-700">
+                                                    <li>Nella dashboard PayPal Developer passa da Sandbox a <strong>Live</strong></li>
+                                                    <li>Copia le credenziali Live dell&apos;app</li>
+                                                    <li>Aggiorna il file .env: <code className="bg-green-100 px-1 rounded">PAYPAL_ENVIRONMENT=&quot;live&quot;</code> e le nuove credenziali</li>
+                                                    <li>Riavvia il server</li>
+                                                </ol>
+                                            </div>
+                                            <div className="p-4 bg-purple-50 rounded-lg">
+                                                <strong className="block mb-2 text-purple-800">💰 Commissioni PayPal (Europe):</strong>
+                                                <ul className="space-y-1 ml-4 list-disc text-purple-700">
+                                                    <li><strong>3.4% + 0.35€</strong> per transazione standard</li>
+                                                    <li>Commissioni ridotte al crescere del volume</li>
+                                                    <li>Nessun costo fisso mensile per account base</li>
+                                                </ul>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    {/* STRIPE */}
+>>>>>>> master
                                     <div className="border-2 rounded-lg p-4 sm:p-6" style={{ borderColor: 'var(--color-primary)' }}>
                                         <div className="flex items-center mb-4">
                                             <CreditCard className="w-12 h-12 mr-3 shrink-0" style={{ color: 'var(--color-primary)' }} />
                                             <div>
+<<<<<<< HEAD
                                                 <h3 className="text-xl font-bold" style={{ color: 'var(--color-text)' }}>Stripe Reale</h3>
+=======
+                                                <h3 className="text-xl font-bold" style={{ color: 'var(--color-text)' }}>Stripe — Configurazione</h3>
+>>>>>>> master
                                                 <span className="text-sm px-2 py-1 bg-gray-200 text-gray-800 rounded">DA CONFIGURARE</span>
                                             </div>
                                         </div>
                                         <div className="space-y-4 text-sm text-gray-700">
                                             <div className="p-4 bg-gray-50 rounded-lg">
+<<<<<<< HEAD
                                                 <strong className="block mb-3">📋 Guida Passo-Passo per Attivare Stripe:</strong>
                                                 <ol className="space-y-3 ml-4 list-decimal">
                                                     <li>
@@ -646,6 +776,52 @@ export default function GuidaAdmin() {
                                                         <strong>Riavvia il server</strong>
                                                         <p className="text-gray-600">Ferma il server e riavvialo con <code className="bg-gray-100 px-1 rounded">npm run dev</code></p>
                                                     </li>
+=======
+                                                <strong className="block mb-3">📋 Passo-Passo per Attivare Stripe:</strong>
+                                                <ol className="space-y-3 ml-4 list-decimal">
+                                                    <li>
+                                                        <strong>Crea account Stripe</strong>
+                                                        <p className="text-gray-600 mt-1">Vai su <a href="https://stripe.com" target="_blank" rel="noopener noreferrer" className="text-blue-600 underline">stripe.com</a> e registrati. Completa la verifica con P.IVA e IBAN.</p>
+                                                    </li>
+                                                    <li>
+                                                        <strong>Ottieni le chiavi API (test)</strong>
+                                                        <p className="text-gray-600 mt-1">Dashboard Stripe → Developers → API Keys → copia Publishable key e Secret key (iniziano con <code className="bg-gray-200 px-1 rounded">pk_test_</code> e <code className="bg-gray-200 px-1 rounded">sk_test_</code>)</p>
+                                                    </li>
+                                                    <li>
+                                                        <strong>Inserisci nel file .env</strong>
+                                                        <div className="bg-gray-800 text-green-400 p-3 rounded mt-2 font-mono text-xs overflow-x-auto">
+                                                            <div>STRIPE_SECRET_KEY=&quot;sk_test_xxxxxxxxxxxx&quot;</div>
+                                                            <div>NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY=&quot;pk_test_xxxxxxxxxxxx&quot;</div>
+                                                            <div>STRIPE_WEBHOOK_SECRET=&quot;whsec_xxxxxxxxxxxx&quot;</div>
+                                                        </div>
+                                                    </li>
+                                                    <li>
+                                                        <strong>Configura il Webhook (importante!)</strong>
+                                                        <p className="text-gray-600 mt-1">Dashboard Stripe → Developers → Webhooks → Add endpoint → URL: <code className="bg-gray-200 px-1 rounded">https://tuodominio.it/api/webhook/stripe</code> → evento: <code className="bg-gray-200 px-1 rounded">checkout.session.completed</code></p>
+                                                    </li>
+                                                    <li>
+                                                        <strong>Riavvia il server</strong>
+                                                    </li>
+                                                </ol>
+                                            </div>
+                                            <div className="p-4 bg-orange-50 rounded-lg">
+                                                <strong className="block mb-2 text-orange-800">🔧 Carte di Test Stripe:</strong>
+                                                <ul className="space-y-1 ml-4 list-disc text-orange-700 font-mono text-xs">
+                                                    <li><code>4242 4242 4242 4242</code> — pagamento riuscito ✅</li>
+                                                    <li><code>4000 0000 0000 0002</code> — carta rifiutata ❌</li>
+                                                    <li><code>4000 0027 6000 3184</code> — richiede 3D Secure 🔐</li>
+                                                </ul>
+                                                <p className="mt-2 text-orange-700 text-xs">Data scadenza: qualsiasi data futura · CVC: qualsiasi 3 cifre</p>
+                                            </div>
+                                            <div className="p-4 bg-green-50 rounded-lg">
+                                                <strong className="block mb-2 text-green-800">🚀 Passaggio a Produzione:</strong>
+                                                <ol className="space-y-1 ml-4 list-decimal text-green-700">
+                                                    <li>Nella Dashboard Stripe passa da Test a <strong>Live</strong> (toggle in alto)</li>
+                                                    <li>Copia le chiavi Live (<code className="bg-green-100 px-1 rounded">pk_live_</code> e <code className="bg-green-100 px-1 rounded">sk_live_</code>)</li>
+                                                    <li>Aggiorna il file .env con le chiavi live</li>
+                                                    <li>Riconfigura il webhook con il dominio di produzione</li>
+                                                    <li>Riavvia il server</li>
+>>>>>>> master
                                                 </ol>
                                             </div>
                                             <div className="p-4 bg-purple-50 rounded-lg">
@@ -653,6 +829,7 @@ export default function GuidaAdmin() {
                                                 <ul className="space-y-1 ml-4 list-disc text-purple-700">
                                                     <li><strong>1.4% + 0.25€</strong> per carte europee</li>
                                                     <li><strong>2.9% + 0.25€</strong> per carte non europee</li>
+<<<<<<< HEAD
                                                     <li>Nessun costo fisso mensile</li>
                                                     <li>Paghi solo quando ricevi pagamenti</li>
                                                 </ul>
@@ -665,11 +842,25 @@ export default function GuidaAdmin() {
                                                     <span className="px-2 py-1 bg-white rounded text-xs border">🍎 Apple Pay</span>
                                                     <span className="px-2 py-1 bg-white rounded text-xs border">📱 Google Pay</span>
                                                     <span className="px-2 py-1 bg-white rounded text-xs border">🏦 SEPA Direct Debit</span>
+=======
+                                                    <li>Nessun costo fisso mensile · paghi solo sulle vendite</li>
+                                                </ul>
+                                            </div>
+                                            <div className="p-4 bg-blue-50 rounded-lg">
+                                                <strong className="block mb-2 text-blue-800">✅ Metodi Supportati con Stripe:</strong>
+                                                <div className="flex flex-wrap gap-2 mt-2">
+                                                    <span className="px-2 py-1 bg-white rounded text-xs border">💳 Carta di Credito</span>
+                                                    <span className="px-2 py-1 bg-white rounded text-xs border">💳 Carta di Debito</span>
+                                                    <span className="px-2 py-1 bg-white rounded text-xs border">🍎 Apple Pay</span>
+                                                    <span className="px-2 py-1 bg-white rounded text-xs border">📱 Google Pay</span>
+                                                    <span className="px-2 py-1 bg-white rounded text-xs border">🏦 SEPA Addebito Diretto</span>
+>>>>>>> master
                                                 </div>
                                             </div>
                                         </div>
                                     </div>
 
+<<<<<<< HEAD
                                     {/* TESTING STRIPE */}
                                     <div className="border rounded-lg p-4 sm:p-6 bg-orange-50" style={{ borderColor: 'var(--color-border)' }}>
                                         <h3 className="text-lg font-bold mb-3 text-orange-800">🔧 Testare Stripe Prima di Andare Live</h3>
@@ -686,6 +877,43 @@ export default function GuidaAdmin() {
                                             <li>CVC: qualsiasi 3 cifre</li>
                                         </ol>
                                     </div>
+=======
+                                    {/* VERIFICA ORDINE DOPO PAGAMENTO */}
+                                    <div className="border rounded-lg p-4 sm:p-6 bg-gray-50" style={{ borderColor: 'var(--color-border)' }}>
+                                        <h3 className="text-base sm:text-lg font-bold mb-3" style={{ color: 'var(--color-text)' }}>📋 Come Verificare un Pagamento Andato a Buon Fine</h3>
+                                        <ol className="space-y-2 text-sm text-gray-700 ml-4 list-decimal">
+                                            <li>Il cliente completa il pagamento (PayPal o Stripe)</li>
+                                            <li>Il sistema reindirizza il cliente alla pagina di conferma ordine</li>
+                                            <li>Vai su <Link href="/admin/ordini" className="text-blue-600 underline">Gestione Ordini</Link></li>
+                                            <li>Cerca l&apos;ordine più recente: lo stato deve essere <strong>Paid</strong></li>
+                                            <li>Clicca sull&apos;ordine per vedere nome cliente, prodotti e importo</li>
+                                            <li>Aggiorna lo stato a <strong>Processing</strong> quando inizi a prepararlo</li>
+                                        </ol>
+                                    </div>
+
+                                    {/* TROUBLESHOOTING */}
+                                    <div className="border rounded-lg p-4 sm:p-6 bg-red-50" style={{ borderColor: '#f87171' }}>
+                                        <h3 className="text-base sm:text-lg font-bold mb-3 text-red-800">🆘 Problemi Comuni e Soluzioni</h3>
+                                        <div className="space-y-3 text-sm">
+                                            <div className="p-3 bg-white rounded border-l-4 border-red-400">
+                                                <strong className="text-red-700">PayPal non configurato</strong>
+                                                <p className="text-gray-600 mt-1">Verifica che <code className="bg-gray-100 px-1 rounded">PAYPAL_CLIENT_ID</code> e <code className="bg-gray-100 px-1 rounded">PAYPAL_CLIENT_SECRET</code> siano nel .env e che il server sia stato riavviato.</p>
+                                            </div>
+                                            <div className="p-3 bg-white rounded border-l-4 border-red-400">
+                                                <strong className="text-red-700">Stripe non parte</strong>
+                                                <p className="text-gray-600 mt-1">Verifica che <code className="bg-gray-100 px-1 rounded">NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY</code> abbia il prefisso <code className="bg-gray-100 px-1 rounded">NEXT_PUBLIC_</code> — senza quel prefisso la chiave non è visibile al browser.</p>
+                                            </div>
+                                            <div className="p-3 bg-white rounded border-l-4 border-red-400">
+                                                <strong className="text-red-700">Ordine resta in Pending dopo il pagamento</strong>
+                                                <p className="text-gray-600 mt-1">Per Stripe: il webhook non è configurato correttamente. Per PayPal: il callback di cattura non ha raggiunto il server (controlla i log).</p>
+                                            </div>
+                                            <div className="p-3 bg-white rounded border-l-4 border-red-400">
+                                                <strong className="text-red-700">Errore &quot;Invalid login&quot; SMTP durante il checkout</strong>
+                                                <p className="text-gray-600 mt-1">Problema con la configurazione email, non con il pagamento. I pagamenti funzionano comunque; configura una App Password Gmail valida per le email.</p>
+                                            </div>
+                                        </div>
+                                    </div>
+>>>>>>> master
                                 </div>
                             )}
 
@@ -2053,7 +2281,11 @@ export default function GuidaAdmin() {
                                                 <code className="shrink-0 bg-purple-100 px-2 py-1 rounded text-sm text-purple-600">{'{{siteName}}'}</code>
                                                 <div>
                                                     <strong className="text-sm text-gray-800">Nome Sito</strong>
+<<<<<<< HEAD
                                                     <p className="text-xs text-gray-600">Es: Il desiderio di una stella</p>
+=======
+                                                    <p className="text-xs text-gray-600">Es: Nome del tuo brand</p>
+>>>>>>> master
                                                 </div>
                                             </div>
                                         </div>

@@ -1,17 +1,28 @@
+<<<<<<< HEAD
 export const runtime = "nodejs";
 export const dynamic = "force-dynamic";
 
+=======
+>>>>>>> master
 import { NextRequest, NextResponse } from 'next/server';
 import { prisma } from '@/lib/prisma';
 
 export async function GET(
     req: NextRequest,
+<<<<<<< HEAD
     context: { params: Promise<{ id: string }> }
 ) {
     try {
         const { id } = await context.params
         const product = await prisma.product.findUnique({
             where: { id },
+=======
+    { params }: { params: { id: string } }
+) {
+    try {
+        const product = await prisma.product.findUnique({
+            where: { id: params.id },
+>>>>>>> master
             include: {
                 images: true,
                 materials: true,

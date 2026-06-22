@@ -1,4 +1,8 @@
 'use client';
+<<<<<<< HEAD
+=======
+
+>>>>>>> master
 import { useEffect, useState } from 'react';
 import { useParams, useRouter } from 'next/navigation';
 import { Package, User, Mail, MapPin, Calendar, CreditCard, ArrowLeft, Truck, Send, Copy, Check } from 'lucide-react';

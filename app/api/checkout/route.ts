@@ -1,8 +1,14 @@
+<<<<<<< HEAD
 export const runtime = "nodejs";
 export const dynamic = "force-dynamic";
 
 import { NextRequest, NextResponse } from 'next/server';
 import { prisma } from '@/lib/prisma';
+=======
+import { NextRequest, NextResponse } from 'next/server';
+import { prisma } from '@/lib/prisma';
+import { sendOrderConfirmation } from '@/lib/email';
+>>>>>>> master
 
 // Sistema di pagamento FITTIZIO per test
 // Disabilita Stripe se la chiave è mancante, placeholder o invalida
@@ -39,6 +45,10 @@ export async function POST(req: NextRequest) {
             return NextResponse.json({ error: 'Dati non validi', details: parsed.error.flatten() }, { status: 400 });
         }
         const { items, shippingInfo, userId } = parsed.data;
+<<<<<<< HEAD
+=======
+        const paymentMethod = typeof body?.paymentMethod === 'string' ? body.paymentMethod : 'stripe';
+>>>>>>> master
 
         // Calcola il totale
         const totalAmount = items.reduce((sum: number, item: any) =>
@@ -68,12 +78,45 @@ export async function POST(req: NextRequest) {
             }
         });
 
+<<<<<<< HEAD
+=======
+        if (paymentMethod === 'cod') {
+            await sendOrderConfirmation({
+                customerName: shippingInfo.name,
+                customerEmail: shippingInfo.email,
+                orderNumber: order.orderNumber || order.id,
+                totalAmount,
+                shippingAddress: order.shippingAddress,
+                items: items.map((item: any) => ({
+                    name: item.name,
+                    quantity: item.quantity,
+                    price: item.price
+                })),
+                paymentMethod: 'cod',
+                status: 'pending'
+            }).catch((error) => {
+                console.error('Errore invio email ordine COD:', error);
+            });
+
+            return NextResponse.json({
+                codMode: true,
+                orderId: order.id,
+                redirectUrl: `/ordine/successo?cod_order=${order.id}`,
+                message: 'Ordine creato con pagamento alla consegna'
+            });
+        }
+
+>>>>>>> master
         if (STRIPE_ENABLED) {
             // Usa Stripe reale
             const Stripe = require('stripe');
             const stripe = new Stripe(process.env.STRIPE_SECRET_KEY!, {
                 apiVersion: '2025-12-15.clover'
             });
+<<<<<<< HEAD
+=======
+            const baseUrl = process.env.NEXT_PUBLIC_URL || req.nextUrl.origin;
+>>>>>>> master
 
             const lineItems = items.map((item: any) => ({
                 price_data: {
@@ -92,7 +135,10 @@ export async function POST(req: NextRequest) {
                     currency: 'eur',
                     product_data: {
                         name: 'Spedizione',
+<<<<<<< HEAD
                         description: 'Spedizione',
+=======
+>>>>>>> master
                     },
                     unit_amount: 500,
                 },
@@ -103,8 +149,13 @@ export async function POST(req: NextRequest) {
                 payment_method_types: ['card'],
                 line_items: lineItems,
                 mode: 'payment',
+<<<<<<< HEAD
                 success_url: `${process.env.NEXT_PUBLIC_URL}/ordine/successo?session_id={CHECKOUT_SESSION_ID}`,
                 cancel_url: `${process.env.NEXT_PUBLIC_URL}/carrello`,
+=======
+                success_url: `${baseUrl}/ordine/successo?session_id={CHECKOUT_SESSION_ID}`,
+                cancel_url: `${baseUrl}/carrello`,
+>>>>>>> master
                 metadata: {
                     orderId: order.id
                 }

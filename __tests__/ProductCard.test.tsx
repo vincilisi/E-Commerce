@@ -1,4 +1,7 @@
+<<<<<<< HEAD
 ﻿import { formatPrice } from '@/lib/utils';
+=======
+>>>>>>> master
 import { render, screen } from '@testing-library/react';
 import ProductCard from '../components/ProductCard';
 import { LanguageProvider } from '../lib/LanguageContext';
@@ -29,4 +32,7 @@ describe('ProductCard', () => {
     expect(priceElement).toBeInTheDocument();
   });
 });
+<<<<<<< HEAD
 
+=======
+>>>>>>> master

@@ -1,4 +1,9 @@
+<<<<<<< HEAD
 ﻿'use client';
+=======
+'use client';
+
+>>>>>>> master
 import { useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import Link from 'next/link';
@@ -190,7 +195,11 @@ export default function AbandonedCartsPage() {
                         </div>
                         <div className="rounded-lg p-4" style={{ backgroundColor: 'var(--color-card-bg)' }}>
                             <p className="text-sm opacity-70" style={{ color: 'var(--color-text)' }}>Valore Recuperato</p>
+<<<<<<< HEAD
                             <p className="text-2xl font-bold" style={{ color: 'var(--color-accent)' }}>â‚¬{stats.recoveredValue.toFixed(2)}</p>
+=======
+                            <p className="text-2xl font-bold" style={{ color: 'var(--color-accent)' }}>€{stats.recoveredValue.toFixed(2)}</p>
+>>>>>>> master
                         </div>
                     </div>
                 )}
@@ -234,6 +243,7 @@ export default function AbandonedCartsPage() {
                                         <div className="flex items-center gap-2 mb-2">
                                             {cart.recovered ? (
                                                 <span className="px-2 py-1 rounded text-xs bg-green-100 text-green-800">
+<<<<<<< HEAD
                                                     âœ“ Recuperato
                                                 </span>
                                             ) : cart.reminderSent ? (
@@ -243,6 +253,17 @@ export default function AbandonedCartsPage() {
                                             ) : (
                                                 <span className="px-2 py-1 rounded text-xs bg-red-100 text-red-800">
                                                     â³ In Attesa
+=======
+                                                    ✓ Recuperato
+                                                </span>
+                                            ) : cart.reminderSent ? (
+                                                <span className="px-2 py-1 rounded text-xs bg-yellow-100 text-yellow-800">
+                                                    📧 Email Inviata
+                                                </span>
+                                            ) : (
+                                                <span className="px-2 py-1 rounded text-xs bg-red-100 text-red-800">
+                                                    ⏳ In Attesa
+>>>>>>> master
                                                 </span>
                                             )}
                                             <span className="text-sm opacity-60" style={{ color: 'var(--color-text)' }}>
@@ -266,7 +287,11 @@ export default function AbandonedCartsPage() {
 
                                     <div className="flex items-center gap-4">
                                         <p className="text-xl font-bold" style={{ color: 'var(--color-primary)' }}>
+<<<<<<< HEAD
                                             â‚¬{getCartTotal(cart.items).toFixed(2)}
+=======
+                                            €{getCartTotal(cart.items).toFixed(2)}
+>>>>>>> master
                                         </p>
 
                                         <div className="flex gap-2">
@@ -309,16 +334,28 @@ export default function AbandonedCartsPage() {
 
                 {/* Info */}
                 <div className="mt-8 p-4 rounded-lg border" style={{ borderColor: 'var(--color-border)', backgroundColor: 'var(--color-card-bg)' }}>
+<<<<<<< HEAD
                     <h3 className="font-bold mb-2" style={{ color: 'var(--color-text)' }}>ðŸ’¡ Come funziona</h3>
                     <ul className="text-sm space-y-1 opacity-80" style={{ color: 'var(--color-text)' }}>
                         <li>â€¢ I carrelli abbandonati vengono salvati automaticamente quando un utente aggiunge prodotti ma non completa l&apos;ordine</li>
                         <li>â€¢ Puoi inviare email di recupero con un codice sconto del 10%</li>
                         <li>â€¢ Quando un cliente completa l&apos;ordine dopo il reminder, segna il carrello come &quot;Recuperato&quot;</li>
                         <li>â€¢ Le statistiche ti mostrano il tasso di recupero e il valore recuperato</li>
+=======
+                    <h3 className="font-bold mb-2" style={{ color: 'var(--color-text)' }}>💡 Come funziona</h3>
+                    <ul className="text-sm space-y-1 opacity-80" style={{ color: 'var(--color-text)' }}>
+                        <li>• I carrelli abbandonati vengono salvati automaticamente quando un utente aggiunge prodotti ma non completa l&apos;ordine</li>
+                        <li>• Puoi inviare email di recupero con un codice sconto del 10%</li>
+                        <li>• Quando un cliente completa l&apos;ordine dopo il reminder, segna il carrello come &quot;Recuperato&quot;</li>
+                        <li>• Le statistiche ti mostrano il tasso di recupero e il valore recuperato</li>
+>>>>>>> master
                     </ul>
                 </div>
             </div>
         </div>
     );
 }
+<<<<<<< HEAD
 
+=======
+>>>>>>> master

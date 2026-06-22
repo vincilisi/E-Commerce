@@ -1,6 +1,9 @@
+<<<<<<< HEAD
 export const runtime = "nodejs";
 export const dynamic = "force-dynamic";
 
+=======
+>>>>>>> master
 import { NextRequest, NextResponse } from 'next/server'
 import { prisma } from '@/lib/prisma'
 
@@ -10,7 +13,11 @@ export async function GET(request: NextRequest) {
         const { searchParams } = new URL(request.url)
         const status = searchParams.get('status') // all, pending, reminded, recovered
 
+<<<<<<< HEAD
         const where: Partial<{ reminderSent: boolean; recovered: boolean }> = {}
+=======
+        const where: Record<string, unknown> = {}
+>>>>>>> master
 
         if (status === 'pending') {
             where.reminderSent = false
@@ -27,6 +34,7 @@ export async function GET(request: NextRequest) {
             orderBy: { createdAt: 'desc' }
         })
 
+<<<<<<< HEAD
         // Calcola statistiche su tutti i carrelli
         const allCarts = await prisma.abandonedCart.findMany()
 
@@ -51,6 +59,27 @@ export async function GET(request: NextRequest) {
 
         return NextResponse.json({
             carts: carts.map((c: CartType) => ({
+=======
+        // Calcola statistiche
+        const allCarts = await prisma.abandonedCart.findMany()
+        const stats = {
+            total: allCarts.length,
+            pending: allCarts.filter(c => !c.reminderSent && !c.recovered).length,
+            reminded: allCarts.filter(c => c.reminderSent && !c.recovered).length,
+            recovered: allCarts.filter(c => c.recovered).length,
+            totalValue: allCarts.reduce((sum, c) => {
+                const items = JSON.parse(c.items || '[]')
+                return sum + items.reduce((s: number, i: any) => s + (i.price * i.quantity), 0)
+            }, 0),
+            recoveredValue: allCarts.filter(c => c.recovered).reduce((sum, c) => {
+                const items = JSON.parse(c.items || '[]')
+                return sum + items.reduce((s: number, i: any) => s + (i.price * i.quantity), 0)
+            }, 0)
+        }
+
+        return NextResponse.json({
+            carts: carts.map(c => ({
+>>>>>>> master
                 ...c,
                 items: JSON.parse(c.items || '[]')
             })),
@@ -72,8 +101,11 @@ export async function POST(request: NextRequest) {
             return NextResponse.json({ error: 'Dati mancanti' }, { status: 400 })
         }
 
+<<<<<<< HEAD
         type CartItem = { price: number; quantity: number }
 
+=======
+>>>>>>> master
         // Verifica se esiste già un carrello per questa sessione
         const existing = await prisma.abandonedCart.findFirst({
             where: {
@@ -84,6 +116,7 @@ export async function POST(request: NextRequest) {
 
         if (existing) {
             // Aggiorna il carrello esistente
+<<<<<<< HEAD
             const total = items.reduce((s: number, i: CartItem) => s + i.price * i.quantity, 0)
             const cart = await prisma.abandonedCart.update({
                 where: { id: existing.id },
@@ -91,6 +124,13 @@ export async function POST(request: NextRequest) {
                     customerEmail: email || existing.customerEmail,
                     items: JSON.stringify(items),
                     totalAmount: total,
+=======
+            const cart = await prisma.abandonedCart.update({
+                where: { id: existing.id },
+                data: {
+                    email: email || existing.email,
+                    items: JSON.stringify(items),
+>>>>>>> master
                     updatedAt: new Date()
                 }
             })
@@ -101,9 +141,14 @@ export async function POST(request: NextRequest) {
         const cart = await prisma.abandonedCart.create({
             data: {
                 sessionId,
+<<<<<<< HEAD
                 customerEmail: email || null,
                 items: JSON.stringify(items),
                 totalAmount: items.reduce((s: number, i: CartItem) => s + i.price * i.quantity, 0),
+=======
+                email: email || null,
+                items: JSON.stringify(items),
+>>>>>>> master
                 reminderSent: false,
                 recovered: false
             }
@@ -114,4 +159,8 @@ export async function POST(request: NextRequest) {
         console.error('Errore salvataggio carrello:', error)
         return NextResponse.json({ error: 'Errore server' }, { status: 500 })
     }
+<<<<<<< HEAD
 }
+=======
+}
+>>>>>>> master

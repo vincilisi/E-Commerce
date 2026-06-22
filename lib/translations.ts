@@ -1,4 +1,7 @@
+<<<<<<< HEAD
 
+=======
+>>>>>>> master
 export const translations = {
     us: {
         // Navbar
@@ -87,7 +90,11 @@ export const translations = {
         apply: 'Apply',
         discount: 'Discount',
         proceedToPayment: 'Proceed to Payment',
+<<<<<<< HEAD
         processingText: 'Processing...',
+=======
+        processing: 'Processing...',
+>>>>>>> master
         securePayment: 'Secure payment with Stripe',
         testModeActive: 'Test Mode Active',
         testModeMessage: 'Payments are automatically simulated. No credit card will be charged.',
@@ -200,7 +207,11 @@ export const translations = {
         apply: 'Applica',
         discount: 'Sconto',
         proceedToPayment: 'Procedi al Pagamento',
+<<<<<<< HEAD
         processingText: 'Elaborazione...',
+=======
+        processing: 'Elaborazione...',
+>>>>>>> master
         securePayment: 'Pagamento sicuro con Stripe',
         testModeActive: 'Modalità Test Attiva',
         testModeMessage: 'I pagamenti vengono simulati automaticamente. Nessuna carta di credito verrà addebitata.',
@@ -230,7 +241,11 @@ export const translations = {
         // Order Status
         pending: 'In Attesa',
         paid: 'Pagato',
+<<<<<<< HEAD
         orderProcessing: 'In Lavorazione',
+=======
+        processing: 'In Lavorazione',
+>>>>>>> master
         shipped: 'Spedito',
         delivered: 'Consegnato',
         cancelled: 'Annullato',
@@ -387,7 +402,11 @@ export const translations = {
         apply: 'Apply',
         discount: 'Discount',
         proceedToPayment: 'Proceed to Payment',
+<<<<<<< HEAD
         processingText: 'Processing...',
+=======
+        processing: 'Processing...',
+>>>>>>> master
         securePayment: 'Secure payment with Stripe',
         testModeActive: 'Test Mode Active',
         testModeMessage: 'Payments are automatically simulated. No credit card will be charged.',
@@ -417,7 +436,11 @@ export const translations = {
         // Order Status
         pending: 'Pending',
         paid: 'Paid',
+<<<<<<< HEAD
         orderProcessing: 'Processing',
+=======
+        processing: 'Processing',
+>>>>>>> master
         shipped: 'Shipped',
         delivered: 'Delivered',
         cancelled: 'Cancelled',
@@ -574,7 +597,11 @@ export const translations = {
         apply: 'Appliquer',
         discount: 'Réduction',
         proceedToPayment: 'Procéder au Paiement',
+<<<<<<< HEAD
         processingText: 'Traitement...',
+=======
+        processing: 'Traitement...',
+>>>>>>> master
         securePayment: 'Paiement sécurisé avec Stripe',
         testModeActive: 'Mode Test Actif',
         testModeMessage: 'Les paiements sont automatiquement simulés. Aucune carte de crédit ne sera débitée.',
@@ -604,7 +631,11 @@ export const translations = {
         // Order Status
         pending: 'En Attente',
         paid: 'Payé',
+<<<<<<< HEAD
         orderProcessing: 'En Traitement',
+=======
+        processing: 'En Traitement',
+>>>>>>> master
         shipped: 'Expédié',
         delivered: 'Livré',
         cancelled: 'Annulé',
@@ -761,7 +792,11 @@ export const translations = {
         apply: 'Aplicar',
         discount: 'Descuento',
         proceedToPayment: 'Proceder al Pago',
+<<<<<<< HEAD
         processingText: 'Procesando...',
+=======
+        processing: 'Procesando...',
+>>>>>>> master
         securePayment: 'Pago seguro con Stripe',
         testModeActive: 'Modo de Prueba Activo',
         testModeMessage: 'Los pagos se simulan automáticamente. No se cargará ninguna tarjeta de crédito.',
@@ -791,7 +826,11 @@ export const translations = {
         // Order Status
         pending: 'Pendiente',
         paid: 'Pagado',
+<<<<<<< HEAD
         orderProcessing: 'Procesando',
+=======
+        processing: 'Procesando',
+>>>>>>> master
         shipped: 'Enviado',
         delivered: 'Entregado',
         cancelled: 'Cancelado',
@@ -948,7 +987,11 @@ export const translations = {
         apply: 'Anwenden',
         discount: 'Rabatt',
         proceedToPayment: 'Zur Zahlung',
+<<<<<<< HEAD
         processingText: 'Wird verarbeitet...',
+=======
+        processing: 'Wird verarbeitet...',
+>>>>>>> master
         securePayment: 'Sichere Zahlung mit Stripe',
         testModeActive: 'Testmodus Aktiv',
         testModeMessage: 'Zahlungen werden automatisch simuliert. Es wird keine Kreditkarte belastet.',
@@ -978,7 +1021,11 @@ export const translations = {
         // Order Status
         pending: 'Ausstehend',
         paid: 'Bezahlt',
+<<<<<<< HEAD
         orderProcessing: 'In Bearbeitung',
+=======
+        processing: 'In Bearbeitung',
+>>>>>>> master
         shipped: 'Versendet',
         delivered: 'Zugestellt',
         cancelled: 'Storniert',
@@ -1135,7 +1182,11 @@ export const translations = {
         apply: 'Aplicar',
         discount: 'Desconto',
         proceedToPayment: 'Prosseguir para o Pagamento',
+<<<<<<< HEAD
         processingText: 'Processando...',
+=======
+        processing: 'Processando...',
+>>>>>>> master
         securePayment: 'Pagamento seguro com Stripe',
         testModeActive: 'Modo de Teste Ativo',
         testModeMessage: 'Os pagamentos são simulados automaticamente. Nenhum cartão de crédito será cobrado.',
@@ -1165,7 +1216,11 @@ export const translations = {
         // Order Status
         pending: 'Pendente',
         paid: 'Pago',
+<<<<<<< HEAD
         orderProcessing: 'Processando',
+=======
+        processing: 'Processando',
+>>>>>>> master
         shipped: 'Enviado',
         delivered: 'Entregue',
         cancelled: 'Cancelado',
@@ -1322,7 +1377,11 @@ export const translations = {
         apply: 'Применить',
         discount: 'Скидка',
         proceedToPayment: 'Перейти к оплате',
+<<<<<<< HEAD
         processingText: 'Обработка...',
+=======
+        processing: 'Обработка...',
+>>>>>>> master
         securePayment: 'Безопасная оплата через Stripe',
         testModeActive: 'Тестовый режим активен',
         testModeMessage: 'Платежи автоматически моделируются. С кредитной карты не будет списана оплата.',
@@ -1352,7 +1411,11 @@ export const translations = {
         // Order Status
         pending: 'Ожидается',
         paid: 'Оплачено',
+<<<<<<< HEAD
         orderProcessing: 'Обрабатывается',
+=======
+        processing: 'Обрабатывается',
+>>>>>>> master
         shipped: 'Отправлено',
         delivered: 'Доставлено',
         cancelled: 'Отменено',
@@ -1509,7 +1572,11 @@ export const translations = {
         apply: '应用',
         discount: '折扣',
         proceedToPayment: '前往付款',
+<<<<<<< HEAD
         processingText: '处理中...',
+=======
+        processing: '处理中...',
+>>>>>>> master
         securePayment: '通过Stripe安全支付',
         testModeActive: '测试模式已激活',
         testModeMessage: '付款会自动模拟。不会向信用卡收费。',
@@ -1539,7 +1606,11 @@ export const translations = {
         // Order Status
         pending: '待处理',
         paid: '已支付',
+<<<<<<< HEAD
         orderProcessing: '处理中',
+=======
+        processing: '处理中',
+>>>>>>> master
         shipped: '已发货',
         delivered: '已送达',
         cancelled: '已取消',
@@ -1608,7 +1679,14 @@ export const translations = {
             talkToOperator: '与客服通话',
         },
     },
+<<<<<<< HEAD
 } as const;
 
 export type Language = keyof typeof translations;
 export type TranslationKeys = keyof typeof translations.it;
+=======
+};
+
+export type Language = keyof typeof translations;
+export type TranslationKeys = typeof translations.it;
+>>>>>>> master

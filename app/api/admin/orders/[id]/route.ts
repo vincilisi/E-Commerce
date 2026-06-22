@@ -1,6 +1,9 @@
+<<<<<<< HEAD
 export const runtime = "nodejs";
 export const dynamic = "force-dynamic";
 
+=======
+>>>>>>> master
 import { NextRequest, NextResponse } from 'next/server';
 import { prisma } from '@/lib/prisma';
 
@@ -9,7 +12,11 @@ export async function GET(
     context: { params: Promise<{ id: string }> }
 ) {
     try {
+<<<<<<< HEAD
         const { id } = await context.params
+=======
+        const { id } = await context.params;
+>>>>>>> master
 
         const order = await prisma.order.findUnique({
             where: { id },
@@ -45,6 +52,7 @@ export async function PUT(
     context: { params: Promise<{ id: string }> }
 ) {
     try {
+<<<<<<< HEAD
         const { id } = await context.params
         const body = await req.json();
 
@@ -52,6 +60,21 @@ export async function PUT(
 
         if (body.status !== undefined) updateData.status = body.status;
         if (body.trackingNumber !== undefined) updateData.trackingNumber = body.trackingNumber;
+=======
+        const { id } = await context.params;
+        const body = await req.json();
+
+        // Costruisci i dati da aggiornare dinamicamente
+        const updateData: any = {};
+
+        if (body.status !== undefined) {
+            updateData.status = body.status;
+        }
+
+        if (body.trackingNumber !== undefined) {
+            updateData.trackingNumber = body.trackingNumber;
+        }
+>>>>>>> master
 
         const order = await prisma.order.update({
             where: { id },
@@ -63,4 +86,8 @@ export async function PUT(
         console.error('Error updating order:', error);
         return NextResponse.json({ error: 'Errore nell\'aggiornamento dell\'ordine' }, { status: 500 });
     }
+<<<<<<< HEAD
 }
+=======
+}
+>>>>>>> master

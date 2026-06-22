@@ -1,6 +1,9 @@
+<<<<<<< HEAD
 export const runtime = "nodejs";
 export const dynamic = "force-dynamic";
 
+=======
+>>>>>>> master
 import { NextRequest, NextResponse } from 'next/server';
 import { prisma } from '@/lib/prisma';
 
@@ -41,7 +44,19 @@ export async function PUT(req: NextRequest) {
             assistantColor,
             assistantTextColor,
             assistantWelcome,
+<<<<<<< HEAD
             assistantPosition
+=======
+            assistantPosition,
+            assistantPhone,
+            assistantWhatsapp,
+            assistantEmail,
+            assistantWeekdayOpen,
+            assistantWeekdayClose,
+            assistantSaturdayOpen,
+            assistantSaturdayClose,
+            assistantSundayClosed
+>>>>>>> master
         } = body;
 
         // Trova o crea le impostazioni
@@ -70,7 +85,19 @@ export async function PUT(req: NextRequest) {
             assistantColor,
             assistantTextColor,
             assistantWelcome,
+<<<<<<< HEAD
             assistantPosition
+=======
+            assistantPosition,
+            assistantPhone,
+            assistantWhatsapp,
+            assistantEmail,
+            assistantWeekdayOpen,
+            assistantWeekdayClose,
+            assistantSaturdayOpen,
+            assistantSaturdayClose,
+            assistantSundayClosed
+>>>>>>> master
         };
 
         // Rimuovi valori undefined

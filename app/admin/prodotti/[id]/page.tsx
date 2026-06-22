@@ -1,4 +1,8 @@
 'use client';
+<<<<<<< HEAD
+=======
+
+>>>>>>> master
 import { useEffect, useState } from 'react';
 import { Save, Plus, Trash2 } from 'lucide-react';
 import toast, { Toaster } from 'react-hot-toast';

@@ -11,7 +11,15 @@
   --color-card-bg: #ffffff;
   --color-border: #e5e7eb;
   --color-button-text: #ffffff;
+<<<<<<< HEAD
   --font-family: "Inter", sans-serif;
+=======
+  --font-family: var(--font-manrope), "Manrope", sans-serif;
+  --font-display: var(--font-playfair), "Playfair Display", serif;
+  --ease-premium: cubic-bezier(0.22, 1, 0.36, 1);
+  --shadow-soft: 0 12px 32px rgba(31, 41, 55, 0.08);
+  --shadow-elevated: 0 20px 55px rgba(31, 41, 55, 0.14);
+>>>>>>> master
 }
 
 @theme inline {
@@ -29,9 +37,28 @@
 }
 
 body {
+<<<<<<< HEAD
   background: var(--color-background);
   color: var(--color-text);
   font-family: var(--font-family);
+=======
+  background:
+    radial-gradient(circle at 20% -10%, rgba(147, 51, 234, 0.08), transparent 35%),
+    radial-gradient(circle at 95% 0%, rgba(253, 224, 71, 0.09), transparent 28%),
+    var(--color-background);
+  color: var(--color-text);
+  font-family: var(--font-family);
+  text-rendering: geometricPrecision;
+  -webkit-font-smoothing: antialiased;
+}
+
+h1,
+h2,
+h3,
+.font-display {
+  font-family: var(--font-display);
+  letter-spacing: -0.015em;
+>>>>>>> master
 }
 
 /* Classi utility per i colori personalizzati */
@@ -169,7 +196,11 @@ body {
 }
 
 .animate-slideDown {
+<<<<<<< HEAD
   animation: slideDown 0.3s ease-out forwards;
+=======
+  animation: slideDown 0.3s var(--ease-premium) forwards;
+>>>>>>> master
 }
 
 .animate-blob {
@@ -207,7 +238,41 @@ a,
 input,
 select,
 textarea {
+<<<<<<< HEAD
   transition: all 0.3s ease;
+=======
+  transition: color 220ms var(--ease-premium),
+    background-color 220ms var(--ease-premium),
+    border-color 220ms var(--ease-premium),
+    transform 220ms var(--ease-premium),
+    box-shadow 220ms var(--ease-premium),
+    opacity 220ms var(--ease-premium);
+}
+
+button:focus-visible,
+a:focus-visible,
+input:focus-visible,
+textarea:focus-visible,
+select:focus-visible {
+  outline: 2px solid color-mix(in srgb, var(--color-primary) 70%, white);
+  outline-offset: 2px;
+}
+
+::selection {
+  background: color-mix(in srgb, var(--color-primary) 24%, white);
+  color: #111827;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+>>>>>>> master
 }
 
 /* Miglioramenti responsive */

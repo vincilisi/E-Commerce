@@ -1,6 +1,9 @@
+<<<<<<< HEAD
 export const runtime = "nodejs";
 export const dynamic = "force-dynamic";
 
+=======
+>>>>>>> master
 import { NextRequest, NextResponse } from 'next/server';
 import { prisma } from '@/lib/prisma';
 
@@ -17,7 +20,11 @@ export async function GET(req: NextRequest) {
         const products = await prisma.product.findMany({
             where: {
                 category,
+<<<<<<< HEAD
                 id: excludeId ? { not: String(excludeId) } : undefined
+=======
+                id: excludeId ? { not: parseInt(excludeId) } : undefined
+>>>>>>> master
             },
             take: 8,
             orderBy: { createdAt: 'desc' }

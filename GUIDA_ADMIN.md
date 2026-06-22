@@ -158,6 +158,128 @@ Vai su `/admin/ordini` per vedere tutti gli ordini ricevuti.
 
 ## 💳 Sistema Pagamenti
 
+<<<<<<< HEAD
+=======
+Questa sezione spiega in modo pratico come usare i pagamenti reali con **PayPal** e **Stripe**, dalla configurazione al test fino alla produzione.
+
+### Panoramica Metodi Disponibili
+
+Nel checkout ora puoi scegliere:
+- **PayPal**: pagamento con account PayPal o carta tramite flusso PayPal
+- **Carta (Stripe)**: pagamento carta su checkout Stripe
+
+Se un provider non è configurato correttamente, il sistema mostra un errore esplicito lato checkout/API.
+
+### Variabili Ambiente Necessarie
+
+Nel file `.env` (o `.env.local` in deploy) configura:
+
+```env
+# PayPal
+PAYPAL_CLIENT_ID="..."
+PAYPAL_CLIENT_SECRET="..."
+PAYPAL_ENVIRONMENT="sandbox"   # sandbox | live
+
+# Stripe
+STRIPE_SECRET_KEY="sk_test_... oppure sk_live_..."
+NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY="pk_test_... oppure pk_live_..."
+STRIPE_WEBHOOK_SECRET="whsec_..."   # raccomandato
+
+# URL pubblico applicazione (raccomandato)
+NEXT_PUBLIC_URL="https://tuodominio.it"
+```
+
+Dopo ogni modifica alle variabili ambiente: **riavvia il server**.
+
+### Flusso Admin: Come Verificare Che Funzioni
+
+1. Vai su `/checkout`
+2. Compila i dati spedizione
+3. Scegli metodo pagamento (PayPal o Stripe)
+4. Completa il pagamento
+5. Verifica in `/admin/ordini` che l'ordine sia stato creato e portato a stato corretto
+
+Controlli consigliati:
+- Numero ordine presente
+- Importo corretto (inclusa spedizione)
+- Stato ordine aggiornato
+- Tracciabilità disponibile in area ordini
+
+### Setup Dettagliato PayPal
+
+#### 1) Creazione credenziali
+1. Vai su [PayPal Developer](https://developer.paypal.com)
+2. Crea una REST app
+3. Copia **Client ID** e **Secret**
+4. Inizia con ambiente `sandbox`
+
+#### 2) Configurazione nel progetto
+- Inserisci `PAYPAL_CLIENT_ID`, `PAYPAL_CLIENT_SECRET`, `PAYPAL_ENVIRONMENT`
+- Riavvia il server
+
+#### 3) Test end-to-end
+1. In checkout seleziona **PayPal**
+2. Verrai reindirizzato su PayPal
+3. Approva pagamento
+4. Ritorno automatico su pagina successo ordine
+
+#### 4) Cosa fa il sistema internamente
+- Crea ordine locale in stato `pending`
+- Crea ordine remoto PayPal
+- Alla conferma (capture) imposta ordine locale `paid`
+- Scala stock prodotti acquistati
+
+#### 5) Passaggio a produzione
+- Cambia `PAYPAL_ENVIRONMENT=live`
+- Sostituisci credenziali sandbox con credenziali live
+- Esegui test con importi reali controllati
+
+### Setup Dettagliato Stripe
+
+#### 1) Creazione credenziali
+1. Vai su [Stripe Dashboard](https://dashboard.stripe.com)
+2. Copia chiavi API test (`pk_test`, `sk_test`)
+3. Configura webhook (`checkout.session.completed`)
+
+#### 2) Configurazione nel progetto
+- Inserisci `STRIPE_SECRET_KEY`
+- Inserisci `NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY`
+- Inserisci `STRIPE_WEBHOOK_SECRET`
+- Riavvia server
+
+#### 3) Test end-to-end
+1. In checkout seleziona **Carta (Stripe)**
+2. Completa pagamento su pagina Stripe
+3. Verifica ritorno su successo ordine
+4. Verifica stato ordine in `/admin/ordini`
+
+#### 4) Passaggio a produzione
+- Usa chiavi live (`pk_live`, `sk_live`)
+- Webhook live sul dominio produzione
+- Testa almeno un pagamento reale a basso importo
+
+### Diagnostica Rapida Errori
+
+**PayPal non configurato**
+- Controlla `PAYPAL_CLIENT_ID` e `PAYPAL_CLIENT_SECRET`
+- Verifica ambiente `sandbox/live`
+- Riavvia server
+
+**Stripe non parte in reale**
+- Verifica chiavi valide con prefissi corretti
+- Controlla che `NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY` sia esposta lato client
+- Verifica webhook secret
+
+**Ordine creato ma non aggiornato come pagato**
+- Stripe: controlla webhook e firma
+- PayPal: controlla callback successo/capture
+- Leggi i log server per il dettaglio errore
+
+Per approfondimento:
+- [STRIPE_SETUP.md](STRIPE_SETUP.md)
+- [PAYPAL_SETUP.md](PAYPAL_SETUP.md)
+
+>>>>>>> master
 ## 🌍 Traduzione Simultanea e Cambio Valuta
 
 ### Traduzione Simultanea
@@ -188,6 +310,7 @@ Vai su `/admin/ordini` per vedere tutti gli ordini ricevuti.
 
 Per maggiori dettagli tecnici, consulta anche il file `docs/CAMBIO_VALUTA_E_TRADUZIONI.md`.
 
+<<<<<<< HEAD
 ### Modalità Test (Default)
 
 Il sito è configurato per simulare pagamenti senza usare carte reali.
@@ -216,6 +339,8 @@ Quando sei pronto per pagamenti reali:
 4. Riavvia il server
 
 Il sistema passerà automaticamente a Stripe reale.
+=======
+>>>>>>> master
 
 ## 🔍 Dashboard Admin
 

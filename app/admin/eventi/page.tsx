@@ -1,4 +1,9 @@
+<<<<<<< HEAD
 ﻿'use client';
+=======
+'use client';
+
+>>>>>>> master
 import { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import Link from 'next/link';
@@ -167,7 +172,11 @@ export default function EventiAdmin() {
 
                 <div className="flex justify-between items-center mb-8">
                     <h1 className="text-3xl font-bold" style={{ color: 'var(--color-text)' }}>
+<<<<<<< HEAD
                         ðŸŽ‰ Gestione Eventi
+=======
+                        🎉 Gestione Eventi
+>>>>>>> master
                     </h1>
                     <button
                         onClick={() => setShowForm(!showForm)}
@@ -183,7 +192,11 @@ export default function EventiAdmin() {
                 {showForm && (
                     <div className="rounded-lg shadow-md p-6 mb-8" style={{ backgroundColor: 'var(--color-card-bg)', borderColor: 'var(--color-border)' }}>
                         <h2 className="text-xl font-bold mb-4" style={{ color: 'var(--color-text)' }}>
+<<<<<<< HEAD
                             {editingEvent ? 'âœï¸ Modifica Evento' : 'âž• Nuovo Evento'}
+=======
+                            {editingEvent ? '✏️ Modifica Evento' : '➕ Nuovo Evento'}
+>>>>>>> master
                         </h2>
                         <form onSubmit={handleSubmit} className="space-y-4">
                             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
@@ -271,7 +284,11 @@ export default function EventiAdmin() {
                                 </div>
                                 <div>
                                     <label className="block text-sm font-medium mb-1" style={{ color: 'var(--color-text)' }}>
+<<<<<<< HEAD
                                         Prezzo (â‚¬)
+=======
+                                        Prezzo (€)
+>>>>>>> master
                                     </label>
                                     <input
                                         type="number"
@@ -316,7 +333,11 @@ export default function EventiAdmin() {
                                         onChange={(e) => setFormData({ ...formData, featured: e.target.checked })}
                                         className="w-4 h-4"
                                     />
+<<<<<<< HEAD
                                     <span style={{ color: 'var(--color-text)' }}>â­ In Evidenza</span>
+=======
+                                    <span style={{ color: 'var(--color-text)' }}>⭐ In Evidenza</span>
+>>>>>>> master
                                 </label>
                             </div>
 
@@ -373,7 +394,11 @@ export default function EventiAdmin() {
                                 <div className="p-4">
                                     <div className="flex items-start justify-between mb-2">
                                         <h3 className="text-lg font-bold" style={{ color: 'var(--color-text)' }}>
+<<<<<<< HEAD
                                             {event.featured && <span className="text-yellow-500 mr-1">â­</span>}
+=======
+                                            {event.featured && <span className="text-yellow-500 mr-1">⭐</span>}
+>>>>>>> master
                                             {event.title}
                                         </h3>
                                         <span
@@ -404,7 +429,11 @@ export default function EventiAdmin() {
                                         )}
                                         <div className="flex items-center gap-2">
                                             <Euro className="w-4 h-4" />
+<<<<<<< HEAD
                                             {event.price === 0 ? 'Gratuito' : `â‚¬${event.price.toFixed(2)}`}
+=======
+                                            {event.price === 0 ? 'Gratuito' : `€${event.price.toFixed(2)}`}
+>>>>>>> master
                                         </div>
                                     </div>
 
@@ -441,4 +470,7 @@ export default function EventiAdmin() {
         </div>
     );
 }
+<<<<<<< HEAD
 
+=======
+>>>>>>> master
