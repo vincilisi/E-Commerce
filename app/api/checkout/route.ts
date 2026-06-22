@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { prisma } from '@/lib/prisma';
+import { sendOrderConfirmation } from '@/lib/email';
 
 // Sistema di pagamento FITTIZIO per test
 // Disabilita Stripe se la chiave è mancante, placeholder o invalida
@@ -36,6 +37,7 @@ export async function POST(req: NextRequest) {
             return NextResponse.json({ error: 'Dati non validi', details: parsed.error.flatten() }, { status: 400 });
         }
         const { items, shippingInfo, userId } = parsed.data;
+        const paymentMethod = typeof body?.paymentMethod === 'string' ? body.paymentMethod : 'stripe';
 
         // Calcola il totale
         const totalAmount = items.reduce((sum: number, item: any) =>
@@ -65,12 +67,39 @@ export async function POST(req: NextRequest) {
             }
         });
 
+        if (paymentMethod === 'cod') {
+            await sendOrderConfirmation({
+                customerName: shippingInfo.name,
+                customerEmail: shippingInfo.email,
+                orderNumber: order.orderNumber || order.id,
+                totalAmount,
+                shippingAddress: order.shippingAddress,
+                items: items.map((item: any) => ({
+                    name: item.name,
+                    quantity: item.quantity,
+                    price: item.price
+                })),
+                paymentMethod: 'cod',
+                status: 'pending'
+            }).catch((error) => {
+                console.error('Errore invio email ordine COD:', error);
+            });
+
+            return NextResponse.json({
+                codMode: true,
+                orderId: order.id,
+                redirectUrl: `/ordine/successo?cod_order=${order.id}`,
+                message: 'Ordine creato con pagamento alla consegna'
+            });
+        }
+
         if (STRIPE_ENABLED) {
             // Usa Stripe reale
             const Stripe = require('stripe');
             const stripe = new Stripe(process.env.STRIPE_SECRET_KEY!, {
                 apiVersion: '2025-12-15.clover'
             });
+            const baseUrl = process.env.NEXT_PUBLIC_URL || req.nextUrl.origin;
 
             const lineItems = items.map((item: any) => ({
                 price_data: {
@@ -99,8 +128,8 @@ export async function POST(req: NextRequest) {
                 payment_method_types: ['card'],
                 line_items: lineItems,
                 mode: 'payment',
-                success_url: `${process.env.NEXT_PUBLIC_URL}/ordine/successo?session_id={CHECKOUT_SESSION_ID}`,
-                cancel_url: `${process.env.NEXT_PUBLIC_URL}/carrello`,
+                success_url: `${baseUrl}/ordine/successo?session_id={CHECKOUT_SESSION_ID}`,
+                cancel_url: `${baseUrl}/carrello`,
                 metadata: {
                     orderId: order.id
                 }

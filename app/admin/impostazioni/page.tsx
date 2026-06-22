@@ -13,7 +13,7 @@ export default function AdminImpostazioni() {
     const [saving, setSaving] = useState(false);
     const [uploading, setUploading] = useState(false);
     const [settings, setSettings] = useState({
-        siteName: 'Il Desiderio di una Stella',
+        siteName: 'Nome del sito',
         logo: '',
         primaryColor: '#9333ea',
         secondaryColor: '#6366f1',
@@ -37,7 +37,14 @@ export default function AdminImpostazioni() {
         assistantColor: '#9333ea',
         assistantTextColor: '#ffffff',
         assistantWelcome: '👋 Ciao! Sono il tuo assistente virtuale. Come posso aiutarti oggi?',
-        assistantPosition: 'right'
+        assistantPosition: 'right',
+        assistantPhone: '+39 02 1234 5678',
+        assistantWhatsapp: '+39 02 1234 5678',
+        assistantWeekdayOpen: '09:00',
+        assistantWeekdayClose: '18:00',
+        assistantSaturdayOpen: '10:00',
+        assistantSaturdayClose: '14:00',
+        assistantSundayClosed: true
     });
 
     useEffect(() => {
@@ -49,7 +56,7 @@ export default function AdminImpostazioni() {
             const res = await fetch('/api/admin/settings');
             const data = await res.json();
             if (data.settings) {
-                setSettings(data.settings);
+                setSettings((prev) => ({ ...prev, ...data.settings }));
             }
         } catch (error) {
             toast.error('Errore nel caricamento impostazioni');
@@ -70,7 +77,8 @@ export default function AdminImpostazioni() {
             });
 
             if (res.ok) {
-                toast.success('Impostazioni salvate! Ricarica la pagina per vedere i cambiamenti.');
+                toast.success('Impostazioni salvate!');
+                window.dispatchEvent(new CustomEvent('siteSettingsUpdated'));
             } else {
                 toast.error('Errore nel salvataggio');
             }
@@ -183,7 +191,7 @@ export default function AdminImpostazioni() {
                                         value={settings.siteName}
                                         onChange={(e) => setSettings({ ...settings, siteName: e.target.value })}
                                         className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-600"
-                                        placeholder="Il Desiderio di una Stella"
+                                        placeholder="Nome del sito"
                                     />
                                     <p className="text-sm text-gray-500 mt-1">
                                         Questo nome apparirà nella navbar, nel titolo della pagina e nella homepage
@@ -509,7 +517,7 @@ export default function AdminImpostazioni() {
                                             <img
                                                 src={settings.logo}
                                                 alt="Logo Preview"
-                                                className="max-w-[200px] max-h-[100px] object-contain"
+                                                className="max-w-50 max-h-25 object-contain"
                                                 onError={(e) => {
                                                     e.currentTarget.style.display = 'none';
                                                     toast.error('Errore nel caricamento del logo');
@@ -668,91 +676,193 @@ export default function AdminImpostazioni() {
                                     🤖 Assistente Virtuale
                                 </h2>
 
-                                {/* Abilita/Disabilita */}
-                                <div className="flex items-center justify-between p-4 border rounded-lg" style={{ borderColor: 'var(--color-border)' }}>
-                                    <div>
-                                        <label className="block text-gray-700 font-semibold">Assistente Attivo</label>
-                                        <p className="text-sm text-gray-500">Mostra il pulsante dell&apos;assistente virtuale sul sito</p>
+                                <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+                                    <div className="border rounded-lg p-5 space-y-4" style={{ borderColor: 'var(--color-border)' }}>
+                                        <div>
+                                            <h3 className="text-lg font-semibold" style={{ color: 'var(--color-text)' }}>
+                                                Chat AI
+                                            </h3>
+                                            <p className="text-sm text-gray-500">Gestisci il bot che risponde dentro al sito.</p>
+                                        </div>
+
+                                        <div className="flex items-center justify-between p-4 border rounded-lg" style={{ borderColor: 'var(--color-border)' }}>
+                                            <div>
+                                                <label className="block text-gray-700 font-semibold">Assistente Attivo</label>
+                                                <p className="text-sm text-gray-500">Mostra il pulsante dell&apos;assistente virtuale sul sito</p>
+                                            </div>
+                                            <button
+                                                type="button"
+                                                onClick={() => setSettings({ ...settings, assistantEnabled: !settings.assistantEnabled })}
+                                                className={`relative inline-flex h-6 w-11 items-center rounded-full transition-colors ${settings.assistantEnabled ? 'bg-green-500' : 'bg-gray-300'}`}
+                                            >
+                                                <span className={`inline-block h-4 w-4 transform rounded-full bg-white transition-transform ${settings.assistantEnabled ? 'translate-x-6' : 'translate-x-1'}`} />
+                                            </button>
+                                        </div>
+
+                                        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                                            <div>
+                                                <label className="block text-gray-700 font-semibold mb-2">Nome Assistente</label>
+                                                <input
+                                                    type="text"
+                                                    value={settings.assistantName}
+                                                    onChange={(e) => setSettings({ ...settings, assistantName: e.target.value })}
+                                                    className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-600"
+                                                    placeholder="Assistente Virtuale"
+                                                />
+                                            </div>
+
+                                            <div>
+                                                <label className="block text-gray-700 font-semibold mb-2">Posizione</label>
+                                                <select
+                                                    value={settings.assistantPosition}
+                                                    onChange={(e) => setSettings({ ...settings, assistantPosition: e.target.value })}
+                                                    className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-600"
+                                                >
+                                                    <option value="right">Destra</option>
+                                                    <option value="left">Sinistra</option>
+                                                </select>
+                                            </div>
+
+                                            <div>
+                                                <label className="block text-gray-700 font-semibold mb-2">Colore Pulsante</label>
+                                                <div className="flex items-center space-x-3">
+                                                    <input
+                                                        type="color"
+                                                        value={settings.assistantColor}
+                                                        onChange={(e) => setSettings({ ...settings, assistantColor: e.target.value })}
+                                                        className="w-16 h-16 rounded cursor-pointer"
+                                                    />
+                                                    <input
+                                                        type="text"
+                                                        value={settings.assistantColor}
+                                                        onChange={(e) => setSettings({ ...settings, assistantColor: e.target.value })}
+                                                        className="flex-1 px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-600"
+                                                    />
+                                                </div>
+                                            </div>
+
+                                            <div>
+                                                <label className="block text-gray-700 font-semibold mb-2">Colore Icona</label>
+                                                <div className="flex items-center space-x-3">
+                                                    <input
+                                                        type="color"
+                                                        value={settings.assistantTextColor}
+                                                        onChange={(e) => setSettings({ ...settings, assistantTextColor: e.target.value })}
+                                                        className="w-16 h-16 rounded cursor-pointer"
+                                                    />
+                                                    <input
+                                                        type="text"
+                                                        value={settings.assistantTextColor}
+                                                        onChange={(e) => setSettings({ ...settings, assistantTextColor: e.target.value })}
+                                                        className="flex-1 px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-600"
+                                                    />
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                        <div>
+                                            <label className="block text-gray-700 font-semibold mb-2">Messaggio di Benvenuto</label>
+                                            <textarea
+                                                value={settings.assistantWelcome}
+                                                onChange={(e) => setSettings({ ...settings, assistantWelcome: e.target.value })}
+                                                className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-600"
+                                                rows={3}
+                                                placeholder="👋 Ciao! Sono il tuo assistente virtuale..."
+                                            />
+                                        </div>
                                     </div>
-                                    <button
-                                        type="button"
-                                        onClick={() => setSettings({ ...settings, assistantEnabled: !settings.assistantEnabled })}
-                                        className={`relative inline-flex h-6 w-11 items-center rounded-full transition-colors ${settings.assistantEnabled ? 'bg-green-500' : 'bg-gray-300'}`}
-                                    >
-                                        <span className={`inline-block h-4 w-4 transform rounded-full bg-white transition-transform ${settings.assistantEnabled ? 'translate-x-6' : 'translate-x-1'}`} />
-                                    </button>
+
+                                    <div className="border rounded-lg p-5 space-y-4" style={{ borderColor: 'var(--color-border)' }}>
+                                        <div>
+                                            <h3 className="text-lg font-semibold" style={{ color: 'var(--color-text)' }}>
+                                                WhatsApp
+                                            </h3>
+                                            <p className="text-sm text-gray-500">Usa WhatsApp come contatto rapido con l&apos;operatore.</p>
+                                        </div>
+
+                                        <div>
+                                            <label className="block text-gray-700 font-semibold mb-2">Numero WhatsApp</label>
+                                            <input
+                                                type="text"
+                                                value={settings.assistantWhatsapp}
+                                                onChange={(e) => setSettings({ ...settings, assistantWhatsapp: e.target.value })}
+                                                className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-600"
+                                                placeholder="+39 02 1234 5678"
+                                            />
+                                            <p className="text-sm text-gray-500 mt-1">Questo numero viene usato per aprire la chat WhatsApp.</p>
+                                        </div>
+
+                                        <div>
+                                            <label className="block text-gray-700 font-semibold mb-2">Telefono Operatore</label>
+                                            <input
+                                                type="text"
+                                                value={settings.assistantPhone}
+                                                onChange={(e) => setSettings({ ...settings, assistantPhone: e.target.value })}
+                                                className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-600"
+                                                placeholder="+39 02 1234 5678"
+                                            />
+                                            <p className="text-sm text-gray-500 mt-1">Usato solo come riferimento operativo e negli orari assistenza.</p>
+                                        </div>
+                                    </div>
                                 </div>
 
-                                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                                    <div>
-                                        <label className="block text-gray-700 font-semibold mb-2">Nome Assistente</label>
-                                        <input
-                                            type="text"
-                                            value={settings.assistantName}
-                                            onChange={(e) => setSettings({ ...settings, assistantName: e.target.value })}
-                                            className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-600"
-                                            placeholder="Assistente Virtuale"
-                                        />
+                                <div className="border rounded-lg p-4 space-y-4" style={{ borderColor: 'var(--color-border)' }}>
+                                    <h3 className="text-lg font-semibold" style={{ color: 'var(--color-text)' }}>
+                                        Orari Operatore
+                                    </h3>
+
+                                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                                        <div>
+                                            <label className="block text-gray-700 font-semibold mb-2">Lunedì - Venerdì: Apertura</label>
+                                            <input
+                                                type="time"
+                                                value={settings.assistantWeekdayOpen}
+                                                onChange={(e) => setSettings({ ...settings, assistantWeekdayOpen: e.target.value })}
+                                                className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-600"
+                                            />
+                                        </div>
+                                        <div>
+                                            <label className="block text-gray-700 font-semibold mb-2">Lunedì - Venerdì: Chiusura</label>
+                                            <input
+                                                type="time"
+                                                value={settings.assistantWeekdayClose}
+                                                onChange={(e) => setSettings({ ...settings, assistantWeekdayClose: e.target.value })}
+                                                className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-600"
+                                            />
+                                        </div>
+                                        <div>
+                                            <label className="block text-gray-700 font-semibold mb-2">Sabato: Apertura</label>
+                                            <input
+                                                type="time"
+                                                value={settings.assistantSaturdayOpen}
+                                                onChange={(e) => setSettings({ ...settings, assistantSaturdayOpen: e.target.value })}
+                                                className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-600"
+                                            />
+                                        </div>
+                                        <div>
+                                            <label className="block text-gray-700 font-semibold mb-2">Sabato: Chiusura</label>
+                                            <input
+                                                type="time"
+                                                value={settings.assistantSaturdayClose}
+                                                onChange={(e) => setSettings({ ...settings, assistantSaturdayClose: e.target.value })}
+                                                className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-600"
+                                            />
+                                        </div>
                                     </div>
 
-                                    <div>
-                                        <label className="block text-gray-700 font-semibold mb-2">Posizione</label>
-                                        <select
-                                            value={settings.assistantPosition}
-                                            onChange={(e) => setSettings({ ...settings, assistantPosition: e.target.value })}
-                                            className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-600"
+                                    <div className="flex items-center justify-between p-3 border rounded-lg" style={{ borderColor: 'var(--color-border)' }}>
+                                        <div>
+                                            <p className="font-semibold" style={{ color: 'var(--color-text)' }}>Domenica chiuso</p>
+                                            <p className="text-sm text-gray-500">Se disattivo, usa gli stessi orari del sabato</p>
+                                        </div>
+                                        <button
+                                            type="button"
+                                            onClick={() => setSettings({ ...settings, assistantSundayClosed: !settings.assistantSundayClosed })}
+                                            className={`relative inline-flex h-6 w-11 items-center rounded-full transition-colors ${settings.assistantSundayClosed ? 'bg-green-500' : 'bg-gray-300'}`}
                                         >
-                                            <option value="right">Destra</option>
-                                            <option value="left">Sinistra</option>
-                                        </select>
+                                            <span className={`inline-block h-4 w-4 transform rounded-full bg-white transition-transform ${settings.assistantSundayClosed ? 'translate-x-6' : 'translate-x-1'}`} />
+                                        </button>
                                     </div>
-
-                                    <div>
-                                        <label className="block text-gray-700 font-semibold mb-2">Colore Pulsante</label>
-                                        <div className="flex items-center space-x-3">
-                                            <input
-                                                type="color"
-                                                value={settings.assistantColor}
-                                                onChange={(e) => setSettings({ ...settings, assistantColor: e.target.value })}
-                                                className="w-16 h-16 rounded cursor-pointer"
-                                            />
-                                            <input
-                                                type="text"
-                                                value={settings.assistantColor}
-                                                onChange={(e) => setSettings({ ...settings, assistantColor: e.target.value })}
-                                                className="flex-1 px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-600"
-                                            />
-                                        </div>
-                                    </div>
-
-                                    <div>
-                                        <label className="block text-gray-700 font-semibold mb-2">Colore Icona</label>
-                                        <div className="flex items-center space-x-3">
-                                            <input
-                                                type="color"
-                                                value={settings.assistantTextColor}
-                                                onChange={(e) => setSettings({ ...settings, assistantTextColor: e.target.value })}
-                                                className="w-16 h-16 rounded cursor-pointer"
-                                            />
-                                            <input
-                                                type="text"
-                                                value={settings.assistantTextColor}
-                                                onChange={(e) => setSettings({ ...settings, assistantTextColor: e.target.value })}
-                                                className="flex-1 px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-600"
-                                            />
-                                        </div>
-                                    </div>
-                                </div>
-
-                                <div>
-                                    <label className="block text-gray-700 font-semibold mb-2">Messaggio di Benvenuto</label>
-                                    <textarea
-                                        value={settings.assistantWelcome}
-                                        onChange={(e) => setSettings({ ...settings, assistantWelcome: e.target.value })}
-                                        className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-600"
-                                        rows={3}
-                                        placeholder="👋 Ciao! Sono il tuo assistente virtuale..."
-                                    />
                                 </div>
 
                                 {/* Anteprima */}

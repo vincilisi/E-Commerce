@@ -461,7 +461,7 @@ export default function EmailAdmin() {
                                         .replace(/\{\{totalAmount\}\}/g, '€49.90')
                                         .replace(/\{\{trackingNumber\}\}/g, 'BRT123456789')
                                         .replace(/\{\{shippingAddress\}\}/g, 'Via Roma 123\n00100 Roma (RM)')
-                                        .replace(/\{\{siteName\}\}/g, 'Il Desiderio di una Stella')
+                                        .replace(/\{\{siteName\}\}/g, 'Nome del sito configurato')
                                         .replace(/\{\{siteUrl\}\}/g, 'http://localhost:3000')
                                         .replace(/\{\{trackingUrl\}\}/g, '#')
                                         .replace(/\{\{unsubscribeUrl\}\}/g, '#')

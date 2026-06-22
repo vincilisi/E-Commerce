@@ -8,7 +8,7 @@ Shop online per portachiavi fatti a mano, realizzato con Next.js 16, TypeScript 
 - ✅ **Carrello funzionale** con gestione quantità
 - ✅ **Sistema di autenticazione** con JWT
 - ✅ **Dashboard amministratore** per gestione prodotti e ordini
-- ✅ **Pagamenti con Stripe** (carte di credito)
+- ✅ **Pagamenti reali con PayPal e Stripe**
 - ✅ **Personalizzazione colori** del sito
 - ✅ **Tracciabilità ordini**
 - 📧 Notifiche email (da implementare)

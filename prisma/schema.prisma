@@ -7,7 +7,7 @@ generator client {
 
 datasource db {
   provider = "sqlite"
-  url      = "file:./dev.db"
+  url      = env("DATABASE_URL")
 }
 
 model User {
@@ -139,6 +139,14 @@ model SiteSettings {
   assistantTextColor  String   @default("#ffffff")
   assistantWelcome    String   @default("👋 Ciao! Sono il tuo assistente virtuale. Come posso aiutarti oggi?")
   assistantPosition   String   @default("right") // "left" or "right"
+  assistantPhone      String   @default("+39 02 1234 5678")
+  assistantWhatsapp   String   @default("+39 02 1234 5678")
+  assistantEmail      String   @default("info@ildesiderio.it")
+  assistantWeekdayOpen  String @default("09:00")
+  assistantWeekdayClose String @default("18:00")
+  assistantSaturdayOpen String @default("10:00")
+  assistantSaturdayClose String @default("14:00")
+  assistantSundayClosed Boolean @default(true)
   
   updatedAt       DateTime @updatedAt
 }

@@ -1,7 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server';
 import Stripe from 'stripe';
 import { prisma } from '@/lib/prisma';
-import { headers } from 'next/headers';
+import { sendOrderConfirmation } from '@/lib/email';
 
 const stripe = new Stripe(process.env.STRIPE_SECRET_KEY!, {
     apiVersion: '2025-12-15.clover'
@@ -26,6 +26,25 @@ export async function POST(req: NextRequest) {
         const orderId = session.metadata?.orderId || '';
 
         if (orderId) {
+            const existingOrder = await prisma.order.findUnique({
+                where: { id: orderId },
+                include: {
+                    orderItems: {
+                        include: {
+                            product: true
+                        }
+                    }
+                }
+            });
+
+            if (!existingOrder) {
+                return NextResponse.json({ error: 'Ordine non trovato' }, { status: 404 });
+            }
+
+            if (existingOrder.status === 'paid') {
+                return NextResponse.json({ received: true });
+            }
+
             // Aggiorna lo stato dell'ordine
             await prisma.order.update({
                 where: { id: orderId },
@@ -33,6 +52,23 @@ export async function POST(req: NextRequest) {
                     status: 'paid',
                     stripePaymentId: session.id
                 }
+            });
+
+            await sendOrderConfirmation({
+                customerName: existingOrder.customerName,
+                customerEmail: existingOrder.customerEmail,
+                orderNumber: existingOrder.orderNumber || existingOrder.id,
+                totalAmount: existingOrder.totalAmount,
+                shippingAddress: existingOrder.shippingAddress,
+                items: existingOrder.orderItems.map((item) => ({
+                    name: item.product?.name || item.productId,
+                    quantity: item.quantity,
+                    price: item.price
+                })),
+                paymentMethod: 'stripe',
+                status: 'paid'
+            }).catch((error) => {
+                console.error('Errore invio email ordine Stripe:', error);
             });
 
             console.log(`Order ${orderId} marked as paid`);

@@ -4,6 +4,7 @@ import { useState, useEffect } from 'react';
 import ProductCard from '@/components/ProductCard';
 import { useSearchParams } from 'next/navigation';
 import { useLanguage } from '@/lib/LanguageContext';
+import { Sparkles, SlidersHorizontal } from 'lucide-react';
 
 export default function ProdottiPage() {
     const { t } = useLanguage();
@@ -42,11 +43,12 @@ export default function ProdottiPage() {
     }
 
     return (
-        <div className="min-h-screen py-12 md:py-20" style={{ backgroundColor: 'var(--color-background)' }}>
+        <div className="min-h-screen py-12 md:py-20 bg-[radial-gradient(circle_at_top,rgba(147,51,234,0.07),transparent_28%),linear-gradient(180deg,#fff_0%,#faf7ff_40%,#fff_100%)]">
             <div className="container mx-auto px-4">
                 {/* Header */}
                 <div className="text-center mb-12 md:mb-16 animate-slideUp">
-                    <h1 className="text-4xl sm:text-5xl md:text-6xl font-bold mb-4 md:mb-6" style={{ color: 'var(--color-text)' }}>
+                    <p className="text-sm uppercase tracking-[0.3em] text-gray-500 mb-3">Curated catalog</p>
+                    <h1 className="text-4xl sm:text-5xl md:text-6xl font-black mb-4 md:mb-6 tracking-tight" style={{ color: 'var(--color-text)' }}>
                         {searchQuery ? `${t('searchResults')} "${searchQuery}"` : t('allProducts')}
                     </h1>
                     <div className="w-24 h-1 mx-auto rounded-full mb-6" style={{ backgroundColor: 'var(--color-accent)' }}></div>
@@ -58,11 +60,23 @@ export default function ProdottiPage() {
                     </p>
                 </div>
 
-                {/* Filtri per Categoria */}
-                <div className="flex flex-wrap justify-center gap-2 sm:gap-3 mb-12 md:mb-16 animate-slideUp animation-delay-200 px-2">
+                <div className="rounded-4xl border border-white/70 bg-white/80 backdrop-blur-xl shadow-[0_20px_50px_rgba(31,41,55,0.08)] p-4 sm:p-5 md:p-6 mb-10 md:mb-12 animate-slideUp animation-delay-150">
+                    <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4 mb-4">
+                        <div className="inline-flex items-center gap-2 text-sm font-semibold text-gray-700">
+                            <SlidersHorizontal className="w-4 h-4" style={{ color: 'var(--color-primary)' }} />
+                            Filtra per categoria
+                        </div>
+                        <div className="inline-flex items-center gap-2 text-sm text-gray-500">
+                            <Sparkles className="w-4 h-4" />
+                            Navigazione rapida del catalogo
+                        </div>
+                    </div>
+
+                    {/* Filtri per Categoria */}
+                    <div className="flex flex-wrap justify-center md:justify-start gap-2 sm:gap-3 px-1">
                     <button
                         onClick={() => setSelectedCategory('all')}
-                        className={`px-4 sm:px-6 py-2 sm:py-2.5 rounded-full font-semibold hover:scale-105 hover:shadow-lg transition-all duration-300 text-sm sm:text-base ${selectedCategory === 'all' ? 'shadow-lg' : ''}`}
+                        className={`px-4 sm:px-6 py-2.5 rounded-full font-semibold hover:scale-105 hover:shadow-lg transition-all duration-300 text-sm sm:text-base ${selectedCategory === 'all' ? 'shadow-lg' : ''}`}
                         style={{
                             backgroundColor: selectedCategory === 'all' ? 'var(--color-primary)' : 'var(--color-card-bg)',
                             color: selectedCategory === 'all' ? 'var(--color-button-text)' : 'var(--color-text)',
@@ -76,7 +90,7 @@ export default function ProdottiPage() {
                         <button
                             key={category}
                             onClick={() => setSelectedCategory(category)}
-                            className={`px-4 sm:px-6 py-2 sm:py-2.5 rounded-full font-semibold hover:scale-105 hover:shadow-md transition-all duration-300 text-sm sm:text-base ${selectedCategory === category ? 'shadow-lg' : ''}`}
+                            className={`px-4 sm:px-6 py-2.5 rounded-full font-semibold hover:scale-105 hover:shadow-md transition-all duration-300 text-sm sm:text-base ${selectedCategory === category ? 'shadow-lg' : ''}`}
                             style={{
                                 backgroundColor: selectedCategory === category ? 'var(--color-primary)' : 'var(--color-card-bg)',
                                 color: selectedCategory === category ? 'var(--color-button-text)' : 'var(--color-text)',
@@ -87,11 +101,12 @@ export default function ProdottiPage() {
                             {category} {selectedCategory === category && `(${products.filter(p => p.category === category).length})`}
                         </button>
                     ))}
+                    </div>
                 </div>
 
                 {/* Contatore Risultati */}
                 <div className="text-center mb-8">
-                    <p className="text-sm md:text-base" style={{ color: 'var(--color-text)', opacity: 0.7 }}>
+                    <p className="text-sm md:text-base font-medium" style={{ color: 'var(--color-text)', opacity: 0.75 }}>
                         {filteredProducts.length} {filteredProducts.length === 1 ? 'prodotto trovato' : 'prodotti trovati'}
                     </p>
                 </div>
@@ -115,9 +130,9 @@ export default function ProdottiPage() {
 
                         {/* Messaggio Nessun Risultato */}
                         {filteredProducts.length === 0 && !loading && (
-                            <div className="text-center py-20">
+                            <div className="text-center py-20 rounded-4xl border border-white/70 bg-white/80 backdrop-blur-xl shadow-[0_20px_50px_rgba(31,41,55,0.08)]">
                                 <div className="text-6xl mb-4">🔍</div>
-                                <h3 className="text-2xl font-bold mb-2" style={{ color: 'var(--color-text)' }}>
+                                <h3 className="text-2xl font-black mb-2" style={{ color: 'var(--color-text)' }}>
                                     {t('noProducts')}
                                 </h3>
                                 <p style={{ color: 'var(--color-text)', opacity: 0.7 }}>

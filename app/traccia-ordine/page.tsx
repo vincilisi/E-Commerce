@@ -2,7 +2,7 @@
 
 import { useState } from 'react';
 import Link from 'next/link';
-import { Search, Package, Truck, CheckCircle, Clock, XCircle, ArrowLeft, MapPin, Calendar, Euro, ChevronRight } from 'lucide-react';
+import { Search, Package, Truck, CheckCircle, Clock, XCircle, ArrowLeft, MapPin, Calendar, Euro, ChevronRight, ShieldCheck } from 'lucide-react';
 
 interface TrackingStep {
     id: string;
@@ -111,15 +111,15 @@ export default function TrackingPage() {
     };
 
     return (
-        <div className="min-h-screen bg-gradient-to-b from-purple-50 to-white py-12 px-4">
+        <div className="min-h-screen bg-[radial-gradient(circle_at_top,rgba(147,51,234,0.12),transparent_34%),linear-gradient(180deg,#fff_0%,#faf7ff_45%,#fff_100%)] py-12 px-4">
             <div className="max-w-3xl mx-auto">
                 {/* Header */}
                 <div className="text-center mb-8">
-                    <Link href="/" className="inline-flex items-center gap-2 text-purple-600 hover:text-purple-800 mb-4">
+                    <Link href="/" className="inline-flex items-center gap-2 text-purple-600 hover:text-purple-800 mb-4 rounded-full px-4 py-2 bg-white/80 border border-purple-100 shadow-sm">
                         <ArrowLeft className="w-4 h-4" />
                         Torna al sito
                     </Link>
-                    <h1 className="text-3xl md:text-4xl font-bold text-gray-900 mb-2">
+                    <h1 className="text-3xl md:text-4xl font-black text-gray-900 mb-2 tracking-tight">
                         📦 Traccia il tuo Ordine
                     </h1>
                     <p className="text-gray-600">
@@ -128,7 +128,10 @@ export default function TrackingPage() {
                 </div>
 
                 {/* Search Form */}
-                <form onSubmit={handleTrack} className="bg-white rounded-2xl shadow-lg p-6 mb-8">
+                <form onSubmit={handleTrack} className="bg-white/90 rounded-4xl shadow-[0_20px_55px_rgba(31,41,55,0.1)] p-6 mb-8 border border-white/70 backdrop-blur-xl">
+                    <div className="mb-4 inline-flex items-center gap-2 rounded-full bg-emerald-50 px-3 py-1.5 text-xs sm:text-sm font-semibold text-emerald-700">
+                        <ShieldCheck className="w-4 h-4" /> Tracciamento protetto
+                    </div>
                     <div className="space-y-4">
                         <div>
                             <label htmlFor="orderNumber" className="block text-sm font-medium text-gray-700 mb-1">
@@ -140,7 +143,7 @@ export default function TrackingPage() {
                                 value={orderNumber}
                                 onChange={(e) => setOrderNumber(e.target.value.toUpperCase())}
                                 placeholder="Es: ORD-ABC123"
-                                className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent text-lg font-mono"
+                                className="w-full px-4 py-3 border border-gray-300 rounded-2xl focus:ring-2 focus:ring-purple-500 focus:border-transparent text-lg font-mono"
                             />
                         </div>
                         <div>
@@ -153,13 +156,13 @@ export default function TrackingPage() {
                                 value={email}
                                 onChange={(e) => setEmail(e.target.value)}
                                 placeholder="Per maggiore sicurezza"
-                                className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent"
+                                className="w-full px-4 py-3 border border-gray-300 rounded-2xl focus:ring-2 focus:ring-purple-500 focus:border-transparent"
                             />
                         </div>
                         <button
                             type="submit"
                             disabled={loading}
-                            className="w-full bg-gradient-to-r from-purple-600 to-indigo-600 text-white py-3 px-6 rounded-lg font-semibold flex items-center justify-center gap-2 hover:from-purple-700 hover:to-indigo-700 transition disabled:opacity-50"
+                            className="w-full bg-linear-to-r from-purple-600 to-indigo-600 text-white py-3 px-6 rounded-full font-semibold flex items-center justify-center gap-2 hover:from-purple-700 hover:to-indigo-700 transition disabled:opacity-50 shadow-lg"
                         >
                             {loading ? (
                                 <>
@@ -177,7 +180,7 @@ export default function TrackingPage() {
 
                     {error && (
                         <div className="mt-4 p-4 bg-red-50 border border-red-200 rounded-lg flex items-center gap-3 text-red-700">
-                            <XCircle className="w-5 h-5 flex-shrink-0" />
+                            <XCircle className="w-5 h-5 shrink-0" />
                             {error}
                         </div>
                     )}
@@ -187,7 +190,7 @@ export default function TrackingPage() {
                 {order && (
                     <div className="space-y-6 animate-fadeIn">
                         {/* Order Header */}
-                        <div className="bg-white rounded-2xl shadow-lg p-6">
+                        <div className="bg-white/90 rounded-4xl shadow-[0_20px_55px_rgba(31,41,55,0.1)] p-6 border border-white/70 backdrop-blur-xl">
                             <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4 mb-6">
                                 <div>
                                     <p className="text-sm text-gray-500">Numero Ordine</p>
@@ -200,7 +203,7 @@ export default function TrackingPage() {
 
                             {/* Tracking Number */}
                             {order.trackingNumber && (
-                                <div className="bg-blue-50 rounded-lg p-4 mb-6">
+                                <div className="bg-blue-50 rounded-2xl p-4 mb-6">
                                     <div className="flex items-center gap-3">
                                         <Truck className="w-6 h-6 text-blue-600" />
                                         <div>
@@ -221,7 +224,7 @@ export default function TrackingPage() {
                                                 className={`absolute left-5 ml-0.5 w-0.5 h-full ${step.completed && order.trackingSteps[index + 1]?.completed
                                                         ? 'bg-green-500'
                                                         : step.completed
-                                                            ? 'bg-gradient-to-b from-green-500 to-gray-200'
+                                                            ? 'bg-linear-to-b from-green-500 to-gray-200'
                                                             : 'bg-gray-200'
                                                     }`}
                                                 style={{ top: `${index * 96 + 40}px`, height: '56px' }}
@@ -230,7 +233,7 @@ export default function TrackingPage() {
 
                                         {/* Icon */}
                                         <div
-                                            className={`relative z-10 w-10 h-10 rounded-full flex items-center justify-center text-xl flex-shrink-0 ${step.isCancelled
+                                            className={`relative z-10 w-10 h-10 rounded-full flex items-center justify-center text-xl shrink-0 ${step.isCancelled
                                                     ? 'bg-red-100'
                                                     : step.completed
                                                         ? 'bg-green-100'
@@ -257,7 +260,7 @@ export default function TrackingPage() {
                                         </div>
 
                                         {/* Status */}
-                                        <div className="flex-shrink-0">
+                                        <div className="shrink-0">
                                             {step.isCancelled ? (
                                                 <XCircle className="w-6 h-6 text-red-500" />
                                             ) : step.completed ? (
@@ -272,7 +275,7 @@ export default function TrackingPage() {
                         </div>
 
                         {/* Order Details */}
-                        <div className="bg-white rounded-2xl shadow-lg p-6">
+                        <div className="bg-white/90 rounded-4xl shadow-[0_20px_55px_rgba(31,41,55,0.1)] p-6 border border-white/70 backdrop-blur-xl">
                             <h3 className="text-lg font-semibold text-gray-900 mb-4 flex items-center gap-2">
                                 <Package className="w-5 h-5" />
                                 Dettagli Ordine
@@ -283,7 +286,7 @@ export default function TrackingPage() {
                                 {order.orderItems.map((item, index) => {
                                     const images = JSON.parse(item.product.images || '[]');
                                     return (
-                                        <div key={index} className="flex items-center gap-4 p-3 bg-gray-50 rounded-lg">
+                                        <div key={index} className="flex items-center gap-4 p-3 bg-gray-50 rounded-2xl">
                                             {images[0] && (
                                                 <img
                                                     src={images[0]}
@@ -304,21 +307,21 @@ export default function TrackingPage() {
                             {/* Info Grid */}
                             <div className="grid grid-cols-1 md:grid-cols-2 gap-4 pt-4 border-t">
                                 <div className="flex items-start gap-3">
-                                    <MapPin className="w-5 h-5 text-gray-400 flex-shrink-0 mt-0.5" />
+                                    <MapPin className="w-5 h-5 text-gray-400 shrink-0 mt-0.5" />
                                     <div>
                                         <p className="text-sm text-gray-500">Indirizzo di Spedizione</p>
                                         <p className="text-gray-900 whitespace-pre-line">{order.shippingAddress}</p>
                                     </div>
                                 </div>
                                 <div className="flex items-start gap-3">
-                                    <Calendar className="w-5 h-5 text-gray-400 flex-shrink-0 mt-0.5" />
+                                    <Calendar className="w-5 h-5 text-gray-400 shrink-0 mt-0.5" />
                                     <div>
                                         <p className="text-sm text-gray-500">Data Ordine</p>
                                         <p className="text-gray-900">{formatDate(order.createdAt)}</p>
                                     </div>
                                 </div>
                                 <div className="flex items-start gap-3 md:col-span-2">
-                                    <Euro className="w-5 h-5 text-gray-400 flex-shrink-0 mt-0.5" />
+                                    <Euro className="w-5 h-5 text-gray-400 shrink-0 mt-0.5" />
                                     <div>
                                         <p className="text-sm text-gray-500">Totale Ordine</p>
                                         <p className="text-2xl font-bold text-purple-600">€{order.totalAmount.toFixed(2)}</p>
@@ -328,7 +331,7 @@ export default function TrackingPage() {
                         </div>
 
                         {/* Help */}
-                        <div className="bg-purple-50 rounded-2xl p-6 text-center">
+                        <div className="bg-purple-50 rounded-4xl p-6 text-center border border-purple-100">
                             <p className="text-purple-800 mb-2">Hai bisogno di aiuto con il tuo ordine?</p>
                             <Link
                                 href="/contatti"

@@ -35,7 +35,14 @@ export async function POST(
                     customerEmail: order.customerEmail,
                     orderNumber: order.orderNumber || order.id,
                     totalAmount: order.totalAmount,
-                    shippingAddress: order.shippingAddress
+                    shippingAddress: order.shippingAddress,
+                    items: order.orderItems.map((item) => ({
+                        name: item.product?.name || item.productId,
+                        quantity: item.quantity,
+                        price: item.price
+                    })),
+                    paymentMethod: order.stripePaymentId?.startsWith('paypal_') ? 'paypal' : (order.stripePaymentId ? 'card' : undefined),
+                    status: order.status
                 });
                 break;
 

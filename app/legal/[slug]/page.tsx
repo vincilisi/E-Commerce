@@ -58,19 +58,19 @@ export default function LegalPageComponent({ params }: { params: Promise<{ slug:
     }
 
     return (
-        <div className="min-h-screen py-12" style={{ backgroundColor: 'var(--color-background)' }}>
+        <div className="min-h-screen py-12 bg-[radial-gradient(circle_at_top,rgba(147,51,234,0.08),transparent_34%),linear-gradient(180deg,#fff_0%,#faf7ff_40%,#fff_100%)]" style={{ backgroundColor: 'var(--color-background)' }}>
             <article className="max-w-4xl mx-auto px-4">
                 {/* Back Link */}
                 <Link
                     href="/"
-                    className="inline-flex items-center gap-2 text-gray-600 hover:text-gray-900 mb-8"
+                    className="inline-flex items-center gap-2 text-gray-600 hover:text-gray-900 mb-8 rounded-full px-4 py-2 bg-white/80 border border-gray-100 shadow-sm"
                 >
                     <ArrowLeft className="w-4 h-4" />
                     Torna alla Home
                 </Link>
 
                 {/* Header */}
-                <header className="mb-8 pb-8 border-b" style={{ borderColor: 'var(--color-border)' }}>
+                <header className="mb-8 pb-8 border-b rounded-4xl border border-white/70 bg-white/85 backdrop-blur-xl shadow-[0_20px_55px_rgba(31,41,55,0.08)] p-6 md:p-8" style={{ borderColor: 'var(--color-border)' }}>
                     <div className="flex items-center gap-4 mb-4">
                         <div
                             className="p-3 rounded-xl"
@@ -78,7 +78,7 @@ export default function LegalPageComponent({ params }: { params: Promise<{ slug:
                         >
                             {icons[resolvedParams.slug] || <FileText className="w-8 h-8" />}
                         </div>
-                        <h1 className="text-3xl md:text-4xl font-bold" style={{ color: 'var(--color-text)' }}>
+                        <h1 className="text-3xl md:text-4xl font-black tracking-tight" style={{ color: 'var(--color-text)' }}>
                             {page.title}
                         </h1>
                     </div>
@@ -93,7 +93,7 @@ export default function LegalPageComponent({ params }: { params: Promise<{ slug:
 
                 {/* Content */}
                 <div
-                    className="prose prose-lg max-w-none"
+                    className="prose prose-lg max-w-none rounded-4xl border border-white/70 bg-white/85 backdrop-blur-xl shadow-[0_20px_55px_rgba(31,41,55,0.08)] p-6 md:p-8"
                     style={{ color: 'var(--color-text)' }}
                     dangerouslySetInnerHTML={{ __html: page.content }}
                 />

@@ -38,7 +38,15 @@ export async function PUT(req: NextRequest) {
             assistantColor,
             assistantTextColor,
             assistantWelcome,
-            assistantPosition
+            assistantPosition,
+            assistantPhone,
+            assistantWhatsapp,
+            assistantEmail,
+            assistantWeekdayOpen,
+            assistantWeekdayClose,
+            assistantSaturdayOpen,
+            assistantSaturdayClose,
+            assistantSundayClosed
         } = body;
 
         // Trova o crea le impostazioni
@@ -67,7 +75,15 @@ export async function PUT(req: NextRequest) {
             assistantColor,
             assistantTextColor,
             assistantWelcome,
-            assistantPosition
+            assistantPosition,
+            assistantPhone,
+            assistantWhatsapp,
+            assistantEmail,
+            assistantWeekdayOpen,
+            assistantWeekdayClose,
+            assistantSaturdayOpen,
+            assistantSaturdayClose,
+            assistantSundayClosed
         };
 
         // Rimuovi valori undefined

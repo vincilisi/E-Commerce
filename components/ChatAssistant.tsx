@@ -187,31 +187,31 @@ export default function ChatAssistant() {
                         console.log('Opening chat assistant');
                         setIsOpen(true);
                     }}
-                    className={`fixed bottom-6 ${positionClass} z-50 p-4 rounded-full shadow-2xl hover:scale-110 transition-all duration-300 flex items-center space-x-2 group`}
-                    style={{ backgroundColor: settings.assistantColor }}
+                    className={`fixed bottom-6 ${positionClass} z-50 p-4 rounded-full shadow-xl hover:scale-110 transition-all duration-300 flex items-center space-x-2 group border border-white/20 backdrop-blur-md`}
+                    style={{ backgroundColor: settings.assistantColor, boxShadow: `0 12px 35px ${settings.assistantColor}30` }}
                 >
                     <MessageCircle className="w-6 h-6" style={{ color: settings.assistantTextColor }} />
                     <span className="hidden group-hover:inline font-semibold pr-2 animate-fadeIn" style={{ color: settings.assistantTextColor }}>
                         {texts.help}
                     </span>
-                    <span className="absolute -top-1 -right-1 w-4 h-4 bg-red-500 rounded-full animate-pulse" />
+                    <span className="absolute -top-1 -right-1 w-4 h-4 bg-emerald-500 rounded-full animate-pulse" />
                 </button>
             )}
 
             {/* Chat Window */}
             {isOpen && (
-                <div className={`fixed bottom-6 ${positionClass} z-50 w-96 max-w-[calc(100vw-3rem)] bg-white rounded-2xl shadow-2xl flex flex-col overflow-hidden animate-slideUp`}
-                    style={{ maxHeight: '600px' }}
+                <div className={`fixed bottom-6 ${positionClass} z-50 w-96 max-w-[calc(100vw-3rem)] bg-white rounded-3xl shadow-2xl flex flex-col overflow-hidden animate-slideUp border border-white/30 backdrop-blur-md`}
+                    style={{ maxHeight: '600px', boxShadow: `0 24px 60px ${settings.assistantColor}20` }}
                 >
                     {/* Header */}
-                    <div className="p-4 flex items-center justify-between" style={{ backgroundColor: settings.assistantColor }}>
+                    <div className="p-4 flex items-center justify-between" style={{ backgroundColor: settings.assistantColor, backgroundImage: `linear-gradient(135deg, ${settings.assistantColor}, ${settings.assistantColor}dd)` }}>
                         <div className="flex items-center space-x-3">
-                            <div className="w-10 h-10 bg-white rounded-full flex items-center justify-center">
-                                <Bot className="w-6 h-6" style={{ color: settings.assistantColor }} />
+                            <div className="w-10 h-10 bg-white/20 rounded-full flex items-center justify-center border border-white/30 backdrop-blur-sm">
+                                <Bot className="w-6 h-6" style={{ color: settings.assistantTextColor }} />
                             </div>
                             <div>
                                 <h3 className="font-bold" style={{ color: settings.assistantTextColor }}>{settings.assistantName}</h3>
-                                <p className="text-xs opacity-80" style={{ color: settings.assistantTextColor }}>{texts.online}</p>
+                                <p className="text-xs opacity-75" style={{ color: settings.assistantTextColor }}>💬 Online</p>
                             </div>
                         </div>
                         <button
@@ -230,7 +230,7 @@ export default function ChatAssistant() {
                     {messages.length === 0 && (
                         <div className="p-4 bg-gray-50">
                             <div className="flex items-start space-x-2">
-                                <div className="w-8 h-8 rounded-full flex items-center justify-center flex-shrink-0" style={{ backgroundColor: `${settings.assistantColor}20` }}>
+                                <div className="w-8 h-8 rounded-full flex items-center justify-center shrink-0" style={{ backgroundColor: `${settings.assistantColor}20` }}>
                                     <Bot className="w-5 h-5" style={{ color: settings.assistantColor }} />
                                 </div>
                                 <div className="p-3 rounded-2xl bg-white text-gray-800 rounded-tl-none shadow-sm">
@@ -249,7 +249,7 @@ export default function ChatAssistant() {
                             >
                                 <div className={`flex items-start space-x-2 max-w-[80%] ${message.isBot ? '' : 'flex-row-reverse space-x-reverse'}`}>
                                     <div
-                                        className="w-8 h-8 rounded-full flex items-center justify-center flex-shrink-0"
+                                        className="w-8 h-8 rounded-full flex items-center justify-center shrink-0"
                                         style={{ backgroundColor: message.isBot ? `${settings.assistantColor}20` : '#fce7f3' }}
                                     >
                                         {message.isBot ? (
@@ -278,7 +278,7 @@ export default function ChatAssistant() {
                             <div className="mb-4 flex justify-start">
                                 <div className="flex items-start space-x-2">
                                     <div
-                                        className="w-8 h-8 rounded-full flex items-center justify-center flex-shrink-0"
+                                        className="w-8 h-8 rounded-full flex items-center justify-center shrink-0"
                                         style={{ backgroundColor: `${settings.assistantColor}20` }}
                                     >
                                         <Bot className="w-5 h-5" style={{ color: settings.assistantColor }} />
