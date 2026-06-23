@@ -17,15 +17,8 @@
     "@stripe/stripe-js": "^8.6.1",
     "@types/bcryptjs": "^2.4.6",
     "bcryptjs": "^3.0.3",
-<<<<<<< HEAD
     "jsonwebtoken": "^9.0.3",
-=======
-<<<<<<< HEAD
-    "lucide-react": "^0.562.0",
-    "next": "16.1.3",
-    "next-auth": "^4.24.13",
-=======
->>>>>>> main
+
     "lightningcss": "^1.31.1",
     "lucide-react": "^0.562.0",
     "neon-new": "^0.14.0",
@@ -33,12 +26,7 @@
     "next-auth": "^4.24.7",
     "nodemailer": "^7.0.13",
     "pdf-lib": "^1.17.1",
-<<<<<<< HEAD
     "pg": "^8.22.0",
-=======
-    "prisma": "^5.22.0",
->>>>>>> master
->>>>>>> main
     "react": "19.2.3",
     "react-dom": "19.2.3",
     "react-hot-toast": "^2.6.0",
@@ -58,14 +46,8 @@
     "eslint-config-next": "16.1.3",
     "jest": "^30.2.0",
     "jest-environment-jsdom": "^30.2.0",
-<<<<<<< HEAD
+
     "prisma": "^7.8.0",
-=======
-<<<<<<< HEAD
-    "prisma": "^7.4.1",
-=======
->>>>>>> master
->>>>>>> main
     "supertest": "^7.2.2",
     "tailwindcss": "^4",
     "ts-jest": "^29.4.6",
