@@ -158,6 +158,8 @@ Vai su `/admin/ordini` per vedere tutti gli ordini ricevuti.
 
 ## 💳 Sistema Pagamenti
 
+<<<<<<< HEAD
+=======
 Questa sezione spiega in modo pratico come usare i pagamenti reali con **PayPal** e **Stripe**, dalla configurazione al test fino alla produzione.
 
 ### Panoramica Metodi Disponibili
@@ -277,6 +279,7 @@ Per approfondimento:
 - [STRIPE_SETUP.md](STRIPE_SETUP.md)
 - [PAYPAL_SETUP.md](PAYPAL_SETUP.md)
 
+>>>>>>> master
 ## 🌍 Traduzione Simultanea e Cambio Valuta
 
 ### Traduzione Simultanea
@@ -307,6 +310,37 @@ Per approfondimento:
 
 Per maggiori dettagli tecnici, consulta anche il file `docs/CAMBIO_VALUTA_E_TRADUZIONI.md`.
 
+<<<<<<< HEAD
+### Modalità Test (Default)
+
+Il sito è configurato per simulare pagamenti senza usare carte reali.
+
+**Come funziona:**
+- Gli utenti compilano il checkout normalmente
+- Cliccando "Procedi al Pagamento" l'ordine viene creato automaticamente come "Pagato"
+- Non serve Stripe configurato
+- Perfetto per test e demo
+
+**Indicatore:**
+Nella pagina checkout appare un banner giallo:
+> "Modalità Test Attiva: I pagamenti vengono simulati automaticamente"
+
+### Attivare Stripe Reale
+
+Quando sei pronto per pagamenti reali:
+
+1. Crea account su [Stripe](https://stripe.com)
+2. Ottieni le chiavi API
+3. Nel file `.env.local` aggiungi:
+   ```
+   STRIPE_SECRET_KEY=sk_live_...
+   NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY=pk_live_...
+   ```
+4. Riavvia il server
+
+Il sistema passerà automaticamente a Stripe reale.
+=======
+>>>>>>> master
 
 ## 🔍 Dashboard Admin
 

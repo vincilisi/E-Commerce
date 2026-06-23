@@ -1,3 +1,9 @@
+<<<<<<< HEAD
+export const runtime = "nodejs";
+export const dynamic = "force-dynamic";
+
+=======
+>>>>>>> master
 import { NextResponse } from 'next/server';
 import { prisma } from '@/lib/prisma';
 import bcrypt from 'bcryptjs';
@@ -19,6 +25,7 @@ export async function GET() {
     await prisma.user.deleteMany();
     await prisma.siteSettings.deleteMany();
 
+<<<<<<< HEAD
     // 4️⃣ Ricrea admin
     const hashedPassword = await bcrypt.hash('admin123', 10);
 
@@ -101,6 +108,38 @@ export async function GET() {
           images: {
             create: product.images.map((url) => ({ url }))
           }
+=======
+        for (const product of productsData) {
+<<<<<<< HEAD
+            const images = JSON.parse(product.images || '[]');
+            const materials = JSON.parse(product.materials || '[]');
+
+            await prisma.product.upsert({
+                where: { id: product.id },
+                update: {},
+                create: {
+                    id: product.id,
+                    name: product.name,
+                    description: product.description,
+                    price: product.price,
+                    category: product.category,
+                    inStock: product.inStock,
+                    dimensions: product.dimensions,
+                    images: {
+                        create: images.map((url: string) => ({ url }))
+                    },
+                    materials: {
+                        create: materials.map((name: string) => ({ name }))
+                    }
+                }
+=======
+            await prisma.product.upsert({
+                where: { id: product.id },
+                update: {},
+                create: product
+>>>>>>> master
+            });
+>>>>>>> main
         }
       });
     }

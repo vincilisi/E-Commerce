@@ -310,7 +310,11 @@ export default function GuidaAdmin() {
                                         <div className="space-y-3 text-sm text-gray-700">
                                             <div className="p-3 bg-gray-50 rounded-lg">
                                                 <strong className="block mb-2">Nome del Sito</strong>
+<<<<<<< HEAD
+                                                <p className="text-gray-600 text-xs">Cambia il nome che appare nella navbar, nel footer e nel titolo della pagina. Default: "Il Desiderio di una Stella"</p>
+=======
                                                 <p className="text-gray-600 text-xs">Cambia il nome che appare nella navbar, nel footer e nel titolo della pagina. Usa il nome del tuo brand.</p>
+>>>>>>> master
                                             </div>
                                             <div className="p-3 bg-gray-50 rounded-lg">
                                                 <strong className="block mb-2">Meta Description</strong>
@@ -568,6 +572,12 @@ export default function GuidaAdmin() {
                                             💳 Sistema Pagamenti
                                         </h2>
                                         <p className="text-sm sm:text-base text-gray-600 mb-4 sm:mb-6">
+<<<<<<< HEAD
+                                            Il sito supporta due modalità di pagamento: Test (per sviluppo) e Stripe Reale (per produzione). Scopri come funzionano e come configurarle.
+                                        </p>
+                                    </div>
+
+=======
                                             Il sito supporta <strong>PayPal</strong> e <strong>Stripe</strong> come metodi di pagamento reali, più una modalità test automatica quando nessun provider è configurato.
                                             In checkout il cliente sceglie il metodo preferito.
                                         </p>
@@ -592,6 +602,7 @@ export default function GuidaAdmin() {
                                         </div>
                                     </div>
 
+>>>>>>> master
                                     {/* MODALITÀ TEST */}
                                     <div className="border-2 rounded-lg p-4 sm:p-6" style={{ borderColor: 'var(--color-accent)' }}>
                                         <div className="flex items-center mb-4">
@@ -600,6 +611,34 @@ export default function GuidaAdmin() {
                                             </div>
                                             <div>
                                                 <h3 className="text-xl font-bold" style={{ color: 'var(--color-text)' }}>Modalità Test</h3>
+<<<<<<< HEAD
+                                                <span className="text-sm px-2 py-1 bg-green-100 text-green-800 rounded font-semibold">✓ ATTIVA PER DEFAULT</span>
+                                            </div>
+                                        </div>
+                                        <div className="space-y-4 text-sm text-gray-700">
+                                            <div className="p-4 bg-gray-50 rounded-lg">
+                                                <strong className="block mb-2">Come Funziona:</strong>
+                                                <ol className="space-y-2 ml-4 list-decimal">
+                                                    <li>Il cliente aggiunge prodotti al carrello</li>
+                                                    <li>Procede al checkout e compila i dati di spedizione</li>
+                                                    <li>Clicca "Procedi al Pagamento"</li>
+                                                    <li>L'ordine viene creato automaticamente come <strong>"Pagato"</strong></li>
+                                                    <li>Nessun pagamento reale viene effettuato</li>
+                                                </ol>
+                                            </div>
+                                            <div className="p-4 bg-yellow-50 rounded-lg">
+                                                <strong className="block mb-2 text-yellow-800">⚠️ Quando Usarla:</strong>
+                                                <ul className="space-y-1 ml-4 list-disc text-yellow-700">
+                                                    <li>Durante lo sviluppo e test del sito</li>
+                                                    <li>Per mostrare demo ai clienti</li>
+                                                    <li>Per testare il flusso di checkout</li>
+                                                    <li>Prima di configurare Stripe reale</li>
+                                                </ul>
+                                            </div>
+                                            <div className="p-4 bg-blue-50 rounded-lg">
+                                                <strong className="block mb-2 text-blue-800">🔍 Come Verificare:</strong>
+                                                <p className="text-blue-700">Se nel file <code className="bg-blue-100 px-1 rounded">.env.local</code> NON ci sono le variabili <code className="bg-blue-100 px-1 rounded">STRIPE_SECRET_KEY</code> e <code className="bg-blue-100 px-1 rounded">NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY</code>, la modalità test è attiva.</p>
+=======
                                                 <span className="text-sm px-2 py-1 bg-green-100 text-green-800 rounded font-semibold">✓ ATTIVA SE NESSUN PROVIDER CONFIGURATO</span>
                                             </div>
                                         </div>
@@ -616,10 +655,14 @@ export default function GuidaAdmin() {
                                             <div className="p-4 bg-yellow-50 rounded-lg text-yellow-800">
                                                 <strong className="block mb-1">⚠️ Usala solo per:</strong>
                                                 sviluppo, demo e test del flusso ordine. Non accetta denaro reale.
+>>>>>>> master
                                             </div>
                                         </div>
                                     </div>
 
+<<<<<<< HEAD
+                                    {/* STRIPE REALE */}
+=======
                                     {/* PAYPAL */}
                                     <div className="border-2 rounded-lg p-4 sm:p-6" style={{ borderColor: '#0070ba' }}>
                                         <div className="flex items-center mb-4">
@@ -692,16 +735,48 @@ export default function GuidaAdmin() {
                                     </div>
 
                                     {/* STRIPE */}
+>>>>>>> master
                                     <div className="border-2 rounded-lg p-4 sm:p-6" style={{ borderColor: 'var(--color-primary)' }}>
                                         <div className="flex items-center mb-4">
                                             <CreditCard className="w-12 h-12 mr-3 shrink-0" style={{ color: 'var(--color-primary)' }} />
                                             <div>
+<<<<<<< HEAD
+                                                <h3 className="text-xl font-bold" style={{ color: 'var(--color-text)' }}>Stripe Reale</h3>
+=======
                                                 <h3 className="text-xl font-bold" style={{ color: 'var(--color-text)' }}>Stripe — Configurazione</h3>
+>>>>>>> master
                                                 <span className="text-sm px-2 py-1 bg-gray-200 text-gray-800 rounded">DA CONFIGURARE</span>
                                             </div>
                                         </div>
                                         <div className="space-y-4 text-sm text-gray-700">
                                             <div className="p-4 bg-gray-50 rounded-lg">
+<<<<<<< HEAD
+                                                <strong className="block mb-3">📋 Guida Passo-Passo per Attivare Stripe:</strong>
+                                                <ol className="space-y-3 ml-4 list-decimal">
+                                                    <li>
+                                                        <strong>Crea account Stripe</strong>
+                                                        <p className="text-gray-600">Vai su <a href="https://stripe.com" target="_blank" className="text-blue-600 underline">stripe.com</a> e registrati gratuitamente</p>
+                                                    </li>
+                                                    <li>
+                                                        <strong>Completa la verifica</strong>
+                                                        <p className="text-gray-600">Inserisci i dati della tua attività (P.IVA, IBAN per i pagamenti)</p>
+                                                    </li>
+                                                    <li>
+                                                        <strong>Ottieni le chiavi API</strong>
+                                                        <p className="text-gray-600">Dashboard Stripe → Developers → API Keys</p>
+                                                    </li>
+                                                    <li>
+                                                        <strong>Crea/modifica il file .env.local</strong>
+                                                        <div className="bg-gray-800 text-green-400 p-3 rounded mt-2 font-mono text-xs overflow-x-auto">
+                                                            <div>STRIPE_SECRET_KEY=sk_live_xxxxxxxxxxxx</div>
+                                                            <div>NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY=pk_live_xxxxxxxxxxxx</div>
+                                                        </div>
+                                                    </li>
+                                                    <li>
+                                                        <strong>Riavvia il server</strong>
+                                                        <p className="text-gray-600">Ferma il server e riavvialo con <code className="bg-gray-100 px-1 rounded">npm run dev</code></p>
+                                                    </li>
+=======
                                                 <strong className="block mb-3">📋 Passo-Passo per Attivare Stripe:</strong>
                                                 <ol className="space-y-3 ml-4 list-decimal">
                                                     <li>
@@ -746,6 +821,7 @@ export default function GuidaAdmin() {
                                                     <li>Aggiorna il file .env con le chiavi live</li>
                                                     <li>Riconfigura il webhook con il dominio di produzione</li>
                                                     <li>Riavvia il server</li>
+>>>>>>> master
                                                 </ol>
                                             </div>
                                             <div className="p-4 bg-purple-50 rounded-lg">
@@ -753,6 +829,20 @@ export default function GuidaAdmin() {
                                                 <ul className="space-y-1 ml-4 list-disc text-purple-700">
                                                     <li><strong>1.4% + 0.25€</strong> per carte europee</li>
                                                     <li><strong>2.9% + 0.25€</strong> per carte non europee</li>
+<<<<<<< HEAD
+                                                    <li>Nessun costo fisso mensile</li>
+                                                    <li>Paghi solo quando ricevi pagamenti</li>
+                                                </ul>
+                                            </div>
+                                            <div className="p-4 bg-green-50 rounded-lg">
+                                                <strong className="block mb-2 text-green-800">✅ Metodi di Pagamento Supportati:</strong>
+                                                <div className="flex flex-wrap gap-2 mt-2">
+                                                    <span className="px-2 py-1 bg-white rounded text-xs border">💳 Carte di Credito</span>
+                                                    <span className="px-2 py-1 bg-white rounded text-xs border">💳 Carte di Debito</span>
+                                                    <span className="px-2 py-1 bg-white rounded text-xs border">🍎 Apple Pay</span>
+                                                    <span className="px-2 py-1 bg-white rounded text-xs border">📱 Google Pay</span>
+                                                    <span className="px-2 py-1 bg-white rounded text-xs border">🏦 SEPA Direct Debit</span>
+=======
                                                     <li>Nessun costo fisso mensile · paghi solo sulle vendite</li>
                                                 </ul>
                                             </div>
@@ -764,11 +854,30 @@ export default function GuidaAdmin() {
                                                     <span className="px-2 py-1 bg-white rounded text-xs border">🍎 Apple Pay</span>
                                                     <span className="px-2 py-1 bg-white rounded text-xs border">📱 Google Pay</span>
                                                     <span className="px-2 py-1 bg-white rounded text-xs border">🏦 SEPA Addebito Diretto</span>
+>>>>>>> master
                                                 </div>
                                             </div>
                                         </div>
                                     </div>
 
+<<<<<<< HEAD
+                                    {/* TESTING STRIPE */}
+                                    <div className="border rounded-lg p-4 sm:p-6 bg-orange-50" style={{ borderColor: 'var(--color-border)' }}>
+                                        <h3 className="text-lg font-bold mb-3 text-orange-800">🔧 Testare Stripe Prima di Andare Live</h3>
+                                        <p className="text-sm text-orange-700 mb-3">Puoi testare Stripe con chiavi di test prima di usare quelle reali:</p>
+                                        <ol className="space-y-2 text-sm text-orange-700 ml-4 list-decimal">
+                                            <li>Usa le chiavi che iniziano con <code className="bg-orange-100 px-1 rounded">sk_test_</code> e <code className="bg-orange-100 px-1 rounded">pk_test_</code></li>
+                                            <li>Usa carte di test Stripe:
+                                                <ul className="ml-4 mt-1 space-y-1 list-disc">
+                                                    <li><code className="bg-orange-100 px-1 rounded">4242 4242 4242 4242</code> - Pagamento riuscito</li>
+                                                    <li><code className="bg-orange-100 px-1 rounded">4000 0000 0000 0002</code> - Carta rifiutata</li>
+                                                </ul>
+                                            </li>
+                                            <li>Data scadenza: qualsiasi data futura</li>
+                                            <li>CVC: qualsiasi 3 cifre</li>
+                                        </ol>
+                                    </div>
+=======
                                     {/* VERIFICA ORDINE DOPO PAGAMENTO */}
                                     <div className="border rounded-lg p-4 sm:p-6 bg-gray-50" style={{ borderColor: 'var(--color-border)' }}>
                                         <h3 className="text-base sm:text-lg font-bold mb-3" style={{ color: 'var(--color-text)' }}>📋 Come Verificare un Pagamento Andato a Buon Fine</h3>
@@ -804,6 +913,7 @@ export default function GuidaAdmin() {
                                             </div>
                                         </div>
                                     </div>
+>>>>>>> master
                                 </div>
                             )}
 
@@ -2171,7 +2281,11 @@ export default function GuidaAdmin() {
                                                 <code className="shrink-0 bg-purple-100 px-2 py-1 rounded text-sm text-purple-600">{'{{siteName}}'}</code>
                                                 <div>
                                                     <strong className="text-sm text-gray-800">Nome Sito</strong>
+<<<<<<< HEAD
+                                                    <p className="text-xs text-gray-600">Es: Il desiderio di una stella</p>
+=======
                                                     <p className="text-xs text-gray-600">Es: Nome del tuo brand</p>
+>>>>>>> master
                                                 </div>
                                             </div>
                                         </div>

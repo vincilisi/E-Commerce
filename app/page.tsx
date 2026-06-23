@@ -2,7 +2,11 @@
 
 import Link from 'next/link';
 import ProductCard from '@/components/ProductCard';
+<<<<<<< HEAD
+import { Star, Sparkles, Heart } from 'lucide-react';
+=======
 import { Sparkles, Heart, ShieldCheck, Truck, Star, ArrowRight, BadgeCheck } from 'lucide-react';
+>>>>>>> master
 import { useEffect, useState } from 'react';
 import { useLanguage } from '@/lib/LanguageContext';
 
@@ -36,6 +40,37 @@ export default function Home() {
   }, []);
 
   return (
+<<<<<<< HEAD
+    <div className="overflow-hidden">
+      {/* Hero Section */}
+      <section className="text-white py-24 md:py-32 relative overflow-hidden" style={{ background: `linear-gradient(135deg, var(--color-primary), var(--color-secondary), var(--color-accent))`, backgroundSize: '200% 200%', animation: 'gradientShift 15s ease infinite' }}>
+        <div className="absolute inset-0 opacity-10">
+          <div className="absolute top-10 left-10 w-72 h-72 bg-white rounded-full blur-3xl animate-blob"></div>
+          <div className="absolute top-40 right-10 w-96 h-96 bg-white rounded-full blur-3xl animate-blob animation-delay-2000"></div>
+          <div className="absolute -bottom-20 left-1/2 w-80 h-80 bg-white rounded-full blur-3xl animate-blob animation-delay-4000"></div>
+        </div>
+        <div className="container mx-auto px-4 text-center relative z-10">
+          <div className="flex justify-center mb-8 transform hover:scale-110 transition-transform duration-500">
+            {logo ? (
+              <img src={logo} alt="Logo" className="w-20 h-20 md:w-24 md:h-24 object-contain drop-shadow-2xl animate-fadeIn" />
+            ) : (
+              <Star className="w-20 h-20 md:w-24 md:h-24 animate-pulse drop-shadow-2xl" style={{ fill: 'var(--color-accent)', color: 'var(--color-accent)' }} />
+            )}
+          </div>
+          <h1 className="text-4xl sm:text-5xl md:text-7xl font-bold mb-6 animate-slideUp drop-shadow-lg">
+            {siteName}
+          </h1>
+          <p className="text-lg sm:text-xl md:text-2xl mb-10 max-w-3xl mx-auto animate-slideUp animation-delay-200 leading-relaxed px-4">
+            {t('heroSubtitle')}
+          </p>
+          <Link
+            href="/prodotti"
+            className="px-8 py-4 md:px-10 md:py-5 rounded-full text-base md:text-lg font-semibold hover:scale-105 hover:shadow-2xl transition-all duration-300 inline-block animate-slideUp animation-delay-400 shadow-xl"
+            style={{ backgroundColor: 'var(--color-accent)', color: 'var(--color-text)' }}
+          >
+            {t('shopNow')} →
+          </Link>
+=======
     <div className="overflow-hidden bg-[radial-gradient(circle_at_top,rgba(147,51,234,0.08),transparent_35%),linear-gradient(180deg,#fff_0%,#faf7ff_38%,#fff_100%)]">
       <section className="pt-4 pb-2">
         <div className="container mx-auto px-4">
@@ -166,10 +201,17 @@ export default function Home() {
               </div>
             </div>
           </div>
+>>>>>>> master
         </div>
       </section>
 
       {/* Features Section */}
+<<<<<<< HEAD
+      <section className="py-20 md:py-24 bg-gradient-to-b from-white to-gray-50">
+        <div className="container mx-auto px-4">
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-8 md:gap-12">
+            <div className="text-center group hover:scale-105 transition-all duration-300 p-6 rounded-2xl hover:shadow-2xl">
+=======
       <section className="py-20 md:py-24">
         <div className="container mx-auto px-4">
           <div className="max-w-3xl mx-auto text-center mb-16">
@@ -183,6 +225,7 @@ export default function Home() {
           </div>
           <div className="grid grid-cols-1 md:grid-cols-3 gap-8 md:gap-12">
             <div className="text-center group hover:-translate-y-2 transition-all duration-300 p-6 rounded-[1.75rem] bg-white border border-gray-100 shadow-[0_18px_45px_rgba(31,41,55,0.08)]">
+>>>>>>> master
               <div className="flex justify-center mb-6">
                 <div className="relative p-4 rounded-full transform group-hover:rotate-12 group-hover:scale-110 transition-all duration-500">
                   <div className="absolute inset-0 rounded-full" style={{ backgroundColor: 'var(--color-primary)', opacity: 0.1 }}></div>
@@ -194,7 +237,11 @@ export default function Home() {
                 {t('features.handmadeDesc')}
               </p>
             </div>
+<<<<<<< HEAD
+            <div className="text-center group hover:scale-105 transition-all duration-300 p-6 rounded-2xl hover:shadow-2xl">
+=======
             <div className="text-center group hover:-translate-y-2 transition-all duration-300 p-6 rounded-[1.75rem] bg-white border border-gray-100 shadow-[0_18px_45px_rgba(31,41,55,0.08)]">
+>>>>>>> master
               <div className="flex justify-center mb-6">
                 <div className="relative p-4 rounded-full transform group-hover:rotate-12 group-hover:scale-110 transition-all duration-500">
                   <div className="absolute inset-0 rounded-full" style={{ backgroundColor: 'var(--color-primary)', opacity: 0.1 }}></div>
@@ -206,11 +253,19 @@ export default function Home() {
                 {t('features.handmadeDesc')}
               </p>
             </div>
+<<<<<<< HEAD
+            <div className="text-center group hover:scale-105 transition-all duration-300 p-6 rounded-2xl hover:shadow-2xl">
+              <div className="flex justify-center mb-6">
+                <div className="relative p-4 rounded-full transform group-hover:rotate-12 group-hover:scale-110 transition-all duration-500">
+                  <div className="absolute inset-0 rounded-full" style={{ backgroundColor: 'var(--color-primary)', opacity: 0.1 }}></div>
+                  <Star className="w-12 h-12 md:w-14 md:h-14 relative z-10" style={{ color: 'var(--color-primary)', fill: 'var(--color-primary)' }} />
+=======
             <div className="text-center group hover:-translate-y-2 transition-all duration-300 p-6 rounded-[1.75rem] bg-white border border-gray-100 shadow-[0_18px_45px_rgba(31,41,55,0.08)]">
               <div className="flex justify-center mb-6">
                 <div className="relative p-4 rounded-full transform group-hover:rotate-12 group-hover:scale-110 transition-all duration-500">
                   <div className="absolute inset-0 rounded-full" style={{ backgroundColor: 'var(--color-primary)', opacity: 0.1 }}></div>
                   <Sparkles className="w-12 h-12 md:w-14 md:h-14 relative z-10" style={{ color: 'var(--color-primary)' }} />
+>>>>>>> master
                 </div>
               </div>
               <h3 className="text-xl md:text-2xl font-bold mb-3" style={{ color: 'var(--color-text)' }}>{t('features.quality')}</h3>
@@ -226,12 +281,19 @@ export default function Home() {
       <section className="py-20 md:py-24">
         <div className="container mx-auto px-4">
           <div className="text-center mb-16">
+<<<<<<< HEAD
+            <h2 className="text-3xl md:text-5xl font-bold mb-4" style={{ color: 'var(--color-text)' }}>
+              {t('featuredProducts')}
+            </h2>
+            <div className="w-24 h-1 mx-auto rounded-full mb-6" style={{ backgroundColor: 'var(--color-accent)' }}></div>
+=======
             <p className="text-sm uppercase tracking-[0.3em] text-gray-500 mb-3">Curated selection</p>
             <h2 className="text-3xl md:text-5xl font-bold mb-4" style={{ color: 'var(--color-text)' }}>
               {t('featuredProducts')}
             </h2>
             <p className="max-w-2xl mx-auto text-gray-600">Una selezione ordinata, con visual pulito e prodotto al centro: così il catalogo comunica più valore e meno confusione.</p>
             <div className="w-24 h-1 mx-auto rounded-full mt-6" style={{ backgroundColor: 'var(--color-accent)' }}></div>
+>>>>>>> master
           </div>
           <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-6 md:gap-8">
             {products.slice(0, 5).map((product, index) => (
@@ -258,6 +320,29 @@ export default function Home() {
         </div>
       </section>
 
+<<<<<<< HEAD
+      {/* CTA Section */}
+      <section className="text-white py-20 md:py-28 relative overflow-hidden" style={{ background: `linear-gradient(135deg, var(--color-primary), var(--color-secondary))` }}>
+        <div className="absolute inset-0 opacity-10">
+          <div className="absolute bottom-0 left-0 w-96 h-96 bg-white rounded-full blur-3xl animate-pulse"></div>
+          <div className="absolute top-0 right-0 w-80 h-80 bg-white rounded-full blur-3xl animate-pulse animation-delay-1000"></div>
+        </div>
+        <div className="container mx-auto px-4 text-center relative z-10">
+          <h2 className="text-3xl sm:text-4xl md:text-5xl font-bold mb-6 animate-slideUp">
+            Cerchi un Regalo Speciale?
+          </h2>
+          <p className="text-lg md:text-2xl mb-10 max-w-3xl mx-auto leading-relaxed animate-slideUp animation-delay-200 px-4">
+            I nostri portachiavi artigianali sono perfetti per sorprendere chi ami.<br className="hidden md:block" />
+            <span className="text-base md:text-xl opacity-90 mt-2 block">Personalizzazione disponibile su richiesta 🎁</span>
+          </p>
+          <Link
+            href="/contatti"
+            className="px-8 md:px-10 py-3 md:py-4 rounded-full hover:scale-105 hover:shadow-2xl transition-all duration-300 inline-block font-semibold text-sm md:text-base shadow-xl animate-slideUp animation-delay-400"
+            style={{ backgroundColor: 'var(--color-accent)', color: 'var(--color-text)' }}
+          >
+            Contattaci Ora →
+          </Link>
+=======
       {/* Testimonials Section */}
       <section className="py-20 md:py-28 bg-[radial-gradient(circle_at_bottom,rgba(147,51,234,0.08),transparent_32%)]">
         <div className="container mx-auto px-4">
@@ -397,6 +482,7 @@ export default function Home() {
             </div>
             <p className="text-xs md:text-sm text-white/60 text-center">💬 Risposta entro 24 ore | 🎁 Packaging premium incluso | ✨ Garanzia soddisfazione</p>
           </div>
+>>>>>>> master
         </div>
       </section >
     </div >

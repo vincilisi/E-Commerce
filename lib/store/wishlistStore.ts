@@ -1,7 +1,11 @@
 import { create } from 'zustand';
 import { persist } from 'zustand/middleware';
 
+<<<<<<< HEAD
+export interface WishlistItem {
+=======
 interface WishlistItem {
+>>>>>>> master
     id: number;
     name: string;
     price: number;

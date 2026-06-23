@@ -1,15 +1,30 @@
+<<<<<<< HEAD
+export const runtime = "nodejs";
+export const dynamic = "force-dynamic";
+
+=======
+>>>>>>> master
 import { NextRequest, NextResponse } from 'next/server';
 import { prisma } from '@/lib/prisma';
 
 // GET - Singolo codice promo
 export async function GET(
     request: NextRequest,
+<<<<<<< HEAD
+    context: { params: Promise<{ id: string }> }
+) {
+    try {
+        const { id } = await context.params
+        const code = await prisma.discountCode.findUnique({
+            where: { id }
+=======
     { params }: { params: Promise<{ id: string }> }
 ) {
     try {
         const resolvedParams = await params;
         const code = await prisma.discountCode.findUnique({
             where: { id: resolvedParams.id }
+>>>>>>> master
         });
 
         if (!code) {
@@ -26,6 +41,16 @@ export async function GET(
 // PUT - Aggiorna codice promo
 export async function PUT(
     request: NextRequest,
+<<<<<<< HEAD
+    context: { params: Promise<{ id: string }> }
+) {
+    try {
+        const { id } = await context.params
+        const body = await request.json();
+
+        const promoCode = await prisma.discountCode.update({
+            where: { id },
+=======
     { params }: { params: Promise<{ id: string }> }
 ) {
     try {
@@ -34,6 +59,7 @@ export async function PUT(
 
         const promoCode = await prisma.discountCode.update({
             where: { id: resolvedParams.id },
+>>>>>>> master
             data: {
                 code: body.code.toUpperCase(),
                 type: body.type,
@@ -56,12 +82,21 @@ export async function PUT(
 // DELETE - Elimina codice promo
 export async function DELETE(
     request: NextRequest,
+<<<<<<< HEAD
+    context: { params: Promise<{ id: string }> }
+) {
+    try {
+        const { id } = await context.params
+        await prisma.discountCode.delete({
+            where: { id }
+=======
     { params }: { params: Promise<{ id: string }> }
 ) {
     try {
         const resolvedParams = await params;
         await prisma.discountCode.delete({
             where: { id: resolvedParams.id }
+>>>>>>> master
         });
 
         return NextResponse.json({ message: 'Codice promo eliminato con successo' });

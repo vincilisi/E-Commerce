@@ -1,6 +1,10 @@
 
 export interface ProductImage {
+<<<<<<< HEAD
+    alt: string;
+=======
     id: string;
+>>>>>>> master
     url: string;
 }
 

@@ -1,10 +1,21 @@
+<<<<<<< HEAD
+export const runtime = "nodejs";
+export const dynamic = "force-dynamic";
+
+=======
+>>>>>>> master
 import { NextRequest, NextResponse } from 'next/server'
 import { prisma } from '@/lib/prisma'
 import { cookies } from 'next/headers'
 
 // Helper per ottenere session ID
+<<<<<<< HEAD
+async function getSessionId() {
+    const cookieStore = await cookies()
+=======
 function getSessionId() {
     const cookieStore = cookies()
+>>>>>>> master
     let sessionId = cookieStore.get('wishlist_session')?.value
     return sessionId || null
 }
@@ -14,7 +25,11 @@ export async function GET(request: NextRequest) {
     try {
         const { searchParams } = new URL(request.url)
         const userId = searchParams.get('userId')
+<<<<<<< HEAD
+        const sessionId = (await getSessionId()) || searchParams.get('sessionId')
+=======
         const sessionId = getSessionId() || searchParams.get('sessionId')
+>>>>>>> master
 
         const where = userId
             ? { userId }

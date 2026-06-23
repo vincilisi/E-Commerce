@@ -2,12 +2,23 @@
 
 import { useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
+<<<<<<< HEAD
+import { loadStripe } from '@stripe/stripe-js';
+import { useCartStore } from '@/lib/store/cartStore';
+import { Lock, CreditCard } from 'lucide-react';
+=======
 import { useCartStore } from '@/lib/store/cartStore';
 import { Lock, Truck, ShieldCheck, BadgeCheck } from 'lucide-react';
+>>>>>>> master
 import toast, { Toaster } from 'react-hot-toast';
 import Link from 'next/link';
 import { useLanguage } from '@/lib/LanguageContext';
 
+<<<<<<< HEAD
+const stripePromise = loadStripe(process.env.NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY!);
+
+=======
+>>>>>>> master
 export default function CheckoutPage() {
     const { language, t, formatPrice } = useLanguage();
     const router = useRouter();
@@ -17,7 +28,10 @@ export default function CheckoutPage() {
     const [discountCode, setDiscountCode] = useState('');
     const [discount, setDiscount] = useState<{ amount: number; code: string } | null>(null);
     const [applyingDiscount, setApplyingDiscount] = useState(false);
+<<<<<<< HEAD
+=======
     const [paymentMethod, setPaymentMethod] = useState<'paypal' | 'cod'>('paypal');
+>>>>>>> master
 
     const [shippingInfo, setShippingInfo] = useState({
         name: '',
@@ -37,6 +51,14 @@ export default function CheckoutPage() {
             const res = await fetch('/api/auth/me');
             if (res.ok) {
                 const data = await res.json();
+<<<<<<< HEAD
+                setUser(data.user);
+                setShippingInfo(prev => ({
+                    ...prev,
+                    email: data.user.email,
+                    name: data.user.name
+                }));
+=======
                 if (data.user) {
                     setUser(data.user);
                     setShippingInfo(prev => ({
@@ -47,6 +69,7 @@ export default function CheckoutPage() {
                 } else {
                     setUser(null);
                 }
+>>>>>>> master
             }
         } catch (error) {
             console.error('Auth check failed:', error);
@@ -110,15 +133,23 @@ export default function CheckoutPage() {
         try {
             console.log('Invio ordine:', { items, shippingInfo, userId: user?.id });
 
+<<<<<<< HEAD
+            const res = await fetch('/api/checkout', {
+=======
             const endpoint = paymentMethod === 'paypal' ? '/api/payments/paypal' : '/api/checkout';
             const res = await fetch(endpoint, {
+>>>>>>> master
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({
                     items,
                     shippingInfo,
+<<<<<<< HEAD
+                    userId: user?.id
+=======
                     userId: user?.id,
                     paymentMethod
+>>>>>>> master
                 })
             });
 
@@ -134,6 +165,25 @@ export default function CheckoutPage() {
                 return;
             }
 
+<<<<<<< HEAD
+            if (data.testMode) {
+                // Modalità test - reindirizza direttamente alla pagina di successo
+                toast.success('🧪 Ordine simulato con successo!');
+                clearCart();
+                router.push(data.redirectUrl);
+            } else if (data.url) {
+                // Modalità Stripe reale - usa l'URL di checkout
+                window.location.href = data.url;
+            } else if (data.sessionId) {
+                // Vecchia modalità con sessionId
+                const stripe = await stripePromise;
+                if (stripe) {
+                    await (stripe as any).redirectToCheckout({ sessionId: data.sessionId });
+                }
+            } else {
+                toast.error('Errore nella creazione del pagamento');
+            }
+=======
             if (paymentMethod === 'paypal') {
                 if (data.approveUrl) {
                     window.location.href = data.approveUrl;
@@ -152,6 +202,7 @@ export default function CheckoutPage() {
             }
 
             toast.error('Errore nella creazione del pagamento');
+>>>>>>> master
         } catch (error) {
             console.error('Errore checkout:', error);
             toast.error('Errore nel processare il pagamento');
@@ -175,6 +226,36 @@ export default function CheckoutPage() {
     }
 
     return (
+<<<<<<< HEAD
+        <div className="min-h-screen py-12" style={{ backgroundColor: 'var(--color-background)' }}>
+            <Toaster position="top-center" />
+
+            <div className="container mx-auto px-4 max-w-6xl">
+                {/* Banner Modalità Test */}
+                {!process.env.NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY || process.env.NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY.includes('pk_test') && (
+                    <div className="mb-6 bg-yellow-50 border-l-4 border-yellow-400 p-4 rounded">
+                        <div className="flex">
+                            <div className="flex-shrink-0">
+                                <svg className="h-5 w-5 text-yellow-400" viewBox="0 0 20 20" fill="currentColor">
+                                    <path fillRule="evenodd" d="M8.257 3.099c.765-1.36 2.722-1.36 3.486 0l5.58 9.92c.75 1.334-.213 2.98-1.742 2.98H4.42c-1.53 0-2.493-1.646-1.743-2.98l5.58-9.92zM11 13a1 1 0 11-2 0 1 1 0 012 0zm-1-8a1 1 0 00-1 1v3a1 1 0 002 0V6a1 1 0 00-1-1z" clipRule="evenodd" />
+                                </svg>
+                            </div>
+                            <div className="ml-3">
+                                <p className="text-sm text-yellow-700">
+                                    <strong>Modalità Test Attiva:</strong> I pagamenti vengono simulati automaticamente. Nessuna carta di credito verrà addebitata.
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+                )}
+
+                <h1 className="text-2xl sm:text-3xl md:text-4xl font-bold mb-6 md:mb-8" style={{ color: 'var(--color-text)' }}>Checkout</h1>
+
+                <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
+                    {/* Form spedizione */}
+                    <div className="lg:col-span-2 rounded-lg shadow-md p-4 sm:p-6 md:p-8" style={{ backgroundColor: 'var(--color-card-bg)' }}>
+                        <h2 className="text-xl sm:text-2xl font-bold mb-4 sm:mb-6" style={{ color: 'var(--color-text)' }}>Informazioni di Spedizione</h2>
+=======
         <div className="min-h-screen py-12 bg-[radial-gradient(circle_at_top,rgba(147,51,234,0.06),transparent_30%),linear-gradient(180deg,#fff_0%,#faf7ff_36%,#fff_100%)]">
             <Toaster position="top-center" />
 
@@ -211,6 +292,7 @@ export default function CheckoutPage() {
                     {/* Form spedizione */}
                     <div className="lg:col-span-2 rounded-4xl shadow-[0_18px_45px_rgba(31,41,55,0.08)] p-4 sm:p-6 md:p-8 border border-white/70 bg-white/85 backdrop-blur-xl" style={{ backgroundColor: 'var(--color-card-bg)' }}>
                         <h2 className="text-xl sm:text-2xl font-black mb-4 sm:mb-6" style={{ color: 'var(--color-text)' }}>Informazioni di Spedizione</h2>
+>>>>>>> master
 
                         <form className="space-y-4">
                             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
@@ -293,6 +375,10 @@ export default function CheckoutPage() {
 
                     {/* Riepilogo ordine */}
                     <div className="lg:col-span-1">
+<<<<<<< HEAD
+                        <div className="rounded-lg shadow-md p-4 sm:p-6 sticky top-4" style={{ backgroundColor: 'var(--color-card-bg)' }}>
+                            <h2 className="text-lg sm:text-xl font-bold mb-3 sm:mb-4" style={{ color: 'var(--color-text)' }}>Riepilogo Ordine</h2>
+=======
                         <div className="rounded-4xl shadow-[0_18px_45px_rgba(31,41,55,0.1)] p-4 sm:p-6 sticky top-4 border border-white/70 bg-white/90 backdrop-blur-xl" style={{ backgroundColor: 'var(--color-card-bg)' }}>
                             <h2 className="text-lg sm:text-xl font-black mb-3 sm:mb-4" style={{ color: 'var(--color-text)' }}>Riepilogo Ordine</h2>
 
@@ -326,12 +412,17 @@ export default function CheckoutPage() {
                                     </label>
                                 </div>
                             </div>
+>>>>>>> master
 
                             <div className="space-y-3 mb-6">
                                 {items.map((item) => (
                                     <div key={item.id} className="flex justify-between text-sm">
                                         <span className="text-gray-600">
+<<<<<<< HEAD
+                                            {(item as any).translations?.name?.[language] || item.name} x {item.quantity}
+=======
                                             {item.translations?.name?.[language] || item.name} x {item.quantity}
+>>>>>>> master
                                         </span>
                                         <span className="font-semibold">{formatPrice(item.price * item.quantity)}</span>
                                     </div>
@@ -405,13 +496,22 @@ export default function CheckoutPage() {
                                 className="w-full mt-6 py-4 rounded-lg hover:opacity-90 transition flex items-center justify-center space-x-2 disabled:opacity-50"
                                 style={{ backgroundColor: 'var(--color-primary)', color: 'var(--color-button-text)' }}
                             >
+<<<<<<< HEAD
+                                <Lock className="w-5 h-5" />
+                                <span>{loading ? 'Elaborazione...' : 'Procedi al Pagamento'}</span>
+=======
                                 {paymentMethod === 'cod' ? <Truck className="w-5 h-5" /> : <Lock className="w-5 h-5" />}
                                 <span>{loading ? 'Elaborazione...' : paymentMethod === 'paypal' ? 'Paga con PayPal' : 'Conferma ordine'}</span>
+>>>>>>> master
                             </button>
 
                             <div className="mt-4 flex items-center justify-center space-x-2 text-sm text-gray-500">
                                 <CreditCard className="w-4 h-4" />
+<<<<<<< HEAD
+                                <span>Pagamento sicuro con Stripe</span>
+=======
                                 <span>{paymentMethod === 'paypal' ? 'Pagamento sicuro con PayPal' : 'Pagamento alla consegna'}</span>
+>>>>>>> master
                             </div>
                         </div>
                     </div>

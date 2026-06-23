@@ -1,13 +1,26 @@
+<<<<<<< HEAD
+export const runtime = "nodejs";
+export const dynamic = "force-dynamic";
+
+=======
+>>>>>>> master
 import { NextRequest, NextResponse } from 'next/server';
 import { prisma } from '@/lib/prisma';
 import { sendShippingNotification, sendOrderConfirmation, sendOrderDelivered } from '@/lib/email';
 
 export async function POST(
     request: NextRequest,
+<<<<<<< HEAD
+    context: { params: Promise<{ id: string }> }
+) {
+    try {
+        const { id } = await context.params;
+=======
     { params }: { params: Promise<{ id: string }> }
 ) {
     try {
         const { id } = await params;
+>>>>>>> master
         const { type } = await request.json();
 
         // Recupera l'ordine
@@ -35,6 +48,9 @@ export async function POST(
                     customerEmail: order.customerEmail,
                     orderNumber: order.orderNumber || order.id,
                     totalAmount: order.totalAmount,
+<<<<<<< HEAD
+                    shippingAddress: order.shippingAddress
+=======
                     shippingAddress: order.shippingAddress,
                     items: order.orderItems.map((item) => ({
                         name: item.product?.name || item.productId,
@@ -43,6 +59,7 @@ export async function POST(
                     })),
                     paymentMethod: order.stripePaymentId?.startsWith('paypal_') ? 'paypal' : (order.stripePaymentId ? 'card' : undefined),
                     status: order.status
+>>>>>>> master
                 });
                 break;
 

@@ -1,6 +1,9 @@
 import { prisma } from '@/lib/prisma';
+<<<<<<< HEAD
+=======
 import nodemailer from 'nodemailer';
 import { PDFDocument, StandardFonts, rgb } from 'pdf-lib';
+>>>>>>> master
 
 // Interfaccia per i dati delle email
 interface EmailData {
@@ -8,6 +11,8 @@ interface EmailData {
     subject: string;
     html: string;
     templateName?: string;
+<<<<<<< HEAD
+=======
     text?: string;
     attachments?: Array<{
         filename: string;
@@ -36,6 +41,7 @@ interface OrderReceiptData {
 interface SiteBrandSettings {
     siteName: string;
     logo: string;
+>>>>>>> master
 }
 
 // Template placeholders
@@ -63,6 +69,8 @@ export function replacePlaceholders(template: string, variables: TemplateVariabl
     return result;
 }
 
+<<<<<<< HEAD
+=======
 async function createMailer() {
     const smtpHost = process.env.SMTP_HOST?.trim();
     const smtpPort = Number(process.env.SMTP_PORT || '587');
@@ -371,6 +379,7 @@ async function buildOrderPdf(order: OrderReceiptData) {
     return Buffer.from(await pdf.save());
 }
 
+>>>>>>> master
 // Template email predefiniti
 export const defaultEmailTemplates = {
     order_confirmation: {
@@ -624,6 +633,10 @@ export const defaultEmailTemplates = {
 
 // Funzione per inviare email (usa un servizio come Resend, SendGrid, ecc.)
 // Per ora simula l'invio e salva nel log
+<<<<<<< HEAD
+export async function sendEmail(data: EmailData): Promise<{ success: boolean; error?: string }> {
+    try {
+=======
 export async function sendEmail(data: EmailData): Promise<{ success: boolean; error?: string; previewUrl?: string }> {
     try {
         const { transporter, fromAddress } = await createMailer();
@@ -639,6 +652,7 @@ export async function sendEmail(data: EmailData): Promise<{ success: boolean; er
 
         const previewUrl = nodemailer.getTestMessageUrl(info) || undefined;
 
+>>>>>>> master
         // Log dell'email inviata
         await prisma.emailLog.create({
             data: {
@@ -649,8 +663,28 @@ export async function sendEmail(data: EmailData): Promise<{ success: boolean; er
             }
         });
 
+<<<<<<< HEAD
+        // TODO: Integra con un servizio email reale come:
+        // - Resend (https://resend.com)
+        // - SendGrid (https://sendgrid.com)
+        // - Mailgun (https://mailgun.com)
+        // - Amazon SES
+        //
+        // Esempio con Resend:
+        // const resend = new Resend(process.env.RESEND_API_KEY);
+        // await resend.emails.send({
+        //     from: 'noreply@tuodominio.com',
+        //     to: data.to,
+        //     subject: data.subject,
+        //     html: data.html
+        // });
+
+        console.log(`📧 Email inviata a ${data.to}: ${data.subject}`);
+        return { success: true };
+=======
         console.log(`📧 Email inviata a ${data.to}: ${data.subject}`);
         return { success: true, previewUrl };
+>>>>>>> master
     } catch (error) {
         console.error('Errore invio email:', error);
 
@@ -676,6 +710,11 @@ export async function sendOrderConfirmation(order: {
     orderNumber: string;
     totalAmount: number;
     shippingAddress: string;
+<<<<<<< HEAD
+}) {
+    const template = defaultEmailTemplates.order_confirmation;
+    const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || 'http://localhost:3000';
+=======
     items: OrderLineItem[];
     paymentMethod?: string;
     status?: string;
@@ -694,13 +733,18 @@ export async function sendOrderConfirmation(order: {
         paymentMethod: order.paymentMethod,
         status: order.status
     });
+>>>>>>> master
 
     const html = replacePlaceholders(template.body, {
         customerName: order.customerName,
         orderNumber: order.orderNumber,
         totalAmount: `€${order.totalAmount.toFixed(2)}`,
         shippingAddress: order.shippingAddress,
+<<<<<<< HEAD
+        siteName: 'Il Desiderio di una Stella',
+=======
         siteName,
+>>>>>>> master
         siteUrl
     });
 
@@ -712,12 +756,16 @@ export async function sendOrderConfirmation(order: {
         to: order.customerEmail,
         subject,
         html,
+<<<<<<< HEAD
+        templateName: template.name
+=======
         templateName: template.name,
         attachments: [{
             filename: `ordine-${order.orderNumber}.pdf`,
             content: pdfBuffer,
             contentType: 'application/pdf'
         }]
+>>>>>>> master
     });
 }
 
@@ -731,8 +779,11 @@ export async function sendShippingNotification(order: {
 }) {
     const template = defaultEmailTemplates.shipping_notification;
     const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || 'http://localhost:3000';
+<<<<<<< HEAD
+=======
     const siteSettings = await getSiteBrandSettings();
     const siteName = siteSettings.siteName;
+>>>>>>> master
 
     // Genera URL tracking (esempio con BRT/Bartolini, modifica per il tuo corriere)
     const trackingUrl = `https://vas.brt.it/vas/sped_det_show.htm?bession=&bession_cl=&referer=sped_numspe_par.htm&Ession=&NumSped=${order.trackingNumber}`;
@@ -743,7 +794,11 @@ export async function sendShippingNotification(order: {
         trackingNumber: order.trackingNumber,
         trackingUrl,
         shippingAddress: order.shippingAddress,
+<<<<<<< HEAD
+        siteName: 'Il Desiderio di una Stella',
+=======
         siteName,
+>>>>>>> master
         siteUrl
     });
 
@@ -763,17 +818,27 @@ export async function sendShippingNotification(order: {
 export async function sendNewsletterWelcome(email: string) {
     const template = defaultEmailTemplates.newsletter_welcome;
     const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || 'http://localhost:3000';
+<<<<<<< HEAD
+
+    const html = replacePlaceholders(template.body, {
+        siteName: 'Il Desiderio di una Stella',
+=======
     const siteSettings = await getSiteBrandSettings();
     const siteName = siteSettings.siteName;
 
     const html = replacePlaceholders(template.body, {
         siteName,
+>>>>>>> master
         siteUrl,
         unsubscribeUrl: `${siteUrl}/newsletter/unsubscribe?email=${encodeURIComponent(email)}`
     });
 
     const subject = replacePlaceholders(template.subject, {
+<<<<<<< HEAD
+        siteName: 'Il Desiderio di una Stella'
+=======
         siteName
+>>>>>>> master
     });
 
     return sendEmail({
@@ -792,13 +857,20 @@ export async function sendOrderDelivered(order: {
 }) {
     const template = defaultEmailTemplates.order_delivered;
     const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || 'http://localhost:3000';
+<<<<<<< HEAD
+=======
     const siteSettings = await getSiteBrandSettings();
     const siteName = siteSettings.siteName;
+>>>>>>> master
 
     const html = replacePlaceholders(template.body, {
         customerName: order.customerName,
         orderNumber: order.orderNumber,
+<<<<<<< HEAD
+        siteName: 'Il Desiderio di una Stella',
+=======
         siteName,
+>>>>>>> master
         siteUrl
     });
 

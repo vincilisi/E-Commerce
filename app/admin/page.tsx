@@ -8,6 +8,23 @@ import { Package, Settings, ShoppingBag, Palette, Plus, LogOut, BookOpen, Calend
 export default function AdminDashboard() {
     const [user, setUser] = useState<any>(null);
     const [loading, setLoading] = useState(true);
+<<<<<<< HEAD
+    const router = useRouter();
+
+    useEffect(() => {
+        fetch('/api/auth/me')
+            .then(res => res.json())
+            .then(data => {
+                if (!data.user || data.user.role !== 'admin') {
+                    router.push('/login');
+                } else {
+                    setUser(data.user);
+                }
+                setLoading(false);
+            });
+    }, [router]);
+
+=======
     const [assistantPhone, setAssistantPhone] = useState('+39 02 1234 5678');
     const [assistantWhatsapp, setAssistantWhatsapp] = useState('+39 02 1234 5678');
     const [assistantEmail, setAssistantEmail] = useState('info@ildesiderio.it');
@@ -76,6 +93,7 @@ export default function AdminDashboard() {
         }
     };
 
+>>>>>>> master
     if (loading) {
         return (
             <div className="flex items-center justify-center min-h-screen">
@@ -233,6 +251,8 @@ export default function AdminDashboard() {
                 </div>
 
                 <div className="mt-8 rounded-lg shadow-md p-6" style={{ backgroundColor: 'var(--color-card-bg)' }}>
+<<<<<<< HEAD
+=======
                     <h3 className="text-xl font-bold mb-4" style={{ color: 'var(--color-text)' }}>Contatti Assistenza</h3>
                     <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
                         <div>
@@ -288,6 +308,7 @@ export default function AdminDashboard() {
                 </div>
 
                 <div className="mt-8 rounded-lg shadow-md p-6" style={{ backgroundColor: 'var(--color-card-bg)' }}>
+>>>>>>> master
                     <h3 className="text-xl font-bold mb-4" style={{ color: 'var(--color-text)' }}>Statistiche Rapide</h3>
                     <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
                         <div className="rounded-lg p-4" style={{ backgroundColor: 'var(--color-background)' }}>

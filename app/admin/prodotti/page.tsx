@@ -1,5 +1,9 @@
+<<<<<<< HEAD
+﻿'use client';
+=======
 'use client';
 
+>>>>>>> master
 import { useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { Plus, Edit, Trash2, Eye } from 'lucide-react';
@@ -103,6 +107,7 @@ export default function AdminProdotti() {
                             <tbody className="divide-y divide-gray-200">
                                 {products.map((product) => (
                                     <tr key={product.id}>
+<<<<<<< HEAD
                                         <td className="px-6 py-4">{product.name}</td>
                                         <td className="px-6 py-4">€{product.price.toFixed(2)}</td>
                                         <td className="px-6 py-4">{product.category}</td>
@@ -114,6 +119,23 @@ export default function AdminProdotti() {
                                                         : 'bg-red-100 text-red-800'
                                                 }`}
                                             >
+=======
+                                        <td className="px-6 py-4 whitespace-nowrap font-medium text-gray-900">
+                                            {product.name}
+                                        </td>
+                                        <td className="px-6 py-4 whitespace-nowrap text-gray-600">
+<<<<<<< HEAD
+                                            â‚¬{product.price.toFixed(2)}
+=======
+                                            €{product.price.toFixed(2)}
+>>>>>>> master
+                                        </td>
+                                        <td className="px-6 py-4 whitespace-nowrap text-gray-600">
+                                            {product.category}
+                                        </td>
+                                        <td className="px-6 py-4 whitespace-nowrap">
+                                            <span className={`px-2 py-1 text-xs rounded-full ${product.inStock ? 'bg-green-100 text-green-800' : 'bg-red-100 text-red-800'}`}>
+>>>>>>> main
                                                 {product.inStock ? 'Disponibile' : 'Esaurito'}
                                             </span>
                                         </td>
@@ -146,3 +168,7 @@ export default function AdminProdotti() {
         </div>
     );
 }
+<<<<<<< HEAD
+
+=======
+>>>>>>> master

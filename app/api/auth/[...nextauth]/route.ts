@@ -1,3 +1,9 @@
+<<<<<<< HEAD
+export const runtime = "nodejs";
+export const dynamic = "force-dynamic";
+
+=======
+>>>>>>> master
 import { NextRequest, NextResponse } from 'next/server';
 
 // Placeholder per NextAuth - per ora disabilitato

@@ -1,15 +1,25 @@
 'use client';
 
+<<<<<<< HEAD
+import { useState } from 'react';
+import { useRouter } from 'next/navigation';
+import Link from 'next/link';
+import { Star, Mail, Lock, User as UserIcon } from 'lucide-react';
+=======
 import { useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import Link from 'next/link';
 import { Mail, Lock, User as UserIcon, ShieldCheck, Sparkles } from 'lucide-react';
+>>>>>>> master
 import toast, { Toaster } from 'react-hot-toast';
 
 export default function RegisterPage() {
     const router = useRouter();
     const [loading, setLoading] = useState(false);
+<<<<<<< HEAD
+=======
     const [logo, setLogo] = useState('');
+>>>>>>> master
     const [formData, setFormData] = useState({
         name: '',
         email: '',
@@ -17,6 +27,8 @@ export default function RegisterPage() {
         confirmPassword: ''
     });
 
+<<<<<<< HEAD
+=======
     useEffect(() => {
         fetch('/api/admin/settings')
             .then(res => res.json())
@@ -28,6 +40,7 @@ export default function RegisterPage() {
             .catch(() => { });
     }, []);
 
+>>>>>>> master
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
 
@@ -71,6 +84,17 @@ export default function RegisterPage() {
     };
 
     return (
+<<<<<<< HEAD
+        <div className="min-h-screen flex items-center justify-center py-12 px-4" style={{ background: `linear-gradient(to bottom right, var(--color-primary), var(--color-secondary))` }}>
+            <Toaster position="top-center" />
+
+            <div className="max-w-md w-full rounded-2xl shadow-2xl p-6 sm:p-8" style={{ backgroundColor: 'var(--color-card-bg)' }}>
+                <div className="text-center mb-8">
+                    <div className="flex justify-center mb-4">
+                        <Star className="w-16 h-16" style={{ fill: 'var(--color-primary)', color: 'var(--color-primary)' }} />
+                    </div>
+                    <h1 className="text-2xl sm:text-3xl font-bold mb-2" style={{ color: 'var(--color-text)' }}>
+=======
         <div className="min-h-screen flex items-center justify-center py-12 px-4 bg-[radial-gradient(circle_at_top,rgba(147,51,234,0.2),transparent_36%),linear-gradient(135deg,rgba(31,41,55,0.98),rgba(147,51,234,0.94),rgba(99,102,241,0.9))]">
             <Toaster position="top-center" />
 
@@ -84,6 +108,7 @@ export default function RegisterPage() {
                         {logo && <img src={logo} alt="Logo" className="w-16 h-16 object-contain drop-shadow-xl" loading="lazy" role="img" />}
                     </div>
                     <h1 className="text-2xl sm:text-3xl font-black mb-2 tracking-tight" style={{ color: 'var(--color-text)' }}>
+>>>>>>> master
                         Crea un Account
                     </h1>
                     <p style={{ color: 'var(--color-text)', opacity: 0.7 }}>
@@ -102,7 +127,11 @@ export default function RegisterPage() {
                             required
                             value={formData.name}
                             onChange={(e) => setFormData({ ...formData, name: e.target.value })}
+<<<<<<< HEAD
+                            className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-600"
+=======
                             className="w-full px-4 py-3 border border-gray-300 rounded-2xl focus:outline-none focus:ring-2 focus:ring-purple-600"
+>>>>>>> master
                             placeholder="Il tuo nome"
                         />
                     </div>
@@ -117,7 +146,11 @@ export default function RegisterPage() {
                             required
                             value={formData.email}
                             onChange={(e) => setFormData({ ...formData, email: e.target.value })}
+<<<<<<< HEAD
+                            className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-600"
+=======
                             className="w-full px-4 py-3 border border-gray-300 rounded-2xl focus:outline-none focus:ring-2 focus:ring-purple-600"
+>>>>>>> master
                             placeholder="tua@email.com"
                         />
                     </div>
@@ -132,7 +165,11 @@ export default function RegisterPage() {
                             required
                             value={formData.password}
                             onChange={(e) => setFormData({ ...formData, password: e.target.value })}
+<<<<<<< HEAD
+                            className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-600"
+=======
                             className="w-full px-4 py-3 border border-gray-300 rounded-2xl focus:outline-none focus:ring-2 focus:ring-purple-600"
+>>>>>>> master
                             placeholder="Minimo 6 caratteri"
                         />
                     </div>
@@ -147,7 +184,11 @@ export default function RegisterPage() {
                             required
                             value={formData.confirmPassword}
                             onChange={(e) => setFormData({ ...formData, confirmPassword: e.target.value })}
+<<<<<<< HEAD
+                            className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-600"
+=======
                             className="w-full px-4 py-3 border border-gray-300 rounded-2xl focus:outline-none focus:ring-2 focus:ring-purple-600"
+>>>>>>> master
                             placeholder="Ripeti la password"
                         />
                     </div>
@@ -155,7 +196,11 @@ export default function RegisterPage() {
                     <button
                         type="submit"
                         disabled={loading}
+<<<<<<< HEAD
+                        className="w-full py-3 rounded-lg font-semibold hover:opacity-90 transition disabled:opacity-50"
+=======
                         className="w-full py-3 rounded-full font-semibold hover:opacity-90 transition disabled:opacity-50 shadow-lg"
+>>>>>>> master
                         style={{ backgroundColor: 'var(--color-primary)', color: 'var(--color-button-text)' }}
                     >
                         {loading ? 'Registrazione in corso...' : 'Registrati'}

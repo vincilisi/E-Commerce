@@ -3,7 +3,18 @@ generator client {
 }
 
 datasource db {
+<<<<<<< HEAD
   provider = "postgresql"
+=======
+<<<<<<< HEAD
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+  
+=======
+  provider = "sqlite"
+  url      = env("DATABASE_URL")
+>>>>>>> master
+>>>>>>> main
 }
 
 model User {
@@ -104,6 +115,7 @@ model OrderItem {
 }
 
 model SiteSettings {
+<<<<<<< HEAD
   id                     String   @id @default(cuid())
   primaryColor           String   @default("#9333ea")
   secondaryColor         String   @default("#6366f1")
@@ -137,6 +149,49 @@ model SiteSettings {
   assistantSaturdayClose String   @default("14:00")
   assistantSundayClosed  Boolean  @default(true)
   updatedAt              DateTime @updatedAt
+=======
+  id              String   @id @default(cuid())
+  primaryColor    String   @default("#9333ea")
+  secondaryColor  String   @default("#6366f1")
+  accentColor     String   @default("#fde047")
+  backgroundColor String   @default("#ffffff")
+  textColor       String   @default("#1f2937")
+  cardBackground  String   @default("#ffffff")
+  borderColor     String   @default("#e5e7eb")
+  buttonTextColor String   @default("#ffffff")
+  fontFamily      String   @default("Inter")
+  customFontUrl   String?
+  siteName        String   @default("Il Desiderio di una Stella")
+  logo            String?
+  
+  // Search Bar Settings
+  searchBgColor       String   @default("#ffffff")
+  searchTextColor     String   @default("#374151")
+  searchPlaceholder   String   @default("#9ca3af")
+  searchBorderColor   String   @default("#e5e7eb")
+  searchIconColor     String   @default("#6b7280")
+  
+  // Virtual Assistant Settings
+  assistantEnabled    Boolean  @default(true)
+  assistantName       String   @default("Assistente Virtuale")
+  assistantColor      String   @default("#9333ea")
+  assistantTextColor  String   @default("#ffffff")
+  assistantWelcome    String   @default("👋 Ciao! Sono il tuo assistente virtuale. Come posso aiutarti oggi?")
+  assistantPosition   String   @default("right") // "left" or "right"
+<<<<<<< HEAD
+=======
+  assistantPhone      String   @default("+39 02 1234 5678")
+  assistantWhatsapp   String   @default("+39 02 1234 5678")
+  assistantEmail      String   @default("info@ildesiderio.it")
+  assistantWeekdayOpen  String @default("09:00")
+  assistantWeekdayClose String @default("18:00")
+  assistantSaturdayOpen String @default("10:00")
+  assistantSaturdayClose String @default("14:00")
+  assistantSundayClosed Boolean @default(true)
+>>>>>>> master
+  
+  updatedAt       DateTime @updatedAt
+>>>>>>> main
 }
 
 model DiscountCode {
@@ -295,4 +350,12 @@ model Session {
   expiresAt DateTime
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
+<<<<<<< HEAD
 }
+=======
+}
+<<<<<<< HEAD
+=======
+
+>>>>>>> master
+>>>>>>> main

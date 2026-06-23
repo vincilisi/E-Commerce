@@ -1,13 +1,26 @@
+<<<<<<< HEAD
+export const runtime = "nodejs";
+export const dynamic = "force-dynamic";
+
+=======
+>>>>>>> master
 import { NextRequest, NextResponse } from 'next/server'
 import { prisma } from '@/lib/prisma'
 
 // GET - Singolo post
 export async function GET(
     request: NextRequest,
+<<<<<<< HEAD
+    context: { params: Promise<{ id: string }> }
+) {
+    try {
+        const { id } = await context.params
+=======
     { params }: { params: Promise<{ id: string }> }
 ) {
     try {
         const { id } = await params
+>>>>>>> master
         const post = await prisma.blogPost.findUnique({
             where: { id }
         })
@@ -26,10 +39,17 @@ export async function GET(
 // PUT - Modifica post
 export async function PUT(
     request: NextRequest,
+<<<<<<< HEAD
+    context: { params: Promise<{ id: string }> }
+) {
+    try {
+        const { id } = await context.params
+=======
     { params }: { params: Promise<{ id: string }> }
 ) {
     try {
         const { id } = await params
+>>>>>>> master
         const body = await request.json()
         const { title, content, excerpt, image, tags, published, featured } = body
 
@@ -63,10 +83,17 @@ export async function PUT(
 // DELETE - Elimina post
 export async function DELETE(
     request: NextRequest,
+<<<<<<< HEAD
+    context: { params: Promise<{ id: string }> }
+) {
+    try {
+        const { id } = await context.params
+=======
     { params }: { params: Promise<{ id: string }> }
 ) {
     try {
         const { id } = await params
+>>>>>>> master
         await prisma.blogPost.delete({
             where: { id }
         })

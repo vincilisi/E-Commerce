@@ -1,8 +1,15 @@
 'use client';
 
+<<<<<<< HEAD
+import { Trash2, ShoppingBag, Minus, Plus } from 'lucide-react';
+import Link from 'next/link';
+import { useCartStore } from '@/lib/store/cartStore';
+import Image from 'next/image';
+=======
 import { Trash2, ShoppingBag, Minus, Plus, ShieldCheck, Truck } from 'lucide-react';
 import Link from 'next/link';
 import { useCartStore } from '@/lib/store/cartStore';
+>>>>>>> master
 import { useLanguage } from '@/lib/LanguageContext';
 
 export default function CarrelloPage() {
@@ -35,6 +42,10 @@ export default function CarrelloPage() {
     }
 
     return (
+<<<<<<< HEAD
+        <div className="container mx-auto px-4 py-12" style={{ backgroundColor: 'var(--color-background)' }}>
+            <h1 className="text-2xl sm:text-3xl md:text-4xl font-bold mb-6 md:mb-8" style={{ color: 'var(--color-text)' }}>Carrello</h1>
+=======
         <div className="bg-[radial-gradient(circle_at_top,rgba(147,51,234,0.06),transparent_30%),linear-gradient(180deg,#fff_0%,#faf7ff_38%,#fff_100%)]">
             <div className="container mx-auto px-4 py-12">
                 <div className="rounded-4xl border border-white/70 bg-white/80 backdrop-blur-xl shadow-[0_20px_50px_rgba(31,41,55,0.08)] p-4 md:p-6 mb-8 flex flex-col md:flex-row md:items-center md:justify-between gap-4">
@@ -47,44 +58,71 @@ export default function CarrelloPage() {
                         <span className="inline-flex items-center gap-2 rounded-full bg-blue-50 px-3 py-2 font-semibold text-blue-700"><Truck className="w-4 h-4" /> Spedizione rapida</span>
                     </div>
                 </div>
+>>>>>>> master
 
             <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
                 {/* Lista Prodotti */}
                 <div className="lg:col-span-2 space-y-4">
                     {items.map((item) => (
+<<<<<<< HEAD
+                        <div key={item.id} className="rounded-lg shadow-md p-4 sm:p-6" style={{ backgroundColor: 'var(--color-card-bg)' }}>
+                            <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
+                                <div className="flex items-center space-x-3 sm:space-x-4 w-full sm:w-auto">
+                                    <div className="w-16 h-16 sm:w-20 sm:h-20 rounded flex items-center justify-center flex-shrink-0" style={{ backgroundColor: 'var(--color-background)' }}>
+=======
                         <div key={item.id} className="rounded-4xl shadow-[0_18px_45px_rgba(31,41,55,0.08)] p-4 sm:p-6 border border-white/70 bg-white/85 backdrop-blur-xl" style={{ backgroundColor: 'var(--color-card-bg)' }}>
                             <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
                                 <div className="flex items-center space-x-3 sm:space-x-4 w-full sm:w-auto">
                                     <div className="w-16 h-16 sm:w-20 sm:h-20 rounded-2xl flex items-center justify-center shrink-0 bg-linear-to-br from-purple-50 to-yellow-50 border border-purple-100">
+>>>>>>> master
                                         <span className="text-2xl sm:text-3xl">🔑</span>
                                     </div>
                                     <div className="flex-1">
                                         <h3 className="font-semibold text-base sm:text-lg" style={{ color: 'var(--color-text)' }}>
+<<<<<<< HEAD
+                                            {(item as any).translations?.name?.[language] || item.name}
+=======
                                             {item.translations?.name?.[language] || item.name}
+>>>>>>> master
                                         </h3>
                                         <p style={{ color: 'var(--color-text)', opacity: 0.7 }}>{formatPrice(item.price)}</p>
                                     </div>
                                 </div>
 
                                 <div className="flex items-center space-x-4">
+<<<<<<< HEAD
+                                    <div className="flex items-center border rounded-lg" style={{ borderColor: 'var(--color-border)' }}>
+                                        <button
+                                            onClick={() => updateQuantity(item.id, item.quantity - 1)}
+                                            className="px-3 py-2 hover:opacity-70"
+=======
                                     <div className="flex items-center border rounded-full overflow-hidden bg-white" style={{ borderColor: 'var(--color-border)' }}>
                                         <button
                                             onClick={() => updateQuantity(item.id, item.quantity - 1)}
                                             className="px-3 py-2 hover:bg-gray-100"
+>>>>>>> master
                                         >
                                             <Minus className="w-4 h-4" />
                                         </button>
                                         <span className="px-4 py-2 border-x" style={{ borderColor: 'var(--color-border)' }}>{item.quantity}</span>
                                         <button
                                             onClick={() => updateQuantity(item.id, item.quantity + 1)}
+<<<<<<< HEAD
+                                            className="px-3 py-2 hover:opacity-70"
+=======
                                             className="px-3 py-2 hover:bg-gray-100"
+>>>>>>> master
                                         >
                                             <Plus className="w-4 h-4" />
                                         </button>
                                     </div>
                                     <button
                                         onClick={() => removeItem(item.id)}
+<<<<<<< HEAD
+                                        className="text-red-500 hover:text-red-700"
+=======
                                         className="text-red-500 hover:text-red-700 p-2 rounded-full hover:bg-red-50"
+>>>>>>> master
                                     >
                                         <Trash2 className="w-5 h-5" />
                                     </button>
@@ -98,8 +136,13 @@ export default function CarrelloPage() {
                 </div>
 
                 {/* Riepilogo Ordine */}
+<<<<<<< HEAD
+                <div className="bg-white rounded-lg shadow-md p-4 sm:p-6 h-fit">
+                    <h2 className="text-xl sm:text-2xl font-bold mb-4 sm:mb-6">Riepilogo Ordine</h2>
+=======
                 <div className="bg-white/90 rounded-4xl shadow-[0_18px_45px_rgba(31,41,55,0.1)] p-4 sm:p-6 h-fit border border-white/70 backdrop-blur-xl">
                     <h2 className="text-xl sm:text-2xl font-black mb-4 sm:mb-6">Riepilogo Ordine</h2>
+>>>>>>> master
 
                     <div className="space-y-3 mb-6">
                         <div className="flex justify-between">
@@ -122,13 +165,20 @@ export default function CarrelloPage() {
                     </div>
 
                     <Link href="/checkout">
+<<<<<<< HEAD
+                        <button className="w-full py-3 rounded-lg font-semibold hover:opacity-90 transition" style={{ backgroundColor: 'var(--color-primary)', color: 'var(--color-button-text)' }}>
+=======
                         <button className="w-full py-3 rounded-full font-semibold hover:opacity-90 transition shadow-lg" style={{ backgroundColor: 'var(--color-primary)', color: 'var(--color-button-text)' }}>
+>>>>>>> master
                             Procedi al Checkout
                         </button>
                     </Link>
                 </div>
             </div>
+<<<<<<< HEAD
+=======
             </div>
+>>>>>>> master
         </div>
     );
 }

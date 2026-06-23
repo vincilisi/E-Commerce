@@ -1,5 +1,25 @@
 'use client';
 
+<<<<<<< HEAD
+import { useEffect, useRef, useState } from 'react';
+import { Send, Loader2 } from 'lucide-react';
+
+interface Message {
+    role: 'user' | 'assistant';
+    content: string;
+}
+
+export default function ChatAssistant() {
+    const [messages, setMessages] = useState<Message[]>([]);
+    const [input, setInput] = useState('');
+    const [isTyping, setIsTyping] = useState(false); // ✅ SPOSTATO QUI
+    const messagesEndRef = useRef<HTMLDivElement | null>(null);
+
+    const scrollToBottom = () => {
+        messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
+    };
+
+=======
 import { useState, useRef, useEffect } from 'react';
 import { MessageCircle, X, Send, Bot, User } from 'lucide-react';
 
@@ -77,10 +97,23 @@ export default function ChatAssistant() {
         { id: 4, question: texts.custom, answer: texts.customAnswer },
     ];
 
+>>>>>>> master
     useEffect(() => {
         scrollToBottom();
     }, [messages, isTyping]);
 
+<<<<<<< HEAD
+    const sendMessage = async () => {
+        if (!input.trim() || isTyping) return;
+
+        const userMessage: Message = {
+            role: 'user',
+            content: input,
+        };
+
+        setMessages(prev => [...prev, userMessage]);
+        setInput('');
+=======
     const scrollToBottom = () => {
         messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
     };
@@ -140,17 +173,38 @@ export default function ChatAssistant() {
         setMessages(prev => [...prev, userMessage]);
         const messageToSend = inputValue;
         setInputValue('');
+>>>>>>> master
         setIsTyping(true);
 
         try {
             const res = await fetch('/api/chat', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
+<<<<<<< HEAD
+                body: JSON.stringify({ message: input }),
+=======
                 body: JSON.stringify({ message: messageToSend })
+>>>>>>> master
             });
 
             const data = await res.json();
 
+<<<<<<< HEAD
+            const assistantMessage: Message = {
+                role: 'assistant',
+                content: data.reply ?? 'Errore nella risposta',
+            };
+
+            setMessages(prev => [...prev, assistantMessage]);
+        } catch (error) {
+            setMessages(prev => [
+                ...prev,
+                {
+                    role: 'assistant',
+                    content: 'Errore di connessione.',
+                },
+            ]);
+=======
             const botMessage: Message = {
                 id: Date.now() + 1,
                 text: data.response || texts.genericAnswer,
@@ -166,11 +220,59 @@ export default function ChatAssistant() {
                 timestamp: new Date()
             };
             setMessages(prev => [...prev, botMessage]);
+>>>>>>> master
         } finally {
             setIsTyping(false);
         }
     };
 
+<<<<<<< HEAD
+    return (
+        <div className="flex flex-col h-full border rounded-lg">
+            <div className="flex-1 overflow-y-auto p-4 space-y-3">
+                {messages.map((msg, index) => (
+                    <div
+                        key={index}
+                        className={`max-w-[80%] px-4 py-2 rounded-lg ${
+                            msg.role === 'user'
+                                ? 'bg-black text-white ml-auto'
+                                : 'bg-gray-100 text-black'
+                        }`}
+                    >
+                        {msg.content}
+                    </div>
+                ))}
+
+                {isTyping && (
+                    <div className="flex items-center space-x-2 text-gray-500">
+                        <Loader2 className="w-4 h-4 animate-spin" />
+                        <span>Sta scrivendo…</span>
+                    </div>
+                )}
+
+                <div ref={messagesEndRef} />
+            </div>
+
+            <div className="flex items-center border-t p-3 gap-2">
+                <input
+                    value={input}
+                    onChange={e => setInput(e.target.value)}
+                    onKeyDown={e => e.key === 'Enter' && sendMessage()}
+                    placeholder="Scrivi un messaggio…"
+                    className="flex-1 border rounded px-3 py-2"
+                />
+                <button
+                    onClick={sendMessage}
+                    disabled={isTyping}
+                    className="p-2 rounded bg-black text-white disabled:opacity-50"
+                >
+                    <Send className="w-5 h-5" />
+                </button>
+            </div>
+        </div>
+    );
+}
+=======
     // Non mostrare se disabilitato o ancora in caricamento
     if (loading || !settings.assistantEnabled) {
         return null;
@@ -375,3 +477,4 @@ export default function ChatAssistant() {
         </>
     );
 }
+>>>>>>> master

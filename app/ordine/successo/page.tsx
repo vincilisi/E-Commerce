@@ -2,7 +2,11 @@
 
 import { useEffect, useState } from 'react';
 import { useSearchParams, useRouter } from 'next/navigation';
+<<<<<<< HEAD
+import { CheckCircle, Package, ArrowRight } from 'lucide-react';
+=======
 import { CheckCircle, Package, ArrowRight, BadgeCheck, ShieldCheck } from 'lucide-react';
+>>>>>>> master
 import Link from 'next/link';
 import { useCartStore } from '@/lib/store/cartStore';
 
@@ -12,17 +16,31 @@ export default function OrderSuccessPage() {
     const { clearCart } = useCartStore();
     const [order, setOrder] = useState<any>(null);
     const sessionId = searchParams.get('session_id');
+<<<<<<< HEAD
+
+    useEffect(() => {
+        if (sessionId) {
+=======
     const paypalOrderId = searchParams.get('paypal_order');
     const codOrderId = searchParams.get('cod_order');
 
     useEffect(() => {
         if (sessionId || paypalOrderId || codOrderId) {
+>>>>>>> master
             // Svuota il carrello dopo l'acquisto
             clearCart();
 
             // Qui potresti fare una chiamata API per ottenere i dettagli dell'ordine
             // Per ora mostriamo solo un messaggio di successo
         }
+<<<<<<< HEAD
+    }, [sessionId, clearCart]);
+
+    return (
+        <div className="min-h-screen flex items-center justify-center py-12" style={{ background: `linear-gradient(to bottom right, var(--color-background), var(--color-card-bg))` }}>
+            <div className="container mx-auto px-4 max-w-2xl">
+                <div className="rounded-2xl shadow-2xl p-12 text-center" style={{ backgroundColor: 'var(--color-card-bg)' }}>
+=======
     }, [sessionId, paypalOrderId, codOrderId, clearCart]);
 
     return (
@@ -32,6 +50,7 @@ export default function OrderSuccessPage() {
                     <div className="mb-6 inline-flex items-center gap-2 rounded-full px-4 py-2 bg-emerald-50 text-emerald-700 text-sm font-semibold">
                         <BadgeCheck className="w-4 h-4" /> Ordine registrato con successo
                     </div>
+>>>>>>> master
                     <div className="mb-6 flex justify-center">
                         <div className="rounded-full p-6" style={{ backgroundColor: 'rgba(34, 197, 94, 0.1)' }}>
                             <CheckCircle className="w-20 h-20 text-green-600" />
@@ -46,6 +65,9 @@ export default function OrderSuccessPage() {
                         Grazie per il tuo acquisto. Il tuo ordine è stato ricevuto e sarà elaborato a breve.
                     </p>
 
+<<<<<<< HEAD
+                    <div className="rounded-lg p-6 mb-8" style={{ backgroundColor: 'var(--color-background)' }}>
+=======
                     {codOrderId && (
                         <div className="rounded-2xl p-4 mb-8 bg-yellow-50 border border-yellow-200">
                             <p className="text-sm font-semibold text-yellow-800">
@@ -55,6 +77,7 @@ export default function OrderSuccessPage() {
                     )}
 
                     <div className="rounded-3xl p-6 mb-8 border" style={{ backgroundColor: 'var(--color-background)', borderColor: 'rgba(229,231,235,0.9)' }}>
+>>>>>>> master
                         <div className="flex items-center justify-center space-x-3 mb-3" style={{ color: 'var(--color-primary)' }}>
                             <Package className="w-6 h-6" />
                             <h2 className="text-lg font-semibold">Prossimi Passi</h2>
@@ -75,14 +98,27 @@ export default function OrderSuccessPage() {
                         </ul>
                     </div>
 
+<<<<<<< HEAD
+                    {sessionId && (
+                        <div className="bg-gray-50 rounded-lg p-4 mb-8">
+                            <p className="text-sm text-gray-600">
+                                <strong>ID Sessione:</strong> {sessionId.substring(0, 30)}...
+=======
                     {(sessionId || paypalOrderId || codOrderId) && (
                         <div className="bg-gray-50 rounded-2xl p-4 mb-8 border border-gray-200">
                             <p className="text-sm text-gray-600">
                                 <strong>{codOrderId ? 'ID Ordine' : 'ID Pagamento'}:</strong> {(codOrderId || paypalOrderId || sessionId || '').substring(0, 30)}...
+>>>>>>> master
                             </p>
                         </div>
                     )}
 
+<<<<<<< HEAD
+                    <div className="flex flex-col sm:flex-row gap-4 justify-center">
+                        <Link
+                            href="/prodotti"
+                            className="px-8 py-4 rounded-lg hover:opacity-90 transition flex items-center justify-center space-x-2"
+=======
                     <div className="mb-8 flex flex-wrap justify-center gap-2 text-xs sm:text-sm">
                         <span className="inline-flex items-center gap-2 rounded-full bg-emerald-50 px-3 py-2 font-semibold text-emerald-700"><ShieldCheck className="w-4 h-4" /> Dati ordine salvati</span>
                         <span className="inline-flex items-center gap-2 rounded-full bg-blue-50 px-3 py-2 font-semibold text-blue-700"><Package className="w-4 h-4" /> Preparazione in corso</span>
@@ -92,6 +128,7 @@ export default function OrderSuccessPage() {
                         <Link
                             href="/prodotti"
                             className="px-8 py-4 rounded-full hover:opacity-90 transition flex items-center justify-center space-x-2 shadow-lg"
+>>>>>>> master
                             style={{ backgroundColor: 'var(--color-primary)', color: 'var(--color-button-text)' }}
                         >
                             <span>Continua gli Acquisti</span>
@@ -99,7 +136,11 @@ export default function OrderSuccessPage() {
                         </Link>
                         <Link
                             href="/"
+<<<<<<< HEAD
+                            className="border-2 px-8 py-4 rounded-lg hover:opacity-80 transition"
+=======
                             className="border-2 px-8 py-4 rounded-full hover:opacity-80 transition"
+>>>>>>> master
                             style={{ borderColor: 'var(--color-primary)', color: 'var(--color-primary)' }}
                         >
                             Torna alla Home
