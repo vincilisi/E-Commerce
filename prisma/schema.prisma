@@ -1,13 +1,9 @@
-// This is your Prisma schema file,
-// learn more about it in the docs: https://pris.ly/d/prisma-schema
-
 generator client {
   provider = "prisma-client-js"
 }
 
 datasource db {
-  provider = "sqlite"
-  url      = env("DATABASE_URL")
+  provider = "postgresql"
 }
 
 model User {
@@ -15,7 +11,7 @@ model User {
   name          String?
   email         String    @unique
   password      String
-  role          String    @default("customer") // "customer" or "admin"
+  role          String    @default("customer")
   emailVerified DateTime?
   image         String?
   createdAt     DateTime  @default(now())
@@ -25,198 +21,187 @@ model User {
 }
 
 model Product {
-  id          String   @id @default(cuid())
+  id          String            @id @default(cuid())
   name        String
   description String
   price       Float
   category    String
-  inStock     Boolean  @default(true)
-  stock       Int      @default(10)
+  inStock     Boolean           @default(true)
+  stock       Int               @default(10)
   dimensions  String?
-  createdAt   DateTime @default(now())
-  updatedAt   DateTime @updatedAt
+  createdAt   DateTime          @default(now())
+  updatedAt   DateTime          @updatedAt
   orderItems  OrderItem[]
-  reviews     Review[]
   images      ProductImage[]
   materials   ProductMaterial[]
   tags        ProductTag[]
+  reviews     Review[]
 }
 
-// Relational table for product images
 model ProductImage {
   id        String   @id @default(cuid())
   url       String
-  product   Product  @relation(fields: [productId], references: [id])
   productId String
   createdAt DateTime @default(now())
+  product   Product  @relation(fields: [productId], references: [id])
 }
 
-// Relational table for product materials
 model ProductMaterial {
   id        String   @id @default(cuid())
   name      String
-  product   Product  @relation(fields: [productId], references: [id])
   productId String
   createdAt DateTime @default(now())
+  product   Product  @relation(fields: [productId], references: [id])
 }
 
-// Relational table for product tags
 model ProductTag {
   id        String   @id @default(cuid())
   name      String
-  product   Product  @relation(fields: [productId], references: [id])
   productId String
   createdAt DateTime @default(now())
+  product   Product  @relation(fields: [productId], references: [id])
 }
 
 model Review {
   id        String   @id @default(cuid())
   productId String
-  product   Product  @relation(fields: [productId], references: [id])
   userId    String
-  user      User     @relation(fields: [userId], references: [id])
   userName  String
-  rating    Int      // 1-5
+  rating    Int
   comment   String
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
+  user      User     @relation(fields: [userId], references: [id])
+  product   Product  @relation(fields: [productId], references: [id])
 }
 
 model Order {
   id              String      @id @default(cuid())
   userId          String?
-  user            User?       @relation(fields: [userId], references: [id])
   customerName    String
   customerEmail   String
   orderNumber     String?     @unique
-  status          String      @default("pending") // pending, paid, processing, shipped, delivered, cancelled
+  status          String      @default("pending")
   totalAmount     Float
   shippingAddress String
   trackingNumber  String?
   stripePaymentId String?
   createdAt       DateTime    @default(now())
   updatedAt       DateTime    @updatedAt
+  user            User?       @relation(fields: [userId], references: [id])
   orderItems      OrderItem[]
 }
 
 model OrderItem {
   id        String   @id @default(cuid())
   orderId   String
-  order     Order    @relation(fields: [orderId], references: [id])
   productId String
-  product   Product  @relation(fields: [productId], references: [id])
   quantity  Int
   price     Float
   createdAt DateTime @default(now())
+  product   Product  @relation(fields: [productId], references: [id])
+  order     Order    @relation(fields: [orderId], references: [id])
 }
 
 model SiteSettings {
-  id              String   @id @default(cuid())
-  primaryColor    String   @default("#9333ea")
-  secondaryColor  String   @default("#6366f1")
-  accentColor     String   @default("#fde047")
-  backgroundColor String   @default("#ffffff")
-  textColor       String   @default("#1f2937")
-  cardBackground  String   @default("#ffffff")
-  borderColor     String   @default("#e5e7eb")
-  buttonTextColor String   @default("#ffffff")
-  fontFamily      String   @default("Inter")
-  customFontUrl   String?
-  siteName        String   @default("Il Desiderio di una Stella")
-  logo            String?
-  
-  // Search Bar Settings
-  searchBgColor       String   @default("#ffffff")
-  searchTextColor     String   @default("#374151")
-  searchPlaceholder   String   @default("#9ca3af")
-  searchBorderColor   String   @default("#e5e7eb")
-  searchIconColor     String   @default("#6b7280")
-  
-  // Virtual Assistant Settings
-  assistantEnabled    Boolean  @default(true)
-  assistantName       String   @default("Assistente Virtuale")
-  assistantColor      String   @default("#9333ea")
-  assistantTextColor  String   @default("#ffffff")
-  assistantWelcome    String   @default("👋 Ciao! Sono il tuo assistente virtuale. Come posso aiutarti oggi?")
-  assistantPosition   String   @default("right") // "left" or "right"
-  assistantPhone      String   @default("+39 02 1234 5678")
-  assistantWhatsapp   String   @default("+39 02 1234 5678")
-  assistantEmail      String   @default("info@ildesiderio.it")
-  assistantWeekdayOpen  String @default("09:00")
-  assistantWeekdayClose String @default("18:00")
-  assistantSaturdayOpen String @default("10:00")
-  assistantSaturdayClose String @default("14:00")
-  assistantSundayClosed Boolean @default(true)
-  
-  updatedAt       DateTime @updatedAt
+  id                     String   @id @default(cuid())
+  primaryColor           String   @default("#9333ea")
+  secondaryColor         String   @default("#6366f1")
+  accentColor            String   @default("#fde047")
+  backgroundColor        String   @default("#ffffff")
+  textColor              String   @default("#1f2937")
+  cardBackground         String   @default("#ffffff")
+  borderColor            String   @default("#e5e7eb")
+  buttonTextColor        String   @default("#ffffff")
+  fontFamily             String   @default("Inter")
+  customFontUrl          String?
+  siteName               String   @default("Il Desiderio di una Stella")
+  logo                   String?
+  searchBgColor          String   @default("#ffffff")
+  searchTextColor        String   @default("#374151")
+  searchPlaceholder      String   @default("#9ca3af")
+  searchBorderColor      String   @default("#e5e7eb")
+  searchIconColor        String   @default("#6b7280")
+  assistantEnabled       Boolean  @default(true)
+  assistantName          String   @default("Assistente Virtuale")
+  assistantColor         String   @default("#9333ea")
+  assistantTextColor     String   @default("#ffffff")
+  assistantWelcome       String   @default("👋 Ciao! Sono il tuo assistente virtuale. Come posso aiutarti oggi?")
+  assistantPosition      String   @default("right")
+  assistantPhone         String   @default("+39 02 1234 5678")
+  assistantWhatsapp      String   @default("+39 02 1234 5678")
+  assistantEmail         String   @default("info@ildesiderio.it")
+  assistantWeekdayOpen   String   @default("09:00")
+  assistantWeekdayClose  String   @default("18:00")
+  assistantSaturdayOpen  String   @default("10:00")
+  assistantSaturdayClose String   @default("14:00")
+  assistantSundayClosed  Boolean  @default(true)
+  updatedAt              DateTime @updatedAt
 }
 
 model DiscountCode {
-  id          String   @id @default(cuid())
-  code        String   @unique
-  type        String   // "percentage" or "fixed"
-  value       Float    // Percentage (0-100) or fixed amount
-  minPurchase Float    @default(0)
-  maxUses     Int?     // null = unlimited
-  usedCount   Int      @default(0)
-  active      Boolean  @default(true)
-  expiresAt   DateTime?
-  createdAt   DateTime @default(now())
-  updatedAt   DateTime @updatedAt
-}
-
-model Newsletter {
-  id          String   @id @default(cuid())
-  email       String   @unique
-  subscribed  Boolean  @default(true)
-  createdAt   DateTime @default(now())
-  updatedAt   DateTime @updatedAt
-}
-
-model Event {
   id          String    @id @default(cuid())
-  title       String
-  description String
-  image       String?
-  date        DateTime
-  endDate     DateTime?
-  location    String?
-  price       Float     @default(0)
-  maxAttendees Int?
-  attendees   Int       @default(0)
+  code        String    @unique
+  type        String
+  value       Float
+  minPurchase Float     @default(0)
+  maxUses     Int?
+  usedCount   Int       @default(0)
   active      Boolean   @default(true)
-  featured    Boolean   @default(false)
+  expiresAt   DateTime?
   createdAt   DateTime  @default(now())
   updatedAt   DateTime  @updatedAt
 }
 
+model Newsletter {
+  id         String   @id @default(cuid())
+  email      String   @unique
+  subscribed Boolean  @default(true)
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @updatedAt
+}
+
+model Event {
+  id           String    @id @default(cuid())
+  title        String
+  description  String
+  image        String?
+  date         DateTime
+  endDate      DateTime?
+  location     String?
+  price        Float     @default(0)
+  maxAttendees Int?
+  attendees    Int       @default(0)
+  active       Boolean   @default(true)
+  featured     Boolean   @default(false)
+  createdAt    DateTime  @default(now())
+  updatedAt    DateTime  @updatedAt
+}
+
 model EmailTemplate {
-  id          String   @id @default(cuid())
-  name        String   @unique // "order_confirmation", "shipping_notification", "newsletter_welcome"
-  subject     String
-  body        String   // HTML template with placeholders like {{customerName}}, {{orderNumber}}
-  active      Boolean  @default(true)
-  createdAt   DateTime @default(now())
-  updatedAt   DateTime @updatedAt
+  id        String   @id @default(cuid())
+  name      String   @unique
+  subject   String
+  body      String
+  active    Boolean  @default(true)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
 }
 
 model EmailLog {
-  id          String   @id @default(cuid())
-  to          String
-  subject     String
+  id           String   @id @default(cuid())
+  to           String
+  subject      String
   templateName String?
-  status      String   @default("sent") // "sent", "failed", "pending"
-  error       String?
-  createdAt   DateTime @default(now())
+  status       String   @default("sent")
+  error        String?
+  createdAt    DateTime @default(now())
 }
 
-// ==================== NUOVI MODELLI ====================
-
-// Wishlist / Preferiti
 model Wishlist {
   id        String   @id @default(cuid())
-  sessionId String?  // Per utenti non loggati
-  userId    String?  // Per utenti loggati
+  sessionId String?
+  userId    String?
   productId String
   createdAt DateTime @default(now())
 
@@ -224,14 +209,13 @@ model Wishlist {
   @@unique([userId, productId])
 }
 
-// Carrelli Abbandonati
 model AbandonedCart {
   id            String   @id @default(cuid())
   sessionId     String?
   userId        String?
   customerEmail String?
   customerName  String?
-  items         String   // JSON array di prodotti
+  items         String
   totalAmount   Float
   reminderSent  Boolean  @default(false)
   recovered     Boolean  @default(false)
@@ -239,24 +223,22 @@ model AbandonedCart {
   updatedAt     DateTime @updatedAt
 }
 
-// Blog
 model BlogPost {
-  id          String   @id @default(cuid())
-  title       String
-  slug        String   @unique
-  excerpt     String?
-  content     String
-  image       String?
-  author      String   @default("Admin")
-  published   Boolean  @default(false)
-  featured    Boolean  @default(false)
-  tags        String?  // JSON array
-  views       Int      @default(0)
-  createdAt   DateTime @default(now())
-  updatedAt   DateTime @updatedAt
+  id        String   @id @default(cuid())
+  title     String
+  slug      String   @unique
+  excerpt   String?
+  content   String
+  image     String?
+  author    String   @default("Admin")
+  published Boolean  @default(false)
+  featured  Boolean  @default(false)
+  tags      String?
+  views     Int      @default(0)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
 }
 
-// FAQ
 model FAQ {
   id        String   @id @default(cuid())
   question  String
@@ -268,54 +250,49 @@ model FAQ {
   updatedAt DateTime @updatedAt
 }
 
-// Pagine Legali
 model LegalPage {
   id        String   @id @default(cuid())
-  slug      String   @unique // "privacy", "terms", "returns"
+  slug      String   @unique
   title     String
   content   String
   active    Boolean  @default(true)
   updatedAt DateTime @updatedAt
 }
 
-// Fatture
 model Invoice {
-  id            String   @id @default(cuid())
-  orderId       String   @unique
-  invoiceNumber String   @unique
-  customerName  String
-  customerEmail String
+  id              String   @id @default(cuid())
+  orderId         String   @unique
+  invoiceNumber   String   @unique
+  customerName    String
+  customerEmail   String
   customerAddress String?
-  customerVat   String?  // P.IVA o Codice Fiscale
-  items         String   // JSON array
-  subtotal      Float
-  tax           Float    @default(0)
-  total         Float
-  pdfUrl        String?
-  createdAt     DateTime @default(now())
+  customerVat     String?
+  items           String
+  subtotal        Float
+  tax             Float    @default(0)
+  total           Float
+  pdfUrl          String?
+  createdAt       DateTime @default(now())
 }
 
-// Analytics - Statistiche Vendite
 model Analytics {
-  id          String   @id @default(cuid())
-  date        DateTime @unique
-  totalOrders Int      @default(0)
-  totalRevenue Float   @default(0)
-  uniqueVisitors Int   @default(0)
-  pageViews   Int      @default(0)
-  conversionRate Float @default(0)
-  topProducts String?  // JSON array
-  createdAt   DateTime @default(now())
+  id             String   @id @default(cuid())
+  date           DateTime @unique
+  totalOrders    Int      @default(0)
+  totalRevenue   Float    @default(0)
+  uniqueVisitors Int      @default(0)
+  pageViews      Int      @default(0)
+  conversionRate Float    @default(0)
+  topProducts    String?
+  createdAt      DateTime @default(now())
 }
 
-// Sessioni utente per carrello persistente
 model Session {
   id        String   @id @default(cuid())
   sessionId String   @unique
   userId    String?
-  cartItems String?  // JSON array
+  cartItems String?
   expiresAt DateTime
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 }
-

@@ -3,8 +3,7 @@ import { jwtVerify } from 'jose';
 
 const adminPaths = [
   '/admin',
-  '/app/admin',
-  '/app/api/admin',
+  '/api/admin',
 ];
 
 export async function middleware(req: NextRequest) {
@@ -16,12 +15,15 @@ export async function middleware(req: NextRequest) {
   if (!token) {
     return NextResponse.redirect(new URL('/login', req.url));
   }
+
   try {
     const secret = process.env.JWT_SECRET || 'your-secret-key-change-in-production';
     const verified = await jwtVerify(token, new TextEncoder().encode(secret));
+
     if (verified.payload.role !== 'admin') {
       return NextResponse.redirect(new URL('/login', req.url));
     }
+
     return NextResponse.next();
   } catch {
     return NextResponse.redirect(new URL('/login', req.url));
@@ -29,5 +31,5 @@ export async function middleware(req: NextRequest) {
 }
 
 export const config = {
-  matcher: ['/admin/:path*', '/app/admin/:path*', '/app/api/admin/:path*'],
+  matcher: ['/admin/:path*', '/api/admin/:path*'],
 };

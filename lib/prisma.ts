@@ -1,16 +1,23 @@
 import { PrismaClient } from '@prisma/client';
-import path from 'node:path';
+import { Pool } from 'pg';
+import { PrismaPg } from '@prisma/adapter-pg';
 
 const globalForPrisma = globalThis as unknown as {
-    prisma: PrismaClient | undefined;
+  prisma: PrismaClient | undefined;
 };
 
-const databaseUrl = `file:${path.resolve(process.cwd(), 'prisma', 'dev.db').replace(/\\/g, '/')}`;
+const pool = new Pool({
+  connectionString: process.env.DATABASE_URL,
+});
 
-if (!process.env.DATABASE_URL) {
-    process.env.DATABASE_URL = databaseUrl;
+const adapter = new PrismaPg(pool);
+
+export const prisma =
+  globalForPrisma.prisma ??
+  new PrismaClient({
+    adapter,
+  });
+
+if (process.env.NODE_ENV !== 'production') {
+  globalForPrisma.prisma = prisma;
 }
-
-export const prisma = globalForPrisma.prisma ?? new PrismaClient();
-
-if (process.env.NODE_ENV !== 'production') globalForPrisma.prisma = prisma;

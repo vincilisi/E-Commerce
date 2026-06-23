@@ -29,15 +29,18 @@ export default function ModificaProdotto() {
 
     const loadProduct = async () => {
         try {
-            const res = await fetch(`/api/admin/products/${productId}`);
+            // ROUTE CORRETTA
+            const res = await fetch(`/api/products/${productId}`);
+
             if (res.ok) {
-                const { product } = await res.json();
+                const product = await res.json();
+
                 setFormData({
                     name: product.name,
                     description: product.description,
                     price: product.price.toString(),
                     category: product.category,
-                    materials: product.materials || [''],
+                    materials: product.materials?.map(m => m.name) || [''],
                     dimensions: product.dimensions || '',
                     inStock: product.inStock
                 });
@@ -63,7 +66,8 @@ export default function ModificaProdotto() {
         setSubmitting(true);
 
         try {
-            const res = await fetch(`/api/admin/products/${productId}`, {
+            // ROUTE CORRETTA
+            const res = await fetch(`/api/products/${productId}`, {
                 method: 'PUT',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({

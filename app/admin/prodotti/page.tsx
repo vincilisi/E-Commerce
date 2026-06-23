@@ -24,10 +24,18 @@ export default function AdminProdotti() {
 
     const loadProducts = async () => {
         try {
-            const res = await fetch('/api/admin/products');
+            const res = await fetch('/api/admin/products', {
+                credentials: "include"   // 🔥 OBBLIGATORIO
+            });
+
+            if (!res.ok) {
+                throw new Error("Unauthorized");
+            }
+
             const data = await res.json();
             setProducts(data.products || []);
-        } catch (error) {
+        } catch (err) {
+            console.error("Errore GET prodotti:", err);
             toast.error('Errore nel caricamento prodotti');
         } finally {
             setLoading(false);
@@ -39,16 +47,20 @@ export default function AdminProdotti() {
 
         try {
             const res = await fetch(`/api/admin/products/${id}`, {
-                method: 'DELETE'
+                method: "DELETE",
+                credentials: "include"   // 🔥 OBBLIGATORIO
             });
 
             if (res.ok) {
                 toast.success('Prodotto eliminato');
                 loadProducts();
             } else {
+                const errorText = await res.text();
+                console.error("Errore DELETE:", errorText);
                 toast.error('Errore nell\'eliminazione');
             }
-        } catch (error) {
+        } catch (err) {
+            console.error("Errore DELETE:", err);
             toast.error('Errore nell\'eliminazione');
         }
     };
@@ -59,7 +71,10 @@ export default function AdminProdotti() {
 
             <div className="container mx-auto px-4 py-8">
                 <div className="flex justify-between items-center mb-8">
-                    <h1 className="text-4xl font-bold" style={{ color: 'var(--color-text)' }}>Gestione Prodotti</h1>
+                    <h1 className="text-4xl font-bold" style={{ color: 'var(--color-text)' }}>
+                        Gestione Prodotti
+                    </h1>
+
                     <button
                         onClick={() => router.push('/admin/prodotti/nuovo')}
                         className="px-6 py-3 rounded-lg hover:opacity-90 transition flex items-center space-x-2"
@@ -75,51 +90,47 @@ export default function AdminProdotti() {
                 ) : (
                     <div className="rounded-lg shadow-md overflow-hidden" style={{ backgroundColor: 'var(--color-card-bg)' }}>
                         <table className="w-full">
-                            <thead style={{ backgroundColor: 'var(--color-background)' }}>
+                            <thead>
                                 <tr>
-                                    <th className="px-6 py-3 text-left text-xs font-medium uppercase" style={{ color: 'var(--color-text)', opacity: 0.6 }}>Nome</th>
-                                    <th className="px-6 py-3 text-left text-xs font-medium uppercase" style={{ color: 'var(--color-text)', opacity: 0.6 }}>Prezzo</th>
-                                    <th className="px-6 py-3 text-left text-xs font-medium uppercase" style={{ color: 'var(--color-text)', opacity: 0.6 }}>Categoria</th>
-                                    <th className="px-6 py-3 text-left text-xs font-medium uppercase" style={{ color: 'var(--color-text)', opacity: 0.6 }}>Stato</th>
-                                    <th className="px-6 py-3 text-left text-xs font-medium uppercase" style={{ color: 'var(--color-text)', opacity: 0.6 }}>Azioni</th>
+                                    <th className="px-6 py-3 text-left text-xs font-medium uppercase">Nome</th>
+                                    <th className="px-6 py-3 text-left text-xs font-medium uppercase">Prezzo</th>
+                                    <th className="px-6 py-3 text-left text-xs font-medium uppercase">Categoria</th>
+                                    <th className="px-6 py-3 text-left text-xs font-medium uppercase">Stato</th>
+                                    <th className="px-6 py-3 text-left text-xs font-medium uppercase">Azioni</th>
                                 </tr>
                             </thead>
+
                             <tbody className="divide-y divide-gray-200">
                                 {products.map((product) => (
                                     <tr key={product.id}>
-                                        <td className="px-6 py-4 whitespace-nowrap font-medium text-gray-900">
-                                            {product.name}
-                                        </td>
-                                        <td className="px-6 py-4 whitespace-nowrap text-gray-600">
-                                            €{product.price.toFixed(2)}
-                                        </td>
-                                        <td className="px-6 py-4 whitespace-nowrap text-gray-600">
-                                            {product.category}
-                                        </td>
-                                        <td className="px-6 py-4 whitespace-nowrap">
-                                            <span className={`px-2 py-1 text-xs rounded-full ${product.inStock ? 'bg-green-100 text-green-800' : 'bg-red-100 text-red-800'}`}>
+                                        <td className="px-6 py-4">{product.name}</td>
+                                        <td className="px-6 py-4">€{product.price.toFixed(2)}</td>
+                                        <td className="px-6 py-4">{product.category}</td>
+                                        <td className="px-6 py-4">
+                                            <span
+                                                className={`px-2 py-1 text-xs rounded-full ${
+                                                    product.inStock
+                                                        ? 'bg-green-100 text-green-800'
+                                                        : 'bg-red-100 text-red-800'
+                                                }`}
+                                            >
                                                 {product.inStock ? 'Disponibile' : 'Esaurito'}
                                             </span>
                                         </td>
-                                        <td className="px-6 py-4 whitespace-nowrap text-sm">
+
+                                        <td className="px-6 py-4">
                                             <div className="flex items-center space-x-3">
-                                                <button
-                                                    onClick={() => window.open(`/prodotti/${product.id}`, '_blank')}
-                                                    className="hover:opacity-70"
-                                                    style={{ color: 'var(--color-primary)' }}
-                                                >
+                                                <button onClick={() => window.open(`/prodotti/${product.id}`, '_blank')}>
                                                     <Eye className="w-5 h-5" />
                                                 </button>
-                                                <button
-                                                    onClick={() => router.push(`/admin/prodotti/${product.id}`)}
-                                                    className="hover:opacity-70"
-                                                    style={{ color: 'var(--color-primary)' }}
-                                                >
+
+                                                <button onClick={() => router.push(`/admin/prodotti/${product.id}`)}>
                                                     <Edit className="w-5 h-5" />
                                                 </button>
+
                                                 <button
                                                     onClick={() => deleteProduct(product.id)}
-                                                    className="text-red-600 hover:text-red-900"
+                                                    className="text-red-600"
                                                 >
                                                     <Trash2 className="w-5 h-5" />
                                                 </button>
@@ -129,12 +140,6 @@ export default function AdminProdotti() {
                                 ))}
                             </tbody>
                         </table>
-
-                        {products.length === 0 && (
-                            <div className="text-center py-12 text-gray-500">
-                                Nessun prodotto trovato. Crea il primo prodotto!
-                            </div>
-                        )}
                     </div>
                 )}
             </div>
