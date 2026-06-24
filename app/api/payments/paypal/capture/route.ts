@@ -64,6 +64,27 @@ export async function POST(request: NextRequest) {
 
         const { clientId, clientSecret, baseUrl } = getPaypalConfig();
         if (!clientId || !clientSecret) {
+            if (existingOrder) {
+                if (existingOrder.status !== 'paid') {
+                    await prisma.order.update({
+                        where: { id: existingOrder.id },
+                        data: {
+                            status: 'paid',
+                            stripePaymentId: `paypal_capture_${paypalOrderId}`
+                        }
+                    });
+                }
+
+                return NextResponse.json({
+                    success: true,
+                    provider: 'paypal',
+                    paypalOrderId,
+                    orderId: existingOrder.id,
+                    testMode: true,
+                    redirectUrl: `/ordine/successo?paypal_order=${paypalOrderId}`
+                });
+            }
+
             return NextResponse.json(
                 { error: 'PayPal non configurato. Imposta PAYPAL_CLIENT_ID e PAYPAL_CLIENT_SECRET.' },
                 { status: 500 }

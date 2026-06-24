@@ -728,6 +728,7 @@ export default function GuidaAdmin() {
                                                         <strong>Riavvia il server</strong>
                                                         <p className="text-gray-600">Ferma il server e riavvialo con <code className="bg-gray-100 px-1 rounded">npm run dev</code></p>
                                                     </li>
+                                                </ol>
                                                 <strong className="block mb-3">📋 Passo-Passo per Attivare Stripe:</strong>
                                                 <ol className="space-y-3 ml-4 list-decimal">
                                                     <li>

@@ -1,7 +1,8 @@
 'use client';
 
 import Link from 'next/link';
-import { Facebook, Instagram, Mail, Phone, MapPin, Heart, Star } from 'lucide-react';
+import Image from 'next/image';
+import { Facebook, Instagram, Mail, Heart, Star } from 'lucide-react';
 import { useEffect, useState } from 'react';
 import { useLanguage } from '@/lib/LanguageContext';
 import LanguageIndicator from './LanguageIndicator';
@@ -11,11 +12,13 @@ export default function Footer() {
     const { t } = useLanguage();
     const [siteName, setSiteName] = useState('Il Desiderio di una Stella');
     const [logo, setLogo] = useState('');
+    const [contactEmail, setContactEmail] = useState('');
+    const [settingsLoaded, setSettingsLoaded] = useState(false);
     const [newsletterEmail, setNewsletterEmail] = useState('');
     const [subscribing, setSubscribing] = useState(false);
 
-    useEffect(() => {
-        fetch('/api/admin/settings')
+    const loadSettings = () => {
+        fetch('/api/settings', { cache: 'no-store' })
             .then(res => res.json())
             .then(data => {
                 if (data.settings?.siteName) {
@@ -24,8 +27,23 @@ export default function Footer() {
                 if (data.settings?.logo) {
                     setLogo(data.settings.logo);
                 }
+                if (data.settings?.contactEmail) {
+                    setContactEmail(data.settings.contactEmail);
+                }
             })
-            .catch(() => { });
+            .catch(() => { })
+            .finally(() => setSettingsLoaded(true));
+    };
+
+    useEffect(() => {
+        loadSettings();
+
+        const onSettingsUpdated = () => loadSettings();
+        window.addEventListener('site-settings-updated', onSettingsUpdated);
+
+        return () => {
+            window.removeEventListener('site-settings-updated', onSettingsUpdated);
+        };
     }, []);
 
     const handleNewsletterSubmit = async (e: React.FormEvent) => {
@@ -52,7 +70,7 @@ export default function Footer() {
             } else {
                 toast.error(data.error || 'Errore nell\'iscrizione');
             }
-        } catch (error) {
+        } catch {
             toast.error('Errore nell\'iscrizione alla newsletter');
         } finally {
             setSubscribing(false);
@@ -60,14 +78,29 @@ export default function Footer() {
     };
 
     return (
-        <footer className="text-white pt-12 sm:pt-16 pb-6 sm:pb-8 mt-16 sm:mt-20" style={{ background: `linear-gradient(135deg, var(--color-primary), var(--color-secondary))` }}>
+        <footer className="text-white pt-12 sm:pt-16 pb-6 sm:pb-8 mt-16 sm:mt-20 border-t border-[#e8d6c0]" style={{ background: `linear-gradient(145deg, #3a2219, #8d4e31)` }}>
             <div className="container mx-auto px-4">
+                <div className="mb-8 rounded-2xl border border-white/20 bg-white/8 backdrop-blur-md p-4 sm:p-6 flex flex-col md:flex-row md:items-center md:justify-between gap-3">
+                    <div>
+                        <p className="text-xs uppercase tracking-[0.22em] text-[#f6dbab] mb-1">{t('premiumExperience')}</p>
+                        <p className="text-sm sm:text-base text-white/90">{t('premiumTagline')}</p>
+                    </div>
+                    <a href="/contatti" className="btn-lux-secondary text-center whitespace-nowrap">{t('talkToUs')}</a>
+                </div>
+
                 <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8 mb-12">
                     {/* Colonna 1: Brand */}
-                    <div>
+                    <div className="glass-panel rounded-2xl p-5">
                         <div className="flex items-center space-x-2 mb-4">
                             {logo ? (
-                                <img src={logo} alt="Logo Il Desiderio di una Stella" className="w-10 h-10 object-contain drop-shadow-lg" loading="lazy" role="img" />
+                                <Image
+                                    src={logo}
+                                    alt="Logo Il Desiderio di una Stella"
+                                    width={40}
+                                    height={40}
+                                    unoptimized
+                                    className="w-10 h-10 object-contain drop-shadow-lg"
+                                />
                             ) : (
                                 <Star className="w-10 h-10 drop-shadow-lg" style={{ fill: 'var(--color-accent)', color: 'var(--color-accent)' }} />
                             )}
@@ -83,14 +116,20 @@ export default function Footer() {
                             <a href="#" className="p-2 bg-white/10 rounded-lg hover:bg-white/20 transition-all duration-300 hover:scale-110" aria-label="Instagram">
                                 <Instagram className="w-5 h-5" />
                             </a>
-                            <a href="mailto:info@ildesideriostellar.it" className="p-2 bg-white/10 rounded-lg hover:bg-white/20 transition-all duration-300 hover:scale-110" aria-label="Email">
-                                <Mail className="w-5 h-5" />
-                            </a>
+                            {settingsLoaded && contactEmail ? (
+                                <a href={`mailto:${contactEmail}`} className="p-2 bg-white/10 rounded-lg hover:bg-white/20 transition-all duration-300 hover:scale-110" aria-label="Email">
+                                    <Mail className="w-5 h-5" />
+                                </a>
+                            ) : (
+                                <span className="p-2 bg-white/10 rounded-lg opacity-60" aria-hidden="true">
+                                    <Mail className="w-5 h-5" />
+                                </span>
+                            )}
                         </div>
                     </div>
 
                     {/* Colonna 2: Link Rapidi */}
-                    <div>
+                    <div className="glass-panel rounded-2xl p-5">
                         <h4 className="text-base sm:text-lg font-bold mb-3 sm:mb-4">{t('quickLinks')}</h4>
                         <ul className="space-y-2">
                             <li>
@@ -121,7 +160,7 @@ export default function Footer() {
                     </div>
 
                     {/* Colonna 3: Servizio Clienti */}
-                    <div>
+                    <div className="glass-panel rounded-2xl p-5">
                         <h4 className="text-base sm:text-lg font-bold mb-3 sm:mb-4">{t('customerService')}</h4>
                         <ul className="space-y-2">
                             <li>
@@ -133,13 +172,13 @@ export default function Footer() {
                             <li>
                                 <Link href="/traccia-ordine" className="text-white/80 hover:text-white transition-colors duration-300 text-sm flex items-center space-x-2">
                                     <span className="text-yellow-300">→</span>
-                                    <span>Traccia Ordine</span>
+                                    <span>{t('trackOrder')}</span>
                                 </Link>
                             </li>
                             <li>
                                 <Link href="/legal/resi" className="text-white/80 hover:text-white transition-colors duration-300 text-sm flex items-center space-x-2">
                                     <span className="text-yellow-300">→</span>
-                                    <span>Resi e Rimborsi</span>
+                                    <span>{t('returnsRefunds')}</span>
                                 </Link>
                             </li>
                             <li>
@@ -151,7 +190,7 @@ export default function Footer() {
                             <li>
                                 <Link href="/legal/termini" className="text-white/80 hover:text-white transition-colors duration-300 text-sm flex items-center space-x-2">
                                     <span className="text-yellow-300">→</span>
-                                    <span>Termini e Condizioni</span>
+                                    <span>{t('termsAndConditions')}</span>
                                 </Link>
                             </li>
                             <li>
@@ -164,7 +203,7 @@ export default function Footer() {
                     </div>
 
                     {/* Colonna 4: Newsletter */}
-                    <div>
+                    <div className="glass-panel rounded-2xl p-5">
                         <h4 className="text-base sm:text-lg font-bold mb-3 sm:mb-4">{t('newsletter')}</h4>
                         <p className="text-white/80 text-sm mb-4">
                             {t('newsletterText')}

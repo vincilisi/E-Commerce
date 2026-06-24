@@ -1,9 +1,6 @@
-<<<<<<< HEAD
 export const runtime = "nodejs";
 export const dynamic = "force-dynamic";
 
-=======
->>>>>>> master
 import { NextRequest, NextResponse } from 'next/server';
 import { prisma } from '@/lib/prisma';
 
@@ -33,8 +30,8 @@ const defaultFAQ = [
     },
     {
         question: 'Come posso pagare?',
-        answer: 'Accettiamo pagamenti con tutte le principali carte di credito e debito (Visa, Mastercard, American Express) tramite Stripe. I pagamenti sono sicuri e protetti con crittografia SSL.',
-        keywords: ['pagamento', 'pagare', 'carta', 'credito', 'debito', 'stripe', 'metodo', 'visa', 'mastercard']
+        answer: 'Accettiamo pagamenti con PayPal oppure pagamento alla consegna (contrassegno). I pagamenti online sono sicuri e protetti con crittografia SSL.',
+        keywords: ['pagamento', 'pagare', 'paypal', 'contrassegno', 'metodo', 'consegna']
     },
     {
         question: 'Posso restituire un prodotto?',

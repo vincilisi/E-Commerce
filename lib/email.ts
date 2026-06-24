@@ -1,9 +1,6 @@
 import { prisma } from '@/lib/prisma';
-<<<<<<< HEAD
-=======
 import nodemailer from 'nodemailer';
 import { PDFDocument, StandardFonts, rgb } from 'pdf-lib';
->>>>>>> master
 
 // Interfaccia per i dati delle email
 interface EmailData {
@@ -11,38 +8,29 @@ interface EmailData {
     subject: string;
     html: string;
     templateName?: string;
-<<<<<<< HEAD
-=======
-    text?: string;
     attachments?: Array<{
         filename: string;
-        content: Buffer | Uint8Array;
+        content: Buffer;
         contentType?: string;
     }>;
 }
 
-interface OrderLineItem {
+type OrderEmailItem = {
     name: string;
     quantity: number;
     price: number;
-}
+};
 
-interface OrderReceiptData {
+type OrderConfirmationInput = {
     customerName: string;
     customerEmail: string;
     orderNumber: string;
     totalAmount: number;
     shippingAddress: string;
-    items: OrderLineItem[];
-    paymentMethod?: string;
+    items?: OrderEmailItem[];
+    paymentMethod?: 'paypal' | 'cod' | 'other';
     status?: string;
-}
-
-interface SiteBrandSettings {
-    siteName: string;
-    logo: string;
->>>>>>> master
-}
+};
 
 // Template placeholders
 interface TemplateVariables {
@@ -69,317 +57,6 @@ export function replacePlaceholders(template: string, variables: TemplateVariabl
     return result;
 }
 
-<<<<<<< HEAD
-=======
-async function createMailer() {
-    const smtpHost = process.env.SMTP_HOST?.trim();
-    const smtpPort = Number(process.env.SMTP_PORT || '587');
-    const smtpUser = process.env.SMTP_USER?.trim();
-    const smtpPass = process.env.SMTP_PASS?.replace(/\s+/g, '').trim();
-    const smtpFrom = process.env.SMTP_FROM?.trim();
-    const hasSmtpConfig = Boolean(smtpHost && smtpUser && smtpPass);
-
-    let transporter: nodemailer.Transporter;
-    let fromUser = smtpUser || '';
-
-    if (hasSmtpConfig) {
-        transporter = nodemailer.createTransport({
-            host: smtpHost,
-            port: smtpPort,
-            secure: process.env.SMTP_SECURE === 'true' || smtpPort === 465,
-            auth: {
-                user: smtpUser,
-                pass: smtpPass
-            }
-        });
-
-        try {
-            await transporter.verify();
-        } catch (smtpError) {
-            if (process.env.NODE_ENV !== 'production') {
-                const testAccount = await nodemailer.createTestAccount();
-                transporter = nodemailer.createTransport({
-                    host: 'smtp.ethereal.email',
-                    port: 587,
-                    secure: false,
-                    auth: {
-                        user: testAccount.user,
-                        pass: testAccount.pass
-                    }
-                });
-                fromUser = testAccount.user;
-            } else {
-                throw smtpError;
-            }
-        }
-    } else if (process.env.NODE_ENV !== 'production') {
-        const testAccount = await nodemailer.createTestAccount();
-        transporter = nodemailer.createTransport({
-            host: 'smtp.ethereal.email',
-            port: 587,
-            secure: false,
-            auth: {
-                user: testAccount.user,
-                pass: testAccount.pass
-            }
-        });
-        fromUser = testAccount.user;
-    } else {
-        throw new Error('Server email non configurato. Imposta SMTP_HOST, SMTP_PORT, SMTP_USER, SMTP_PASS');
-    }
-
-    const siteSettings = await getSiteBrandSettings();
-    const fromEmail = smtpFrom?.match(/<([^>]+)>/)?.[1]?.trim() || smtpUser || fromUser;
-    const fromAddress = `"${siteSettings.siteName}" <${fromEmail}>`;
-
-    return { transporter, fromAddress, siteName: siteSettings.siteName };
-}
-
-async function getSiteBrandSettings(): Promise<SiteBrandSettings> {
-    const siteSettings = await prisma.siteSettings.findFirst({
-        select: { siteName: true, logo: true }
-    });
-
-    return {
-        siteName: siteSettings?.siteName?.trim() || process.env.NEXT_PUBLIC_SITE_NAME?.trim() || 'Il tuo sito',
-        logo: siteSettings?.logo || ''
-    };
-}
-
-async function loadLogoImage(logo: string | null | undefined) {
-    if (!logo) {
-        return null;
-    }
-
-    let bytes: Uint8Array | null = null;
-    let format: 'png' | 'jpg' | null = null;
-
-    if (logo.startsWith('data:')) {
-        const match = logo.match(/^data:(image\/(png|jpeg|jpg));base64,(.+)$/i);
-        if (!match) {
-            return null;
-        }
-
-        format = match[2].toLowerCase() === 'png' ? 'png' : 'jpg';
-        bytes = Uint8Array.from(Buffer.from(match[3], 'base64'));
-    } else {
-        const response = await fetch(logo);
-        if (!response.ok) {
-            return null;
-        }
-
-        const contentType = response.headers.get('content-type') || '';
-        if (contentType.includes('png')) {
-            format = 'png';
-        } else if (contentType.includes('jpeg') || contentType.includes('jpg')) {
-            format = 'jpg';
-        } else {
-            return null;
-        }
-        bytes = new Uint8Array(await response.arrayBuffer());
-    }
-
-    if (!bytes || !format) {
-        return null;
-    }
-
-    return { bytes, format };
-}
-
-async function buildOrderPdf(order: OrderReceiptData) {
-    const siteSettings = await getSiteBrandSettings();
-    const siteName = siteSettings.siteName;
-    const logo = await loadLogoImage(siteSettings.logo);
-
-    const pdf = await PDFDocument.create();
-    const pageWidth = 595.28;
-    const pageHeight = 841.89;
-    const margin = 40;
-    const font = await pdf.embedFont(StandardFonts.Helvetica);
-    const boldFont = await pdf.embedFont(StandardFonts.HelveticaBold);
-    const embeddedLogo = logo
-        ? (logo.format === 'png'
-            ? await pdf.embedPng(logo.bytes)
-            : await pdf.embedJpg(logo.bytes))
-        : null;
-
-    let page = pdf.addPage([pageWidth, pageHeight]);
-    let y = pageHeight - margin;
-
-    const drawHeader = () => {
-        page.drawRectangle({
-            x: 0,
-            y: pageHeight - 115,
-            width: pageWidth,
-            height: 115,
-            color: rgb(0.57, 0.2, 0.92)
-        });
-
-        if (embeddedLogo) {
-            page.drawImage(embeddedLogo, {
-                x: margin,
-                y: pageHeight - 95,
-                width: 54,
-                height: 54
-            });
-            page.drawText(siteName, {
-                x: margin + 70,
-                y: pageHeight - 64,
-                size: 20,
-                font: boldFont,
-                color: rgb(1, 1, 1)
-            });
-            page.drawText(`Ordine #${order.orderNumber}`, {
-                x: margin + 70,
-                y: pageHeight - 86,
-                size: 12,
-                font,
-                color: rgb(1, 1, 1)
-            });
-            return;
-        }
-
-        page.drawText(siteName, {
-            x: margin,
-            y: pageHeight - 64,
-            size: 20,
-            font: boldFont,
-            color: rgb(1, 1, 1)
-        });
-        page.drawText(`Ordine #${order.orderNumber}`, {
-            x: margin,
-            y: pageHeight - 86,
-            size: 12,
-            font,
-            color: rgb(1, 1, 1)
-        });
-    };
-
-    const ensureSpace = async (needed: number) => {
-        if (y - needed < 80) {
-            page = pdf.addPage([pageWidth, pageHeight]);
-            y = pageHeight - margin;
-            await drawHeader();
-            y -= 30;
-        }
-    };
-
-    await drawHeader();
-    y -= 150;
-
-    page.drawText('Riepilogo ordine', {
-        x: margin,
-        y,
-        size: 18,
-        font: boldFont,
-        color: rgb(0.12, 0.15, 0.19)
-    });
-    y -= 26;
-
-    const summaryLines = [
-        `Cliente: ${order.customerName}`,
-        `Email: ${order.customerEmail}`,
-        `Stato: ${order.status || 'pending'}`,
-        `Pagamento: ${order.paymentMethod || 'non specificato'}`,
-        `Indirizzo: ${order.shippingAddress}`
-    ];
-
-    for (const line of summaryLines) {
-        await ensureSpace(20);
-        page.drawText(line, {
-            x: margin,
-            y,
-            size: 11,
-            font,
-            color: rgb(0.23, 0.25, 0.28)
-        });
-        y -= 18;
-    }
-
-    y -= 8;
-    await ensureSpace(30);
-    page.drawText('Prodotti', {
-        x: margin,
-        y,
-        size: 16,
-        font: boldFont,
-        color: rgb(0.12, 0.15, 0.19)
-    });
-    y -= 24;
-
-    let subtotal = 0;
-    for (const item of order.items) {
-        subtotal += item.price * item.quantity;
-        const itemText = `${item.quantity} x ${item.name}`;
-        const priceText = `€${(item.price * item.quantity).toFixed(2)}`;
-
-        await ensureSpace(22);
-        page.drawText(itemText, {
-            x: margin,
-            y,
-            size: 11,
-            font,
-            color: rgb(0.23, 0.25, 0.28)
-        });
-        page.drawText(priceText, {
-            x: pageWidth - margin - 90,
-            y,
-            size: 11,
-            font: boldFont,
-            color: rgb(0.23, 0.25, 0.28)
-        });
-        y -= 18;
-    }
-
-    const shipping = Math.max(0, order.totalAmount - subtotal);
-    y -= 10;
-    await ensureSpace(80);
-    page.drawLine({
-        start: { x: margin, y },
-        end: { x: pageWidth - margin, y },
-        thickness: 1,
-        color: rgb(0.86, 0.88, 0.9)
-    });
-    y -= 24;
-
-    const totals = [
-        ['Subtotale', `€${subtotal.toFixed(2)}`],
-        ['Spedizione', `€${shipping.toFixed(2)}`],
-        ['Totale', `€${order.totalAmount.toFixed(2)}`]
-    ] as const;
-
-    for (const [label, value] of totals) {
-        page.drawText(label, {
-            x: margin,
-            y,
-            size: 12,
-            font: label === 'Totale' ? boldFont : font,
-            color: rgb(0.23, 0.25, 0.28)
-        });
-        page.drawText(value, {
-            x: pageWidth - margin - 90,
-            y,
-            size: 12,
-            font: boldFont,
-            color: label === 'Totale' ? rgb(0.57, 0.2, 0.92) : rgb(0.23, 0.25, 0.28)
-        });
-        y -= 18;
-    }
-
-    y -= 12;
-    await ensureSpace(40);
-    page.drawText('Grazie per aver scelto ' + siteName, {
-        x: margin,
-        y,
-        size: 11,
-        font,
-        color: rgb(0.45, 0.47, 0.5)
-    });
-
-    return Buffer.from(await pdf.save());
-}
-
->>>>>>> master
 // Template email predefiniti
 export const defaultEmailTemplates = {
     order_confirmation: {
@@ -405,6 +82,9 @@ export const defaultEmailTemplates = {
             </p>
             <p style="color: #374151; font-size: 16px; line-height: 1.6;">
                 Abbiamo ricevuto il tuo ordine e stiamo già preparando i tuoi prodotti con cura! 🌟
+            </p>
+            <p style="color: #6b7280; font-size: 14px; line-height: 1.6; margin-top: 8px;">
+                In allegato trovi la ricevuta del tuo ordine con il riepilogo dei prodotti acquistati e dell'importo pagato.
             </p>
             
             <div style="background: #f3f4f6; border-radius: 12px; padding: 20px; margin: 20px 0;">
@@ -631,60 +311,270 @@ export const defaultEmailTemplates = {
     }
 };
 
+function formatCurrency(amount: number) {
+    return new Intl.NumberFormat('it-IT', {
+        style: 'currency',
+        currency: 'EUR'
+    }).format(amount);
+}
+
+function getPaymentMethodLabel(paymentMethod?: 'paypal' | 'cod' | 'other') {
+    if (paymentMethod === 'paypal') return 'PayPal';
+    if (paymentMethod === 'cod') return 'Pagamento alla consegna';
+    return 'Pagamento online';
+}
+
+function wrapText(text: string, maxChars: number) {
+    const words = text.split(/\s+/).filter(Boolean);
+    const lines: string[] = [];
+    let currentLine = '';
+
+    for (const word of words) {
+        const candidate = currentLine ? `${currentLine} ${word}` : word;
+        if (candidate.length <= maxChars) {
+            currentLine = candidate;
+        } else {
+            if (currentLine) lines.push(currentLine);
+            currentLine = word;
+        }
+    }
+
+    if (currentLine) lines.push(currentLine);
+    return lines;
+}
+
+async function loadLogoBytes(logo?: string | null) {
+    if (!logo) return null;
+
+    try {
+        if (logo.startsWith('data:image/')) {
+            const [, mimePart, dataPart] = logo.match(/^data:(image\/[a-zA-Z0-9.+-]+);base64,(.+)$/) || [];
+            if (!mimePart || !dataPart) return null;
+            return {
+                bytes: Buffer.from(dataPart, 'base64'),
+                mimeType: mimePart
+            };
+        }
+
+        const response = await fetch(logo);
+        if (!response.ok) return null;
+        const arrayBuffer = await response.arrayBuffer();
+        const mimeType = response.headers.get('content-type') || 'image/png';
+        return {
+            bytes: Buffer.from(arrayBuffer),
+            mimeType
+        };
+    } catch {
+        return null;
+    }
+}
+
+async function generateOrderReceiptPdf(order: OrderConfirmationInput) {
+    const settings = await prisma.siteSettings.findFirst({
+        select: {
+            siteName: true,
+            logo: true,
+            contactEmail: true,
+            contactPhone: true
+        }
+    });
+
+    const siteName = settings?.siteName || 'Il Desiderio di una Stella';
+    const pdfDoc = await PDFDocument.create();
+    let page = pdfDoc.addPage([595.28, 841.89]);
+    const pageWidth = page.getWidth();
+    const pageHeight = page.getHeight();
+    const margin = 48;
+
+    const fontRegular = await pdfDoc.embedFont(StandardFonts.Helvetica);
+    const fontBold = await pdfDoc.embedFont(StandardFonts.HelveticaBold);
+    const logoAsset = await loadLogoBytes(settings?.logo);
+
+    let y = pageHeight - margin;
+
+    if (logoAsset) {
+        try {
+            const image = logoAsset.mimeType.includes('png')
+                ? await pdfDoc.embedPng(logoAsset.bytes)
+                : await pdfDoc.embedJpg(logoAsset.bytes);
+            const dimensions = image.scale(0.22);
+            page.drawImage(image, {
+                x: margin,
+                y: y - dimensions.height,
+                width: dimensions.width,
+                height: dimensions.height
+            });
+        } catch {
+            // Ignore logo embedding errors and continue with text-only branding.
+        }
+    }
+
+    page.drawText(siteName, {
+        x: margin + 92,
+        y: y - 8,
+        size: 22,
+        font: fontBold,
+        color: rgb(0.18, 0.12, 0.09)
+    });
+    page.drawText('Ricevuta ordine', {
+        x: margin + 92,
+        y: y - 30,
+        size: 11,
+        font: fontRegular,
+        color: rgb(0.42, 0.34, 0.29)
+    });
+    y -= 82;
+
+    page.drawRectangle({
+        x: margin,
+        y: y - 74,
+        width: pageWidth - margin * 2,
+        height: 74,
+        color: rgb(0.98, 0.95, 0.91)
+    });
+    page.drawText(`Ordine: ${order.orderNumber}`, { x: margin + 16, y: y - 24, size: 12, font: fontBold, color: rgb(0.17, 0.11, 0.08) });
+    page.drawText(`Data: ${new Date().toLocaleDateString('it-IT')}`, { x: margin + 16, y: y - 44, size: 11, font: fontRegular, color: rgb(0.28, 0.22, 0.19) });
+    page.drawText(`Pagamento: ${getPaymentMethodLabel(order.paymentMethod)}`, { x: pageWidth - margin - 180, y: y - 24, size: 11, font: fontRegular, color: rgb(0.28, 0.22, 0.19) });
+    page.drawText(`Importo pagato: ${formatCurrency(order.totalAmount)}`, { x: pageWidth - margin - 180, y: y - 44, size: 12, font: fontBold, color: rgb(0.63, 0.23, 0.18) });
+    y -= 102;
+
+    page.drawText('Cliente', { x: margin, y, size: 12, font: fontBold, color: rgb(0.17, 0.11, 0.08) });
+    page.drawText(order.customerName, { x: margin, y: y - 18, size: 11, font: fontRegular, color: rgb(0.24, 0.18, 0.16) });
+    page.drawText(order.customerEmail, { x: margin, y: y - 34, size: 11, font: fontRegular, color: rgb(0.24, 0.18, 0.16) });
+
+    page.drawText('Indirizzo di spedizione', { x: pageWidth / 2, y, size: 12, font: fontBold, color: rgb(0.17, 0.11, 0.08) });
+    const addressLines = wrapText(order.shippingAddress || '-', 34);
+    addressLines.forEach((line, index) => {
+        page.drawText(line, { x: pageWidth / 2, y: y - 18 - index * 14, size: 11, font: fontRegular, color: rgb(0.24, 0.18, 0.16) });
+    });
+    y -= 86;
+
+    const drawHeader = () => {
+        page.drawText('Articolo', { x: margin, y, size: 11, font: fontBold, color: rgb(0.17, 0.11, 0.08) });
+        page.drawText('Qta', { x: pageWidth - margin - 160, y, size: 11, font: fontBold, color: rgb(0.17, 0.11, 0.08) });
+        page.drawText('Prezzo', { x: pageWidth - margin - 110, y, size: 11, font: fontBold, color: rgb(0.17, 0.11, 0.08) });
+        page.drawText('Totale', { x: pageWidth - margin - 48, y, size: 11, font: fontBold, color: rgb(0.17, 0.11, 0.08) });
+        page.drawLine({ start: { x: margin, y: y - 8 }, end: { x: pageWidth - margin, y: y - 8 }, thickness: 1, color: rgb(0.84, 0.78, 0.72) });
+        y -= 26;
+    };
+
+    drawHeader();
+
+    const items = order.items || [];
+    for (const item of items) {
+        if (y < 118) {
+            page = pdfDoc.addPage([595.28, 841.89]);
+            y = pageHeight - margin;
+            drawHeader();
+        }
+
+        const itemNameLines = wrapText(item.name, 34);
+        itemNameLines.forEach((line, index) => {
+            page.drawText(line, { x: margin, y: y - index * 14, size: 10.5, font: fontRegular, color: rgb(0.24, 0.18, 0.16) });
+        });
+
+        page.drawText(String(item.quantity), { x: pageWidth - margin - 154, y, size: 10.5, font: fontRegular, color: rgb(0.24, 0.18, 0.16) });
+        page.drawText(formatCurrency(item.price), { x: pageWidth - margin - 118, y, size: 10.5, font: fontRegular, color: rgb(0.24, 0.18, 0.16) });
+        page.drawText(formatCurrency(item.price * item.quantity), { x: pageWidth - margin - 52, y, size: 10.5, font: fontBold, color: rgb(0.17, 0.11, 0.08) });
+
+        y -= Math.max(22, itemNameLines.length * 14 + 8);
+        page.drawLine({ start: { x: margin, y: y + 4 }, end: { x: pageWidth - margin, y: y + 4 }, thickness: 0.6, color: rgb(0.92, 0.88, 0.84) });
+        y -= 12;
+    }
+
+    if (y < 120) {
+        page = pdfDoc.addPage([595.28, 841.89]);
+        y = pageHeight - margin;
+    }
+
+    page.drawRectangle({
+        x: pageWidth - margin - 210,
+        y: y - 58,
+        width: 210,
+        height: 58,
+        color: rgb(0.98, 0.95, 0.91)
+    });
+    page.drawText('Totale pagato', { x: pageWidth - margin - 194, y: y - 22, size: 11, font: fontRegular, color: rgb(0.28, 0.22, 0.19) });
+    page.drawText(formatCurrency(order.totalAmount), { x: pageWidth - margin - 194, y: y - 42, size: 18, font: fontBold, color: rgb(0.63, 0.23, 0.18) });
+    y -= 88;
+
+    const footerLines = [
+        settings?.contactEmail ? `Email: ${settings.contactEmail}` : '',
+        settings?.contactPhone ? `Telefono: ${settings.contactPhone}` : '',
+        'Documento riepilogativo non fiscale generato automaticamente dal negozio.'
+    ].filter(Boolean);
+
+    footerLines.forEach((line, index) => {
+        page.drawText(line, { x: margin, y: y - index * 14, size: 9.5, font: fontRegular, color: rgb(0.42, 0.34, 0.29) });
+    });
+
+    const pdfBytes = await pdfDoc.save();
+    return Buffer.from(pdfBytes);
+}
+
 // Funzione per inviare email (usa un servizio come Resend, SendGrid, ecc.)
-// Per ora simula l'invio e salva nel log
-<<<<<<< HEAD
+// Ora invia realmente via SMTP e salva sempre il log.
 export async function sendEmail(data: EmailData): Promise<{ success: boolean; error?: string }> {
     try {
-=======
-export async function sendEmail(data: EmailData): Promise<{ success: boolean; error?: string; previewUrl?: string }> {
-    try {
-        const { transporter, fromAddress } = await createMailer();
+        const smtpHost = process.env.SMTP_HOST?.trim();
+        const smtpPort = Number(process.env.SMTP_PORT || '587');
+        const smtpUser = process.env.SMTP_USER?.trim();
+        const smtpPass = process.env.SMTP_PASS?.replace(/\s+/g, '').trim();
 
-        const info = await transporter.sendMail({
+        if (!smtpHost || !smtpUser || !smtpPass) {
+            const missing = ['SMTP_HOST', 'SMTP_USER', 'SMTP_PASS'].filter((name) => {
+                if (name === 'SMTP_HOST') return !smtpHost;
+                if (name === 'SMTP_USER') return !smtpUser;
+                return !smtpPass;
+            });
+
+            throw new Error(`SMTP non configurato. Variabili mancanti: ${missing.join(', ')}`);
+        }
+
+        const forceRecipient = process.env.EMAIL_FORCE_TO?.trim();
+        const settings = await prisma.siteSettings.findFirst({
+            select: { contactEmail: true }
+        });
+        const adminCopyRecipient = process.env.EMAIL_ADMIN_COPY_TO?.trim() || settings?.contactEmail?.trim();
+        const recipient = forceRecipient || data.to;
+        const bcc = adminCopyRecipient && adminCopyRecipient !== recipient ? adminCopyRecipient : undefined;
+
+        const smtpFrom = process.env.SMTP_FROM?.trim();
+        const fromAddress = smtpFrom || `"Il Desiderio di una Stella" <${smtpUser}>`;
+
+        const transporter = nodemailer.createTransport({
+            host: smtpHost,
+            port: smtpPort,
+            secure: process.env.SMTP_SECURE === 'true' || smtpPort === 465,
+            auth: {
+                user: smtpUser,
+                pass: smtpPass
+            }
+        });
+
+        await transporter.verify();
+
+        await transporter.sendMail({
             from: fromAddress,
-            to: data.to,
+            to: recipient,
+            bcc,
             subject: data.subject,
             html: data.html,
-            text: data.text,
             attachments: data.attachments
         });
 
-        const previewUrl = nodemailer.getTestMessageUrl(info) || undefined;
-
->>>>>>> master
         // Log dell'email inviata
         await prisma.emailLog.create({
             data: {
-                to: data.to,
+                to: recipient,
                 subject: data.subject,
                 templateName: data.templateName,
                 status: 'sent'
             }
         });
 
-<<<<<<< HEAD
-        // TODO: Integra con un servizio email reale come:
-        // - Resend (https://resend.com)
-        // - SendGrid (https://sendgrid.com)
-        // - Mailgun (https://mailgun.com)
-        // - Amazon SES
-        //
-        // Esempio con Resend:
-        // const resend = new Resend(process.env.RESEND_API_KEY);
-        // await resend.emails.send({
-        //     from: 'noreply@tuodominio.com',
-        //     to: data.to,
-        //     subject: data.subject,
-        //     html: data.html
-        // });
-
-        console.log(`📧 Email inviata a ${data.to}: ${data.subject}`);
+        console.log(`📧 Email inviata a ${recipient}: ${data.subject}`);
         return { success: true };
-=======
-        console.log(`📧 Email inviata a ${data.to}: ${data.subject}`);
-        return { success: true, previewUrl };
->>>>>>> master
     } catch (error) {
         console.error('Errore invio email:', error);
 
@@ -704,47 +594,17 @@ export async function sendEmail(data: EmailData): Promise<{ success: boolean; er
 }
 
 // Funzione per inviare email di conferma ordine
-export async function sendOrderConfirmation(order: {
-    customerName: string;
-    customerEmail: string;
-    orderNumber: string;
-    totalAmount: number;
-    shippingAddress: string;
-<<<<<<< HEAD
-}) {
+export async function sendOrderConfirmation(order: OrderConfirmationInput) {
     const template = defaultEmailTemplates.order_confirmation;
     const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || 'http://localhost:3000';
-=======
-    items: OrderLineItem[];
-    paymentMethod?: string;
-    status?: string;
-}) {
-    const template = defaultEmailTemplates.order_confirmation;
-    const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || 'http://localhost:3000';
-    const siteSettings = await getSiteBrandSettings();
-    const siteName = siteSettings.siteName;
-    const pdfBuffer = await buildOrderPdf({
-        customerName: order.customerName,
-        customerEmail: order.customerEmail,
-        orderNumber: order.orderNumber,
-        totalAmount: order.totalAmount,
-        shippingAddress: order.shippingAddress,
-        items: order.items,
-        paymentMethod: order.paymentMethod,
-        status: order.status
-    });
->>>>>>> master
+    const receiptPdf = await generateOrderReceiptPdf(order);
 
     const html = replacePlaceholders(template.body, {
         customerName: order.customerName,
         orderNumber: order.orderNumber,
         totalAmount: `€${order.totalAmount.toFixed(2)}`,
         shippingAddress: order.shippingAddress,
-<<<<<<< HEAD
         siteName: 'Il Desiderio di una Stella',
-=======
-        siteName,
->>>>>>> master
         siteUrl
     });
 
@@ -756,16 +616,14 @@ export async function sendOrderConfirmation(order: {
         to: order.customerEmail,
         subject,
         html,
-<<<<<<< HEAD
-        templateName: template.name
-=======
         templateName: template.name,
-        attachments: [{
-            filename: `ordine-${order.orderNumber}.pdf`,
-            content: pdfBuffer,
-            contentType: 'application/pdf'
-        }]
->>>>>>> master
+        attachments: [
+            {
+                filename: `conferma-ordine-${order.orderNumber}.pdf`,
+                content: receiptPdf,
+                contentType: 'application/pdf'
+            }
+        ]
     });
 }
 
@@ -779,11 +637,6 @@ export async function sendShippingNotification(order: {
 }) {
     const template = defaultEmailTemplates.shipping_notification;
     const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || 'http://localhost:3000';
-<<<<<<< HEAD
-=======
-    const siteSettings = await getSiteBrandSettings();
-    const siteName = siteSettings.siteName;
->>>>>>> master
 
     // Genera URL tracking (esempio con BRT/Bartolini, modifica per il tuo corriere)
     const trackingUrl = `https://vas.brt.it/vas/sped_det_show.htm?bession=&bession_cl=&referer=sped_numspe_par.htm&Ession=&NumSped=${order.trackingNumber}`;
@@ -794,11 +647,7 @@ export async function sendShippingNotification(order: {
         trackingNumber: order.trackingNumber,
         trackingUrl,
         shippingAddress: order.shippingAddress,
-<<<<<<< HEAD
         siteName: 'Il Desiderio di una Stella',
-=======
-        siteName,
->>>>>>> master
         siteUrl
     });
 
@@ -818,27 +667,15 @@ export async function sendShippingNotification(order: {
 export async function sendNewsletterWelcome(email: string) {
     const template = defaultEmailTemplates.newsletter_welcome;
     const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || 'http://localhost:3000';
-<<<<<<< HEAD
 
     const html = replacePlaceholders(template.body, {
         siteName: 'Il Desiderio di una Stella',
-=======
-    const siteSettings = await getSiteBrandSettings();
-    const siteName = siteSettings.siteName;
-
-    const html = replacePlaceholders(template.body, {
-        siteName,
->>>>>>> master
         siteUrl,
         unsubscribeUrl: `${siteUrl}/newsletter/unsubscribe?email=${encodeURIComponent(email)}`
     });
 
     const subject = replacePlaceholders(template.subject, {
-<<<<<<< HEAD
         siteName: 'Il Desiderio di una Stella'
-=======
-        siteName
->>>>>>> master
     });
 
     return sendEmail({
@@ -857,20 +694,11 @@ export async function sendOrderDelivered(order: {
 }) {
     const template = defaultEmailTemplates.order_delivered;
     const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || 'http://localhost:3000';
-<<<<<<< HEAD
-=======
-    const siteSettings = await getSiteBrandSettings();
-    const siteName = siteSettings.siteName;
->>>>>>> master
 
     const html = replacePlaceholders(template.body, {
         customerName: order.customerName,
         orderNumber: order.orderNumber,
-<<<<<<< HEAD
         siteName: 'Il Desiderio di una Stella',
-=======
-        siteName,
->>>>>>> master
         siteUrl
     });
 

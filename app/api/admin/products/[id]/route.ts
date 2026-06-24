@@ -1,25 +1,19 @@
-<<<<<<< HEAD
 export const runtime = "nodejs";
 export const dynamic = "force-dynamic";
 
-=======
->>>>>>> master
 import { NextRequest, NextResponse } from 'next/server';
 import { prisma } from '@/lib/prisma';
+import { requireAdmin } from '@/lib/adminGuard';
 
 export async function GET(
     req: NextRequest,
-<<<<<<< HEAD
     context: { params: Promise<{ id: string }> }
 ) {
+    const guard = await requireAdmin();
+    if (!guard.ok) return guard.response;
+
     try {
         const { id } = await context.params
-=======
-    { params }: { params: Promise<{ id: string }> }
-) {
-    try {
-        const { id } = await params;
->>>>>>> master
         const product = await prisma.product.findUnique({
             where: { id },
             include: {
@@ -41,17 +35,13 @@ export async function GET(
 
 export async function PUT(
     req: NextRequest,
-<<<<<<< HEAD
     context: { params: Promise<{ id: string }> }
 ) {
+    const guard = await requireAdmin();
+    if (!guard.ok) return guard.response;
+
     try {
         const { id } = await context.params
-=======
-    { params }: { params: Promise<{ id: string }> }
-) {
-    try {
-        const { id } = await params;
->>>>>>> master
         const body = await req.json();
         const { name, description, price, category, inStock, materials, dimensions, images, tags } = body;
 
@@ -112,23 +102,27 @@ export async function PUT(
 
 export async function DELETE(
     req: NextRequest,
-<<<<<<< HEAD
     context: { params: Promise<{ id: string }> }
 ) {
+    const guard = await requireAdmin();
+    if (!guard.ok) return guard.response;
+
     try {
         const { id } = await context.params
-=======
-    { params }: { params: Promise<{ id: string }> }
-) {
-    try {
-        const { id } = await params;
->>>>>>> master
-        await prisma.product.delete({
-            where: { id }
+
+        await prisma.$transaction(async (tx) => {
+            await tx.productImage.deleteMany({ where: { productId: id } });
+            await tx.productMaterial.deleteMany({ where: { productId: id } });
+            await tx.productTag.deleteMany({ where: { productId: id } });
+            await tx.review.deleteMany({ where: { productId: id } });
+            await tx.orderItem.deleteMany({ where: { productId: id } });
+            await tx.wishlist.deleteMany({ where: { productId: id } });
+
+            await tx.product.delete({ where: { id } });
         });
 
         return NextResponse.json({ success: true });
     } catch (error) {
-        return NextResponse.json({ error: 'Errore nell\'eliminazione' }, { status: 500 });
+        return NextResponse.json({ error: 'Errore nell\'eliminazione', details: String(error) }, { status: 500 });
     }
 }

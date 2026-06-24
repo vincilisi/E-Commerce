@@ -1,12 +1,9 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { jwtVerify } from 'jose';
 
-const adminPaths = [
-  '/admin',
-  '/api/admin',
-];
+const adminPaths = ['/admin', '/api/admin'];
 
-export async function middleware(req: NextRequest) {
+export async function proxy(req: NextRequest) {
   const { pathname } = req.nextUrl;
   const isAdminRoute = adminPaths.some((path) => pathname.startsWith(path));
   if (!isAdminRoute) return NextResponse.next();

@@ -1,26 +1,16 @@
-<<<<<<< HEAD
 export const runtime = "nodejs";
 export const dynamic = "force-dynamic";
 
-=======
->>>>>>> master
 import { NextRequest, NextResponse } from 'next/server';
 import { prisma } from '@/lib/prisma';
 
 // GET - Singolo template
 export async function GET(
     request: NextRequest,
-<<<<<<< HEAD
     context: { params: Promise<{ id: string }> }
 ) {
     try {
         const { id } = await context.params;
-=======
-    { params }: { params: Promise<{ id: string }> }
-) {
-    try {
-        const { id } = await params;
->>>>>>> master
 
         const template = await prisma.emailTemplate.findUnique({
             where: { id }
@@ -40,18 +30,11 @@ export async function GET(
 // PUT - Aggiorna template
 export async function PUT(
     request: NextRequest,
-<<<<<<< HEAD
     context: { params: Promise<{ id: string }> }
 ) {
     try {
         const { id } = await context.params;
 
-=======
-    { params }: { params: Promise<{ id: string }> }
-) {
-    try {
-        const { id } = await params;
->>>>>>> master
         const body = await request.json();
 
         const template = await prisma.emailTemplate.update({
@@ -73,17 +56,10 @@ export async function PUT(
 // DELETE - Elimina template
 export async function DELETE(
     request: NextRequest,
-<<<<<<< HEAD
     context: { params: Promise<{ id: string }> }
 ) {
     try {
         const { id } = await context.params;
-=======
-    { params }: { params: Promise<{ id: string }> }
-) {
-    try {
-        const { id } = await params;
->>>>>>> master
 
         await prisma.emailTemplate.delete({
             where: { id }

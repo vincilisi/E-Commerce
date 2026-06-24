@@ -3,14 +3,42 @@ import nodemailer from 'nodemailer';
 import { z } from 'zod';
 import { prisma } from '@/lib/prisma';
 
+const rateLimitWindowMs = 10 * 60 * 1000;
+const maxRequestsPerWindow = 5;
+const ipRequestLog = new Map<string, number[]>();
+
+function getClientIp(req: NextRequest) {
+    const forwarded = req.headers.get('x-forwarded-for');
+    if (forwarded) return forwarded.split(',')[0].trim();
+    return req.headers.get('x-real-ip') || 'unknown';
+}
+
+function isRateLimited(ip: string) {
+    const now = Date.now();
+    const timestamps = ipRequestLog.get(ip) || [];
+    const recent = timestamps.filter((ts) => now - ts < rateLimitWindowMs);
+    recent.push(now);
+    ipRequestLog.set(ip, recent);
+    return recent.length > maxRequestsPerWindow;
+}
+
 const contactSchema = z.object({
     nome: z.string().trim().min(2).max(120),
     email: z.string().trim().email(),
+    oggetto: z.string().trim().min(3).max(160),
     messaggio: z.string().trim().min(10).max(2000)
 });
 
 export async function POST(req: NextRequest) {
     try {
+        const ip = getClientIp(req);
+        if (isRateLimited(ip)) {
+            return NextResponse.json(
+                { error: 'Troppi tentativi. Riprova tra qualche minuto.' },
+                { status: 429 }
+            );
+        }
+
         const body = await req.json();
         const parsed = contactSchema.safeParse(body);
 
@@ -33,16 +61,16 @@ export async function POST(req: NextRequest) {
             );
         }
 
-        const { nome, email, messaggio } = parsed.data;
+        const { nome, email, oggetto, messaggio } = parsed.data;
 
         const settings = await prisma.siteSettings.findFirst({
             select: {
-                assistantEmail: true,
+                contactEmail: true,
                 siteName: true
             }
         });
 
-        const destinationEmail = settings?.assistantEmail?.trim();
+        const destinationEmail = settings?.contactEmail?.trim() || process.env.CONTACT_EMAIL?.trim();
         if (!destinationEmail) {
             return NextResponse.json(
                 { error: 'Email di destinazione non configurata nelle impostazioni' },
@@ -55,6 +83,7 @@ export async function POST(req: NextRequest) {
         const smtpUser = process.env.SMTP_USER?.trim();
         const smtpPass = process.env.SMTP_PASS?.replace(/\s+/g, '').trim();
         const hasSmtpConfig = Boolean(smtpHost && smtpUser && smtpPass);
+        const allowDevMailbox = process.env.ALLOW_DEV_ETHEREAL === 'true';
 
         let transporter;
         let fromUser = smtpUser || '';
@@ -76,7 +105,7 @@ export async function POST(req: NextRequest) {
             try {
                 await smtpTransporter.verify();
             } catch (smtpError) {
-                if (process.env.NODE_ENV !== 'production') {
+                if (process.env.NODE_ENV !== 'production' && allowDevMailbox) {
                     const testAccount = await nodemailer.createTestAccount();
                     transporter = nodemailer.createTransport({
                         host: 'smtp.ethereal.email',
@@ -93,7 +122,7 @@ export async function POST(req: NextRequest) {
                     throw smtpError;
                 }
             }
-        } else if (process.env.NODE_ENV !== 'production') {
+        } else if (process.env.NODE_ENV !== 'production' && allowDevMailbox) {
             const testAccount = await nodemailer.createTestAccount();
             transporter = nodemailer.createTransport({
                 host: 'smtp.ethereal.email',
@@ -108,7 +137,7 @@ export async function POST(req: NextRequest) {
             usingDevMailbox = true;
         } else {
             return NextResponse.json(
-                { error: 'Server email non configurato. Imposta SMTP_HOST, SMTP_PORT, SMTP_USER, SMTP_PASS' },
+                { error: 'Server email non configurato. Imposta SMTP_HOST, SMTP_PORT, SMTP_USER, SMTP_PASS (oppure ALLOW_DEV_ETHEREAL=true solo per test).' },
                 { status: 500 }
             );
         }
@@ -119,11 +148,12 @@ export async function POST(req: NextRequest) {
         const fromAddress = !smtpFrom || hasPlaceholderFrom
             ? `"${siteName}" <${fromUser}>`
             : smtpFrom;
-        const subject = `Nuovo messaggio contatti da ${nome}`;
+        const subject = `Contatti: ${oggetto} (da ${nome})`;
 
         const text = [
             `Nome: ${nome}`,
             `Email: ${email}`,
+            `Oggetto: ${oggetto}`,
             '',
             'Messaggio:',
             messaggio
@@ -133,6 +163,7 @@ export async function POST(req: NextRequest) {
             <h2>Nuovo messaggio dal form contatti</h2>
             <p><strong>Nome:</strong> ${nome}</p>
             <p><strong>Email:</strong> ${email}</p>
+            <p><strong>Oggetto:</strong> ${oggetto}</p>
             <p><strong>Messaggio:</strong></p>
             <p style="white-space: pre-line;">${messaggio.replace(/</g, '&lt;').replace(/>/g, '&gt;')}</p>
         `;

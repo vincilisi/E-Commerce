@@ -1,104 +1,101 @@
 'use client';
 
-import { useEffect, useState } from 'react';
+import { useCallback, useEffect, useState } from 'react';
+import Image from 'next/image';
 import { Save, Palette, Type, Image as ImageIcon, Settings, Search, MessageCircle } from 'lucide-react';
 import toast, { Toaster } from 'react-hot-toast';
 import Link from 'next/link';
 
 type Tab = 'generale' | 'colori' | 'tipografia' | 'logo' | 'ricerca' | 'assistente';
 
+const defaultSettings = {
+    siteName: 'Il Desiderio di una Stella',
+    contactEmail: 'info@ildesideriodiunastella.it',
+    contactPhone: '+39 123 456 7890',
+    contactWhatsapp: '+39 123 456 7890',
+    logo: '',
+    primaryColor: '#9333ea',
+    secondaryColor: '#6366f1',
+    accentColor: '#fde047',
+    backgroundColor: '#ffffff',
+    textColor: '#1f2937',
+    cardBackground: '#ffffff',
+    borderColor: '#e5e7eb',
+    buttonTextColor: '#ffffff',
+    fontFamily: 'Inter',
+    customFontUrl: '',
+    // Search Bar
+    searchBgColor: '#ffffff',
+    searchTextColor: '#374151',
+    searchPlaceholder: '#9ca3af',
+    searchBorderColor: '#e5e7eb',
+    searchIconColor: '#6b7280',
+    // Virtual Assistant
+    assistantEnabled: true,
+    assistantName: 'Assistente Virtuale',
+    assistantColor: '#9333ea',
+    assistantTextColor: '#ffffff',
+    assistantWelcome: '👋 Ciao! Sono il tuo assistente virtuale. Come posso aiutarti oggi?',
+    assistantPosition: 'right'
+};
+
 export default function AdminImpostazioni() {
     const [activeTab, setActiveTab] = useState<Tab>('generale');
     const [loading, setLoading] = useState(true);
     const [saving, setSaving] = useState(false);
     const [uploading, setUploading] = useState(false);
-    const [settings, setSettings] = useState({
-<<<<<<< HEAD
-        siteName: 'Il Desiderio di una Stella',
-=======
-        siteName: 'Nome del sito',
->>>>>>> master
-        logo: '',
-        primaryColor: '#9333ea',
-        secondaryColor: '#6366f1',
-        accentColor: '#fde047',
-        backgroundColor: '#ffffff',
-        textColor: '#1f2937',
-        cardBackground: '#ffffff',
-        borderColor: '#e5e7eb',
-        buttonTextColor: '#ffffff',
-        fontFamily: 'Inter',
-        customFontUrl: '',
-        // Search Bar
-        searchBgColor: '#ffffff',
-        searchTextColor: '#374151',
-        searchPlaceholder: '#9ca3af',
-        searchBorderColor: '#e5e7eb',
-        searchIconColor: '#6b7280',
-        // Virtual Assistant
-        assistantEnabled: true,
-        assistantName: 'Assistente Virtuale',
-        assistantColor: '#9333ea',
-        assistantTextColor: '#ffffff',
-        assistantWelcome: '👋 Ciao! Sono il tuo assistente virtuale. Come posso aiutarti oggi?',
-<<<<<<< HEAD
-        assistantPosition: 'right'
-=======
-        assistantPosition: 'right',
-        assistantPhone: '+39 02 1234 5678',
-        assistantWhatsapp: '+39 02 1234 5678',
-        assistantWeekdayOpen: '09:00',
-        assistantWeekdayClose: '18:00',
-        assistantSaturdayOpen: '10:00',
-        assistantSaturdayClose: '14:00',
-        assistantSundayClosed: true
->>>>>>> master
-    });
+    const [settings, setSettings] = useState(defaultSettings);
 
-    useEffect(() => {
-        loadSettings();
-    }, []);
-
-    const loadSettings = async () => {
+    const loadSettings = useCallback(async () => {
         try {
             const res = await fetch('/api/admin/settings');
             const data = await res.json();
             if (data.settings) {
-<<<<<<< HEAD
-                setSettings(data.settings);
-=======
-                setSettings((prev) => ({ ...prev, ...data.settings }));
->>>>>>> master
+                setSettings({
+                    ...defaultSettings,
+                    ...data.settings,
+                    contactWhatsapp: data.settings.contactWhatsapp || data.settings.contactPhone || defaultSettings.contactWhatsapp
+                });
             }
-        } catch (error) {
+        } catch {
             toast.error('Errore nel caricamento impostazioni');
         } finally {
             setLoading(false);
         }
-    };
+    }, []);
+
+    useEffect(() => {
+        loadSettings();
+    }, [loadSettings]);
 
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
         setSaving(true);
 
+        const payload = activeTab === 'generale'
+            ? {
+                siteName: settings.siteName,
+                contactEmail: settings.contactEmail,
+                contactPhone: settings.contactPhone,
+                contactWhatsapp: settings.contactWhatsapp
+            }
+            : settings;
+
         try {
             const res = await fetch('/api/admin/settings', {
                 method: 'PUT',
                 headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify(settings)
+                body: JSON.stringify(payload)
             });
 
             if (res.ok) {
-<<<<<<< HEAD
+                window.dispatchEvent(new CustomEvent('site-settings-updated'));
                 toast.success('Impostazioni salvate! Ricarica la pagina per vedere i cambiamenti.');
-=======
-                toast.success('Impostazioni salvate!');
-                window.dispatchEvent(new CustomEvent('siteSettingsUpdated'));
->>>>>>> master
             } else {
-                toast.error('Errore nel salvataggio');
+                const data = await res.json().catch(() => null);
+                toast.error(data?.error || 'Errore nel salvataggio');
             }
-        } catch (error) {
+        } catch {
             toast.error('Errore nel salvataggio');
         } finally {
             setSaving(false);
@@ -135,7 +132,7 @@ export default function AdminImpostazioni() {
                 toast.error('Errore nella lettura del file');
             };
             reader.readAsDataURL(file);
-        } catch (error) {
+        } catch {
             toast.error('Errore nel caricamento del file');
         } finally {
             setUploading(false);
@@ -207,15 +204,55 @@ export default function AdminImpostazioni() {
                                         value={settings.siteName}
                                         onChange={(e) => setSettings({ ...settings, siteName: e.target.value })}
                                         className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-600"
-<<<<<<< HEAD
                                         placeholder="Il Desiderio di una Stella"
-=======
-                                        placeholder="Nome del sito"
->>>>>>> master
                                     />
                                     <p className="text-sm text-gray-500 mt-1">
                                         Questo nome apparirà nella navbar, nel titolo della pagina e nella homepage
                                     </p>
+                                </div>
+
+                                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                                    <div>
+                                        <label className="block text-gray-700 font-semibold mb-2">Email Contatti</label>
+                                        <input
+                                            type="email"
+                                            value={settings.contactEmail}
+                                            onChange={(e) => setSettings({ ...settings, contactEmail: e.target.value })}
+                                            className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-600"
+                                            placeholder="info@ildesideriodiunastella.it"
+                                        />
+                                        <p className="text-sm text-gray-500 mt-1">
+                                            Indirizzo mostrato nella pagina contatti e usato come destinatario del form
+                                        </p>
+                                    </div>
+
+                                    <div>
+                                        <label className="block text-gray-700 font-semibold mb-2">Telefono Contatti</label>
+                                        <input
+                                            type="text"
+                                            value={settings.contactPhone}
+                                            onChange={(e) => setSettings({ ...settings, contactPhone: e.target.value })}
+                                            className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-600"
+                                            placeholder="+39 123 456 7890"
+                                        />
+                                        <p className="text-sm text-gray-500 mt-1">
+                                            Numero mostrato nella pagina contatti
+                                        </p>
+                                    </div>
+
+                                    <div>
+                                        <label className="block text-gray-700 font-semibold mb-2">Numero WhatsApp</label>
+                                        <input
+                                            type="text"
+                                            value={settings.contactWhatsapp}
+                                            onChange={(e) => setSettings({ ...settings, contactWhatsapp: e.target.value })}
+                                            className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-600"
+                                            placeholder="+39 123 456 7890"
+                                        />
+                                        <p className="text-sm text-gray-500 mt-1">
+                                            Numero usato per il pulsante/chat WhatsApp nella pagina contatti
+                                        </p>
+                                    </div>
                                 </div>
                             </div>
                         )}
@@ -534,14 +571,13 @@ export default function AdminImpostazioni() {
                                     <div className="border rounded-lg p-6" style={{ borderColor: 'var(--color-border)' }}>
                                         <p className="text-sm font-semibold text-gray-700 mb-3">Anteprima Logo:</p>
                                         <div className="flex items-center justify-center p-8 bg-gray-50 rounded-lg">
-                                            <img
+                                            <Image
                                                 src={settings.logo}
                                                 alt="Logo Preview"
-<<<<<<< HEAD
-                                                className="max-w-[200px] max-h-[100px] object-contain"
-=======
+                                                width={200}
+                                                height={100}
+                                                unoptimized
                                                 className="max-w-50 max-h-25 object-contain"
->>>>>>> master
                                                 onError={(e) => {
                                                     e.currentTarget.style.display = 'none';
                                                     toast.error('Errore nel caricamento del logo');
@@ -700,7 +736,6 @@ export default function AdminImpostazioni() {
                                     🤖 Assistente Virtuale
                                 </h2>
 
-<<<<<<< HEAD
                                 {/* Abilita/Disabilita */}
                                 <div className="flex items-center justify-between p-4 border rounded-lg" style={{ borderColor: 'var(--color-border)' }}>
                                     <div>
@@ -786,195 +821,6 @@ export default function AdminImpostazioni() {
                                         rows={3}
                                         placeholder="👋 Ciao! Sono il tuo assistente virtuale..."
                                     />
-=======
-                                <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-                                    <div className="border rounded-lg p-5 space-y-4" style={{ borderColor: 'var(--color-border)' }}>
-                                        <div>
-                                            <h3 className="text-lg font-semibold" style={{ color: 'var(--color-text)' }}>
-                                                Chat AI
-                                            </h3>
-                                            <p className="text-sm text-gray-500">Gestisci il bot che risponde dentro al sito.</p>
-                                        </div>
-
-                                        <div className="flex items-center justify-between p-4 border rounded-lg" style={{ borderColor: 'var(--color-border)' }}>
-                                            <div>
-                                                <label className="block text-gray-700 font-semibold">Assistente Attivo</label>
-                                                <p className="text-sm text-gray-500">Mostra il pulsante dell&apos;assistente virtuale sul sito</p>
-                                            </div>
-                                            <button
-                                                type="button"
-                                                onClick={() => setSettings({ ...settings, assistantEnabled: !settings.assistantEnabled })}
-                                                className={`relative inline-flex h-6 w-11 items-center rounded-full transition-colors ${settings.assistantEnabled ? 'bg-green-500' : 'bg-gray-300'}`}
-                                            >
-                                                <span className={`inline-block h-4 w-4 transform rounded-full bg-white transition-transform ${settings.assistantEnabled ? 'translate-x-6' : 'translate-x-1'}`} />
-                                            </button>
-                                        </div>
-
-                                        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                                            <div>
-                                                <label className="block text-gray-700 font-semibold mb-2">Nome Assistente</label>
-                                                <input
-                                                    type="text"
-                                                    value={settings.assistantName}
-                                                    onChange={(e) => setSettings({ ...settings, assistantName: e.target.value })}
-                                                    className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-600"
-                                                    placeholder="Assistente Virtuale"
-                                                />
-                                            </div>
-
-                                            <div>
-                                                <label className="block text-gray-700 font-semibold mb-2">Posizione</label>
-                                                <select
-                                                    value={settings.assistantPosition}
-                                                    onChange={(e) => setSettings({ ...settings, assistantPosition: e.target.value })}
-                                                    className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-600"
-                                                >
-                                                    <option value="right">Destra</option>
-                                                    <option value="left">Sinistra</option>
-                                                </select>
-                                            </div>
-
-                                            <div>
-                                                <label className="block text-gray-700 font-semibold mb-2">Colore Pulsante</label>
-                                                <div className="flex items-center space-x-3">
-                                                    <input
-                                                        type="color"
-                                                        value={settings.assistantColor}
-                                                        onChange={(e) => setSettings({ ...settings, assistantColor: e.target.value })}
-                                                        className="w-16 h-16 rounded cursor-pointer"
-                                                    />
-                                                    <input
-                                                        type="text"
-                                                        value={settings.assistantColor}
-                                                        onChange={(e) => setSettings({ ...settings, assistantColor: e.target.value })}
-                                                        className="flex-1 px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-600"
-                                                    />
-                                                </div>
-                                            </div>
-
-                                            <div>
-                                                <label className="block text-gray-700 font-semibold mb-2">Colore Icona</label>
-                                                <div className="flex items-center space-x-3">
-                                                    <input
-                                                        type="color"
-                                                        value={settings.assistantTextColor}
-                                                        onChange={(e) => setSettings({ ...settings, assistantTextColor: e.target.value })}
-                                                        className="w-16 h-16 rounded cursor-pointer"
-                                                    />
-                                                    <input
-                                                        type="text"
-                                                        value={settings.assistantTextColor}
-                                                        onChange={(e) => setSettings({ ...settings, assistantTextColor: e.target.value })}
-                                                        className="flex-1 px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-600"
-                                                    />
-                                                </div>
-                                            </div>
-                                        </div>
-
-                                        <div>
-                                            <label className="block text-gray-700 font-semibold mb-2">Messaggio di Benvenuto</label>
-                                            <textarea
-                                                value={settings.assistantWelcome}
-                                                onChange={(e) => setSettings({ ...settings, assistantWelcome: e.target.value })}
-                                                className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-600"
-                                                rows={3}
-                                                placeholder="👋 Ciao! Sono il tuo assistente virtuale..."
-                                            />
-                                        </div>
-                                    </div>
-
-                                    <div className="border rounded-lg p-5 space-y-4" style={{ borderColor: 'var(--color-border)' }}>
-                                        <div>
-                                            <h3 className="text-lg font-semibold" style={{ color: 'var(--color-text)' }}>
-                                                WhatsApp
-                                            </h3>
-                                            <p className="text-sm text-gray-500">Usa WhatsApp come contatto rapido con l&apos;operatore.</p>
-                                        </div>
-
-                                        <div>
-                                            <label className="block text-gray-700 font-semibold mb-2">Numero WhatsApp</label>
-                                            <input
-                                                type="text"
-                                                value={settings.assistantWhatsapp}
-                                                onChange={(e) => setSettings({ ...settings, assistantWhatsapp: e.target.value })}
-                                                className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-600"
-                                                placeholder="+39 02 1234 5678"
-                                            />
-                                            <p className="text-sm text-gray-500 mt-1">Questo numero viene usato per aprire la chat WhatsApp.</p>
-                                        </div>
-
-                                        <div>
-                                            <label className="block text-gray-700 font-semibold mb-2">Telefono Operatore</label>
-                                            <input
-                                                type="text"
-                                                value={settings.assistantPhone}
-                                                onChange={(e) => setSettings({ ...settings, assistantPhone: e.target.value })}
-                                                className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-600"
-                                                placeholder="+39 02 1234 5678"
-                                            />
-                                            <p className="text-sm text-gray-500 mt-1">Usato solo come riferimento operativo e negli orari assistenza.</p>
-                                        </div>
-                                    </div>
-                                </div>
-
-                                <div className="border rounded-lg p-4 space-y-4" style={{ borderColor: 'var(--color-border)' }}>
-                                    <h3 className="text-lg font-semibold" style={{ color: 'var(--color-text)' }}>
-                                        Orari Operatore
-                                    </h3>
-
-                                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                                        <div>
-                                            <label className="block text-gray-700 font-semibold mb-2">Lunedì - Venerdì: Apertura</label>
-                                            <input
-                                                type="time"
-                                                value={settings.assistantWeekdayOpen}
-                                                onChange={(e) => setSettings({ ...settings, assistantWeekdayOpen: e.target.value })}
-                                                className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-600"
-                                            />
-                                        </div>
-                                        <div>
-                                            <label className="block text-gray-700 font-semibold mb-2">Lunedì - Venerdì: Chiusura</label>
-                                            <input
-                                                type="time"
-                                                value={settings.assistantWeekdayClose}
-                                                onChange={(e) => setSettings({ ...settings, assistantWeekdayClose: e.target.value })}
-                                                className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-600"
-                                            />
-                                        </div>
-                                        <div>
-                                            <label className="block text-gray-700 font-semibold mb-2">Sabato: Apertura</label>
-                                            <input
-                                                type="time"
-                                                value={settings.assistantSaturdayOpen}
-                                                onChange={(e) => setSettings({ ...settings, assistantSaturdayOpen: e.target.value })}
-                                                className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-600"
-                                            />
-                                        </div>
-                                        <div>
-                                            <label className="block text-gray-700 font-semibold mb-2">Sabato: Chiusura</label>
-                                            <input
-                                                type="time"
-                                                value={settings.assistantSaturdayClose}
-                                                onChange={(e) => setSettings({ ...settings, assistantSaturdayClose: e.target.value })}
-                                                className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-600"
-                                            />
-                                        </div>
-                                    </div>
-
-                                    <div className="flex items-center justify-between p-3 border rounded-lg" style={{ borderColor: 'var(--color-border)' }}>
-                                        <div>
-                                            <p className="font-semibold" style={{ color: 'var(--color-text)' }}>Domenica chiuso</p>
-                                            <p className="text-sm text-gray-500">Se disattivo, usa gli stessi orari del sabato</p>
-                                        </div>
-                                        <button
-                                            type="button"
-                                            onClick={() => setSettings({ ...settings, assistantSundayClosed: !settings.assistantSundayClosed })}
-                                            className={`relative inline-flex h-6 w-11 items-center rounded-full transition-colors ${settings.assistantSundayClosed ? 'bg-green-500' : 'bg-gray-300'}`}
-                                        >
-                                            <span className={`inline-block h-4 w-4 transform rounded-full bg-white transition-transform ${settings.assistantSundayClosed ? 'translate-x-6' : 'translate-x-1'}`} />
-                                        </button>
-                                    </div>
->>>>>>> master
                                 </div>
 
                                 {/* Anteprima */}

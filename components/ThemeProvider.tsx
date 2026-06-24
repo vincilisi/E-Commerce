@@ -1,15 +1,11 @@
 'use client';
 
-import { useEffect, useState } from 'react';
+import { useEffect } from 'react';
 
 export function ThemeProvider({ children }: { children: React.ReactNode }) {
-    const [mounted, setMounted] = useState(false);
-
     useEffect(() => {
-        setMounted(true);
-
         // Carica le impostazioni dal database
-        fetch('/api/admin/settings')
+        fetch('/api/settings')
             .then(res => res.json())
             .then(data => {
                 if (data.settings) {
@@ -88,8 +84,6 @@ export function ThemeProvider({ children }: { children: React.ReactNode }) {
                 document.body.style.backgroundColor = '#f9fafb';
             });
     }, []);
-
-    if (!mounted) return null;
 
     return <>{children}</>;
 }

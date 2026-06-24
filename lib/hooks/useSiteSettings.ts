@@ -15,8 +15,14 @@ export function useSiteSettings() {
         siteName: 'Il Desiderio di una Stella'
     });
 
+    const applyColors = (colors: SiteSettings) => {
+        document.documentElement.style.setProperty('--color-primary', colors.primaryColor);
+        document.documentElement.style.setProperty('--color-secondary', colors.secondaryColor);
+        document.documentElement.style.setProperty('--color-accent', colors.accentColor);
+    };
+
     useEffect(() => {
-        fetch('/api/admin/settings')
+        fetch('/api/settings')
             .then(res => res.json())
             .then(data => {
                 if (data.settings) {
@@ -26,15 +32,14 @@ export function useSiteSettings() {
             })
             .catch(() => {
                 // Usa i colori di default
-                applyColors(settings);
+                applyColors({
+                    primaryColor: '#AA3939',
+                    secondaryColor: '#BB5B80',
+                    accentColor: '#fde047',
+                    siteName: 'Il Desiderio di una Stella'
+                });
             });
     }, []);
-
-    const applyColors = (colors: SiteSettings) => {
-        document.documentElement.style.setProperty('--color-primary', colors.primaryColor);
-        document.documentElement.style.setProperty('--color-secondary', colors.secondaryColor);
-        document.documentElement.style.setProperty('--color-accent', colors.accentColor);
-    };
 
     return settings;
 }

@@ -1,8 +1,4 @@
 'use client';
-<<<<<<< HEAD
-=======
-
->>>>>>> master
 import { useEffect, useState } from 'react';
 import { Save, Plus, Trash2 } from 'lucide-react';
 import toast, { Toaster } from 'react-hot-toast';
@@ -32,11 +28,15 @@ export default function ModificaProdotto() {
 
     const loadProduct = async () => {
         try {
-            // ROUTE CORRETTA
-            const res = await fetch(`/api/products/${productId}`);
+            const res = await fetch(`/api/admin/products/${productId}`);
 
             if (res.ok) {
-                const product = await res.json();
+                const data = await res.json();
+                const product = data.product;
+
+                if (!product) {
+                    throw new Error('Prodotto non trovato');
+                }
 
                 setFormData({
                     name: product.name,
@@ -69,8 +69,7 @@ export default function ModificaProdotto() {
         setSubmitting(true);
 
         try {
-            // ROUTE CORRETTA
-            const res = await fetch(`/api/products/${productId}`, {
+            const res = await fetch(`/api/admin/products/${productId}`, {
                 method: 'PUT',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({

@@ -1,9 +1,6 @@
-<<<<<<< HEAD
 export const runtime = "nodejs";
 export const dynamic = "force-dynamic";
 
-=======
->>>>>>> master
 import { NextRequest, NextResponse } from 'next/server'
 import { prisma } from '@/lib/prisma'
 
@@ -27,11 +24,7 @@ export async function GET(request: NextRequest) {
 
         // Statistiche generali
         const totalOrders = orders.length
-<<<<<<< HEAD
         const totalRevenue = orders.reduce((sum: number, o) => sum + o.totalAmount, 0)
-=======
-        const totalRevenue = orders.reduce((sum, o) => sum + o.totalAmount, 0)
->>>>>>> master
         const avgOrderValue = totalOrders > 0 ? totalRevenue / totalOrders : 0
 
         // Ordini per stato
@@ -50,33 +43,20 @@ export async function GET(request: NextRequest) {
             take: 10
         })
 
-<<<<<<< HEAD
         // Tipizza gli elementi della map
         const productIds = topProducts.map((p: typeof topProducts[number]) => p.productId)
 
         // Dettagli prodotti
-=======
-        // Dettagli prodotti top
-        const productIds = topProducts.map(p => p.productId)
->>>>>>> master
         const products = await prisma.product.findMany({
             where: { id: { in: productIds } }
         })
 
-<<<<<<< HEAD
         const topProductsWithDetails = topProducts.map((tp: typeof topProducts[number]) => ({
-=======
-        const topProductsWithDetails = topProducts.map(tp => ({
->>>>>>> master
             ...tp,
             product: products.find(p => p.id === tp.productId)
         }))
 
-<<<<<<< HEAD
         // Ordini per giorno
-=======
-        // Ordini per giorno (ultimi 30 giorni)
->>>>>>> master
         const dailyOrders = orders.reduce((acc, order) => {
             const date = order.createdAt.toISOString().split('T')[0]
             if (!acc[date]) {
@@ -120,8 +100,4 @@ export async function GET(request: NextRequest) {
         console.error('Errore analytics:', error)
         return NextResponse.json({ error: 'Errore server' }, { status: 500 })
     }
-<<<<<<< HEAD
 }
-=======
-}
->>>>>>> master

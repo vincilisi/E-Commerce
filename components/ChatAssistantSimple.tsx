@@ -20,18 +20,31 @@ const STORE_HOURS = {
     domenica: null,
 };
 
-const CONTACT_INFO = {
-    phone: '+39 02 1234 5678',
-    email: 'info@ildesiderio.it',
-};
-
 export default function ChatAssistantSimple() {
     const { t } = useLanguage();
     const [isOpen, setIsOpen] = useState(false);
     const [messages, setMessages] = useState<Message[]>([]);
     const [inputValue, setInputValue] = useState('');
     const [showOperatorBtn, setShowOperatorBtn] = useState(false);
+    const [contactInfo, setContactInfo] = useState({
+        phone: '+39 123 456 7890',
+        email: 'info@ildesideriodiunastella.it',
+    });
     const messagesEndRef = useRef<HTMLDivElement>(null);
+
+    const loadContactInfo = () => {
+        fetch('/api/settings', { cache: 'no-store' })
+            .then((res) => res.json())
+            .then((data) => {
+                if (data?.settings) {
+                    setContactInfo({
+                        phone: data.settings.contactPhone || '+39 123 456 7890',
+                        email: data.settings.contactEmail || 'info@ildesideriodiunastella.it',
+                    });
+                }
+            })
+            .catch(() => { });
+    };
 
     const isStoreOpen = () => {
         const now = new Date();
@@ -55,8 +68,8 @@ ${t('assistant.saturday')}: 10:00 - 14:00
 ${t('assistant.sunday')}: ${t('assistant.closed')}
 
 📞 ${t('assistant.urgentContacts')}:
-${t('assistant.phone')}: ${CONTACT_INFO.phone}
-Email: ${CONTACT_INFO.email}`;
+${t('assistant.phone')}: ${contactInfo.phone}
+Email: ${contactInfo.email}`;
 
     const questions = [
         { id: 1, q: t('assistant.shipping'), a: t('assistant.shippingAnswer') },
@@ -65,11 +78,23 @@ Email: ${CONTACT_INFO.email}`;
         { id: 4, q: t('assistant.scheduleBtn'), a: schedule, special: true },
     ];
 
+    const openAssistant = () => {
+        setIsOpen(true);
+        setMessages((prev) =>
+            prev.length === 0 ? [{ id: Date.now(), text: t('assistant.welcome'), isBot: true }] : prev
+        );
+    };
+
     useEffect(() => {
-        if (isOpen && messages.length === 0) {
-            setMessages([{ id: Date.now(), text: t('assistant.welcome'), isBot: true }]);
-        }
-    }, [isOpen, messages.length, t]);
+        loadContactInfo();
+
+        const onSettingsUpdated = () => loadContactInfo();
+        window.addEventListener('site-settings-updated', onSettingsUpdated);
+
+        return () => {
+            window.removeEventListener('site-settings-updated', onSettingsUpdated);
+        };
+    }, []);
 
     useEffect(() => {
         messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
@@ -102,6 +127,7 @@ Email: ${CONTACT_INFO.email}`;
             const msg = isStoreOpen()
                 ? t('assistant.requestSent')
                 : `${t('assistant.storeClosed')}\n\n${schedule}`;
+            setMessages(prev => [...prev, { id: Date.now() + 1, text: msg, isBot: true }]);
             setShowOperatorBtn(false);
         }, 500);
     };
@@ -110,8 +136,8 @@ Email: ${CONTACT_INFO.email}`;
         <>
             {!isOpen && (
                 <button
-                    onClick={() => setIsOpen(true)}
-                    className="fixed bottom-6 right-6 z-[9999] p-4 rounded-full shadow-2xl bg-purple-600 hover:bg-purple-700 transition-all hover:scale-110"
+                    onClick={openAssistant}
+                    className="fixed bottom-6 right-6 z-9999 p-4 rounded-full shadow-2xl bg-purple-600 hover:bg-purple-700 transition-all hover:scale-110"
                 >
                     <MessageCircle className="w-6 h-6 text-white" />
                     <span className="absolute -top-1 -right-1 w-3 h-3 bg-red-500 rounded-full animate-pulse" />
@@ -119,7 +145,7 @@ Email: ${CONTACT_INFO.email}`;
             )}
 
             {isOpen && (
-                <div className="fixed bottom-6 right-6 z-[9999] w-96 max-w-[calc(100vw-3rem)] bg-white rounded-2xl shadow-2xl flex flex-col" style={{ height: '600px' }}>
+                <div className="fixed bottom-6 right-6 z-9999 w-96 max-w-[calc(100vw-3rem)] bg-white rounded-2xl shadow-2xl flex flex-col" style={{ height: '600px' }}>
                     <div className="bg-purple-600 p-4 flex items-center justify-between rounded-t-2xl">
                         <div className="flex items-center space-x-2">
                             <div className="w-10 h-10 bg-white rounded-full flex items-center justify-center">

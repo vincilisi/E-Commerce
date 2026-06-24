@@ -1,15 +1,16 @@
-<<<<<<< HEAD
 export const runtime = "nodejs";
 export const dynamic = "force-dynamic";
 
-=======
->>>>>>> master
 
 import { NextRequest, NextResponse } from 'next/server';
 import { prisma } from '@/lib/prisma';
 import { z } from 'zod';
+import { requireAdmin } from '@/lib/adminGuard';
 
 export async function GET() {
+    const guard = await requireAdmin();
+    if (!guard.ok) return guard.response;
+
     try {
         const products = await prisma.product.findMany({
             orderBy: { createdAt: 'desc' }
@@ -22,6 +23,9 @@ export async function GET() {
 }
 
 export async function POST(req: NextRequest) {
+    const guard = await requireAdmin();
+    if (!guard.ok) return guard.response;
+
     try {
         const body = await req.json();
 

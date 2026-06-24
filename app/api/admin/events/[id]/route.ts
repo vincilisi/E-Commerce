@@ -1,16 +1,12 @@
-<<<<<<< HEAD
 export const runtime = "nodejs";
 export const dynamic = "force-dynamic";
 
-=======
->>>>>>> master
 import { NextRequest, NextResponse } from 'next/server';
 import { prisma } from '@/lib/prisma';
 
 // GET - Singolo evento
 export async function GET(
     request: NextRequest,
-<<<<<<< HEAD
     context: { params: Promise<{ id: string }> }
 ) {
     try {
@@ -18,14 +14,6 @@ export async function GET(
 
         const event = await prisma.event.findUnique({
             where: { id }
-=======
-    { params }: { params: Promise<{ id: string }> }
-) {
-    try {
-        const resolvedParams = await params;
-        const event = await prisma.event.findUnique({
-            where: { id: resolvedParams.id }
->>>>>>> master
         });
 
         if (!event) {
@@ -42,7 +30,6 @@ export async function GET(
 // PUT - Aggiorna evento
 export async function PUT(
     request: NextRequest,
-<<<<<<< HEAD
     context: { params: Promise<{ id: string }> }
 ) {
     try {
@@ -52,16 +39,6 @@ export async function PUT(
 
         const event = await prisma.event.update({
             where: { id },
-=======
-    { params }: { params: Promise<{ id: string }> }
-) {
-    try {
-        const resolvedParams = await params;
-        const body = await request.json();
-
-        const event = await prisma.event.update({
-            where: { id: resolvedParams.id },
->>>>>>> master
             data: {
                 title: body.title,
                 description: body.description,
@@ -87,7 +64,6 @@ export async function PUT(
 // DELETE - Elimina evento
 export async function DELETE(
     request: NextRequest,
-<<<<<<< HEAD
     context: { params: Promise<{ id: string }> }
 ) {
     try {
@@ -95,14 +71,6 @@ export async function DELETE(
 
         await prisma.event.delete({
             where: { id }
-=======
-    { params }: { params: Promise<{ id: string }> }
-) {
-    try {
-        const resolvedParams = await params;
-        await prisma.event.delete({
-            where: { id: resolvedParams.id }
->>>>>>> master
         });
 
         return NextResponse.json({ message: 'Evento eliminato con successo' });

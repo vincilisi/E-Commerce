@@ -7,7 +7,6 @@ generator client {
 
 datasource db {
   provider = "sqlite"
-  url      = "file:./dev.db"
 }
 
 model User {
@@ -124,6 +123,9 @@ model SiteSettings {
   customFontUrl   String?
   siteName        String   @default("Il Desiderio di una Stella")
   logo            String?
+  contactEmail    String   @default("info@ildesideriodiunastella.it")
+  contactPhone    String   @default("+39 123 456 7890")
+  contactWhatsapp String   @default("+39 123 456 7890")
   
   // Search Bar Settings
   searchBgColor       String   @default("#ffffff")

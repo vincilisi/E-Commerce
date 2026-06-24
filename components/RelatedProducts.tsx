@@ -1,12 +1,5 @@
-<<<<<<< HEAD
 ﻿'use client'
 import { useState, useEffect } from 'react'
-=======
-'use client'
-
-import { useState, useEffect } from 'react'
-import { ShoppingCart, Heart, Star } from 'lucide-react'
->>>>>>> master
 import Link from 'next/link'
 import Image from 'next/image'
 
@@ -98,11 +91,7 @@ export default function RelatedProducts({ currentProductId, category }: RelatedP
     return (
         <div className="mt-16">
             <h2 className="text-2xl font-bold mb-6" style={{ color: 'var(--color-text)' }}>
-<<<<<<< HEAD
                 ðŸ›ï¸ Potrebbe piacerti anche
-=======
-                🛍️ Potrebbe piacerti anche
->>>>>>> master
             </h2>
 
             <div className="grid grid-cols-2 md:grid-cols-4 gap-4 md:gap-6">
@@ -131,11 +120,7 @@ export default function RelatedProducts({ currentProductId, category }: RelatedP
                                 {product.name}
                             </h3>
                             <p className="font-bold" style={{ color: 'var(--color-primary)' }}>
-<<<<<<< HEAD
                                 â‚¬{product.price.toFixed(2)}
-=======
-                                €{product.price.toFixed(2)}
->>>>>>> master
                             </p>
                         </div>
                     </Link>
@@ -144,7 +129,4 @@ export default function RelatedProducts({ currentProductId, category }: RelatedP
         </div>
     )
 }
-<<<<<<< HEAD
 
-=======
->>>>>>> master

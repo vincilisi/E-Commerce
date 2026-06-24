@@ -1,6 +1,6 @@
 'use client'
 
-import { useState, useEffect, use } from 'react'
+import { useState, useEffect, useCallback } from 'react'
 import { ArrowLeft, Shield, FileText, RotateCcw } from 'lucide-react'
 import Link from 'next/link'
 
@@ -17,30 +17,14 @@ const icons: Record<string, React.ReactNode> = {
     'resi': <RotateCcw className="w-8 h-8" />
 }
 
-<<<<<<< HEAD
 export default function LegalPageComponent({ params }: { params: { slug: string } }) {
-=======
-export default function LegalPageComponent({ params }: { params: Promise<{ slug: string }> }) {
-    const resolvedParams = use(params)
->>>>>>> master
     const [page, setPage] = useState<LegalPage | null>(null)
     const [loading, setLoading] = useState(true)
+    const [contactEmail, setContactEmail] = useState('info@ildesideriodiunastella.it')
 
-    useEffect(() => {
-        fetchPage()
-<<<<<<< HEAD
-    }, [params.slug])
-
-    const fetchPage = async () => {
+    const fetchPage = useCallback(async () => {
         try {
             const res = await fetch(`/api/legal?slug=${params.slug}`)
-=======
-    }, [resolvedParams.slug])
-
-    const fetchPage = async () => {
-        try {
-            const res = await fetch(`/api/legal?slug=${resolvedParams.slug}`)
->>>>>>> master
             const data = await res.json()
             setPage(data)
         } catch (error) {
@@ -48,7 +32,19 @@ export default function LegalPageComponent({ params }: { params: Promise<{ slug:
         } finally {
             setLoading(false)
         }
-    }
+    }, [params.slug])
+
+    useEffect(() => {
+        fetchPage()
+        fetch('/api/settings', { cache: 'no-store' })
+            .then((res) => res.json())
+            .then((data) => {
+                if (data?.settings?.contactEmail) {
+                    setContactEmail(data.settings.contactEmail)
+                }
+            })
+            .catch(() => { })
+    }, [fetchPage])
 
     if (loading) {
         return (
@@ -70,45 +66,27 @@ export default function LegalPageComponent({ params }: { params: Promise<{ slug:
     }
 
     return (
-<<<<<<< HEAD
         <div className="min-h-screen py-12" style={{ backgroundColor: 'var(--color-background)' }}>
-=======
-        <div className="min-h-screen py-12 bg-[radial-gradient(circle_at_top,rgba(147,51,234,0.08),transparent_34%),linear-gradient(180deg,#fff_0%,#faf7ff_40%,#fff_100%)]" style={{ backgroundColor: 'var(--color-background)' }}>
->>>>>>> master
             <article className="max-w-4xl mx-auto px-4">
                 {/* Back Link */}
                 <Link
                     href="/"
-<<<<<<< HEAD
                     className="inline-flex items-center gap-2 text-gray-600 hover:text-gray-900 mb-8"
-=======
-                    className="inline-flex items-center gap-2 text-gray-600 hover:text-gray-900 mb-8 rounded-full px-4 py-2 bg-white/80 border border-gray-100 shadow-sm"
->>>>>>> master
                 >
                     <ArrowLeft className="w-4 h-4" />
                     Torna alla Home
                 </Link>
 
                 {/* Header */}
-<<<<<<< HEAD
                 <header className="mb-8 pb-8 border-b" style={{ borderColor: 'var(--color-border)' }}>
-=======
-                <header className="mb-8 pb-8 border-b rounded-4xl border border-white/70 bg-white/85 backdrop-blur-xl shadow-[0_20px_55px_rgba(31,41,55,0.08)] p-6 md:p-8" style={{ borderColor: 'var(--color-border)' }}>
->>>>>>> master
                     <div className="flex items-center gap-4 mb-4">
                         <div
                             className="p-3 rounded-xl"
                             style={{ backgroundColor: 'var(--color-primary)', color: 'white' }}
                         >
-<<<<<<< HEAD
                             {icons[params.slug] || <FileText className="w-8 h-8" />}
                         </div>
                         <h1 className="text-3xl md:text-4xl font-bold" style={{ color: 'var(--color-text)' }}>
-=======
-                            {icons[resolvedParams.slug] || <FileText className="w-8 h-8" />}
-                        </div>
-                        <h1 className="text-3xl md:text-4xl font-black tracking-tight" style={{ color: 'var(--color-text)' }}>
->>>>>>> master
                             {page.title}
                         </h1>
                     </div>
@@ -123,18 +101,17 @@ export default function LegalPageComponent({ params }: { params: Promise<{ slug:
 
                 {/* Content */}
                 <div
-<<<<<<< HEAD
                     className="prose prose-lg max-w-none"
-=======
-                    className="prose prose-lg max-w-none rounded-4xl border border-white/70 bg-white/85 backdrop-blur-xl shadow-[0_20px_55px_rgba(31,41,55,0.08)] p-6 md:p-8"
->>>>>>> master
                     style={{ color: 'var(--color-text)' }}
                     dangerouslySetInnerHTML={{ __html: page.content }}
                 />
 
                 {/* Footer */}
                 <div className="mt-12 pt-8 border-t text-center text-gray-500" style={{ borderColor: 'var(--color-border)' }}>
-                    <p>Per domande su questa pagina, contattaci a <a href="mailto:info@ildesideriodiuna stella.it" className="underline">info@ildesideriodiunastella.it</a></p>
+                    <p>
+                        Per domande su questa pagina, contattaci a{' '}
+                        <a href={`mailto:${contactEmail}`} className="underline">{contactEmail}</a>
+                    </p>
                 </div>
             </article>
         </div>

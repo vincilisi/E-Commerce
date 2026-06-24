@@ -1,4 +1,3 @@
-<<<<<<< HEAD
 export const runtime = "nodejs";
 export const dynamic = "force-dynamic";
 
@@ -6,12 +5,6 @@ import { NextRequest, NextResponse } from 'next/server';
 import Stripe from 'stripe';
 import { prisma } from '@/lib/prisma';
 import { headers } from 'next/headers';
-=======
-import { NextRequest, NextResponse } from 'next/server';
-import Stripe from 'stripe';
-import { prisma } from '@/lib/prisma';
-import { sendOrderConfirmation } from '@/lib/email';
->>>>>>> master
 
 const stripe = new Stripe(process.env.STRIPE_SECRET_KEY!, {
     apiVersion: '2025-12-15.clover'
@@ -36,28 +29,6 @@ export async function POST(req: NextRequest) {
         const orderId = session.metadata?.orderId || '';
 
         if (orderId) {
-<<<<<<< HEAD
-=======
-            const existingOrder = await prisma.order.findUnique({
-                where: { id: orderId },
-                include: {
-                    orderItems: {
-                        include: {
-                            product: true
-                        }
-                    }
-                }
-            });
-
-            if (!existingOrder) {
-                return NextResponse.json({ error: 'Ordine non trovato' }, { status: 404 });
-            }
-
-            if (existingOrder.status === 'paid') {
-                return NextResponse.json({ received: true });
-            }
-
->>>>>>> master
             // Aggiorna lo stato dell'ordine
             await prisma.order.update({
                 where: { id: orderId },
@@ -67,26 +38,6 @@ export async function POST(req: NextRequest) {
                 }
             });
 
-<<<<<<< HEAD
-=======
-            await sendOrderConfirmation({
-                customerName: existingOrder.customerName,
-                customerEmail: existingOrder.customerEmail,
-                orderNumber: existingOrder.orderNumber || existingOrder.id,
-                totalAmount: existingOrder.totalAmount,
-                shippingAddress: existingOrder.shippingAddress,
-                items: existingOrder.orderItems.map((item) => ({
-                    name: item.product?.name || item.productId,
-                    quantity: item.quantity,
-                    price: item.price
-                })),
-                paymentMethod: 'stripe',
-                status: 'paid'
-            }).catch((error) => {
-                console.error('Errore invio email ordine Stripe:', error);
-            });
-
->>>>>>> master
             console.log(`Order ${orderId} marked as paid`);
         }
     } if (event.type === 'payment_intent.payment_failed') {
