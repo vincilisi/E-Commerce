@@ -70,7 +70,7 @@ export default function ReviewList({ productId }: ReviewListProps) {
         return (
             <div className="space-y-4">
                 {[1, 2, 3].map((i) => (
-                    <div key={i} className="animate-pulse">
+                    <div key={i} className="animate-pulse surface-panel p-4">
                         <div className="h-4 bg-gray-200 rounded w-1/4 mb-2" />
                         <div className="h-3 bg-gray-200 rounded w-3/4 mb-1" />
                         <div className="h-3 bg-gray-200 rounded w-1/2" />
@@ -82,7 +82,7 @@ export default function ReviewList({ productId }: ReviewListProps) {
 
     if (reviews.length === 0) {
         return (
-            <div className="text-center py-8 bg-gray-50 rounded-lg">
+            <div className="empty-state-panel text-center py-8 px-6">
                 <Star className="w-12 h-12 text-gray-300 mx-auto mb-3" />
                 <p className="text-gray-500">Nessuna recensione ancora</p>
                 <p className="text-sm text-gray-400">Sii il primo a lasciare una recensione!</p>
@@ -100,7 +100,7 @@ export default function ReviewList({ productId }: ReviewListProps) {
     return (
         <div className="space-y-6">
             {/* Summary */}
-            <div className="bg-gray-50 rounded-lg p-6 flex flex-col sm:flex-row gap-6">
+            <div className="surface-panel p-6 flex flex-col sm:flex-row gap-6">
                 {/* Average Rating */}
                 <div className="text-center sm:text-left">
                     <div className="text-5xl font-bold" style={{ color: 'var(--color-primary)' }}>
@@ -139,8 +139,7 @@ export default function ReviewList({ productId }: ReviewListProps) {
                 {reviews.map((review) => (
                     <div
                         key={review.id}
-                        className="border rounded-lg p-4"
-                        style={{ borderColor: 'var(--color-border)' }}
+                        className="surface-panel p-4"
                     >
                         <div className="flex items-start justify-between mb-3">
                             <div className="flex items-center gap-3">
@@ -171,7 +170,7 @@ export default function ReviewList({ productId }: ReviewListProps) {
 
                         {/* Badge Acquisto Verificato (se ha ordine) */}
                         <div className="mt-3 flex items-center gap-2">
-                            <span className="inline-flex items-center gap-1 px-2 py-1 bg-green-100 text-green-700 text-xs rounded-full">
+                            <span className="status-badge bg-green-100 text-green-700 text-xs">
                                 <ThumbsUp className="w-3 h-3" />
                                 Acquisto verificato
                             </span>

@@ -1,9 +1,5 @@
-<<<<<<< HEAD
-﻿'use client';
-=======
 'use client';
 
->>>>>>> master
 import { useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { Plus, Edit, Trash2, Eye } from 'lucide-react';
@@ -28,18 +24,10 @@ export default function AdminProdotti() {
 
     const loadProducts = async () => {
         try {
-            const res = await fetch('/api/admin/products', {
-                credentials: "include"   // 🔥 OBBLIGATORIO
-            });
-
-            if (!res.ok) {
-                throw new Error("Unauthorized");
-            }
-
+            const res = await fetch('/api/admin/products');
             const data = await res.json();
             setProducts(data.products || []);
-        } catch (err) {
-            console.error("Errore GET prodotti:", err);
+        } catch (error) {
             toast.error('Errore nel caricamento prodotti');
         } finally {
             setLoading(false);
@@ -51,38 +39,34 @@ export default function AdminProdotti() {
 
         try {
             const res = await fetch(`/api/admin/products/${id}`, {
-                method: "DELETE",
-                credentials: "include"   // 🔥 OBBLIGATORIO
+                method: 'DELETE'
             });
 
             if (res.ok) {
                 toast.success('Prodotto eliminato');
                 loadProducts();
             } else {
-                const errorText = await res.text();
-                console.error("Errore DELETE:", errorText);
-                toast.error('Errore nell\'eliminazione');
+                const data = await res.json().catch(() => null);
+                toast.error(data?.error || 'Errore nell\'eliminazione');
             }
-        } catch (err) {
-            console.error("Errore DELETE:", err);
+        } catch (error) {
             toast.error('Errore nell\'eliminazione');
         }
     };
 
     return (
-        <div className="min-h-screen" style={{ backgroundColor: 'var(--color-background)' }}>
+        <div className="page-shell min-h-screen">
             <Toaster position="top-center" />
 
             <div className="container mx-auto px-4 py-8">
-                <div className="flex justify-between items-center mb-8">
-                    <h1 className="text-4xl font-bold" style={{ color: 'var(--color-text)' }}>
-                        Gestione Prodotti
-                    </h1>
-
+                <div className="flex flex-col gap-4 sm:flex-row sm:justify-between sm:items-center mb-8">
+                    <div>
+                        <p className="eyebrow mb-2">Catalogo admin</p>
+                        <h1 className="text-4xl font-bold" style={{ color: 'var(--color-text)' }}>Gestione Prodotti</h1>
+                    </div>
                     <button
                         onClick={() => router.push('/admin/prodotti/nuovo')}
-                        className="px-6 py-3 rounded-lg hover:opacity-90 transition flex items-center space-x-2"
-                        style={{ backgroundColor: 'var(--color-primary)', color: 'var(--color-button-text)' }}
+                        className="btn-lux-primary flex items-center space-x-2"
                     >
                         <Plus className="w-5 h-5" />
                         <span>Nuovo Prodotto</span>
@@ -92,83 +76,43 @@ export default function AdminProdotti() {
                 {loading ? (
                     <div className="text-center py-12">Caricamento...</div>
                 ) : (
-                    <div className="rounded-lg shadow-md overflow-hidden" style={{ backgroundColor: 'var(--color-card-bg)' }}>
-                        <table className="w-full">
-                            <thead>
-                                <tr>
-                                    <th className="px-6 py-3 text-left text-xs font-medium uppercase">Nome</th>
-                                    <th className="px-6 py-3 text-left text-xs font-medium uppercase">Prezzo</th>
-                                    <th className="px-6 py-3 text-left text-xs font-medium uppercase">Categoria</th>
-                                    <th className="px-6 py-3 text-left text-xs font-medium uppercase">Stato</th>
-                                    <th className="px-6 py-3 text-left text-xs font-medium uppercase">Azioni</th>
-                                </tr>
-                            </thead>
-
-                            <tbody className="divide-y divide-gray-200">
-                                {products.map((product) => (
-                                    <tr key={product.id}>
-<<<<<<< HEAD
-                                        <td className="px-6 py-4">{product.name}</td>
-                                        <td className="px-6 py-4">€{product.price.toFixed(2)}</td>
-                                        <td className="px-6 py-4">{product.category}</td>
-                                        <td className="px-6 py-4">
-                                            <span
-                                                className={`px-2 py-1 text-xs rounded-full ${
-                                                    product.inStock
-                                                        ? 'bg-green-100 text-green-800'
-                                                        : 'bg-red-100 text-red-800'
-                                                }`}
-                                            >
-=======
-                                        <td className="px-6 py-4 whitespace-nowrap font-medium text-gray-900">
-                                            {product.name}
-                                        </td>
-                                        <td className="px-6 py-4 whitespace-nowrap text-gray-600">
-<<<<<<< HEAD
-                                            â‚¬{product.price.toFixed(2)}
-=======
-                                            €{product.price.toFixed(2)}
->>>>>>> master
-                                        </td>
-                                        <td className="px-6 py-4 whitespace-nowrap text-gray-600">
-                                            {product.category}
-                                        </td>
-                                        <td className="px-6 py-4 whitespace-nowrap">
-                                            <span className={`px-2 py-1 text-xs rounded-full ${product.inStock ? 'bg-green-100 text-green-800' : 'bg-red-100 text-red-800'}`}>
->>>>>>> main
+                    <div className="admin-grid">
+                        {products.map((product) => (
+                            <div key={product.id} className="admin-row-card p-5 sm:p-6">
+                                <div className="flex flex-col gap-4 lg:flex-row lg:items-center lg:justify-between">
+                                    <div className="space-y-2">
+                                        <p className="eyebrow">{product.category}</p>
+                                        <h2 className="text-2xl font-bold" style={{ color: 'var(--color-text)' }}>{product.name}</h2>
+                                        <div className="flex flex-wrap gap-3 items-center">
+                                            <span className="stat-pill">€{product.price.toFixed(2)}</span>
+                                            <span className={`status-badge ${product.inStock ? 'bg-green-100 text-green-800' : 'bg-red-100 text-red-800'}`}>
                                                 {product.inStock ? 'Disponibile' : 'Esaurito'}
                                             </span>
-                                        </td>
+                                        </div>
+                                    </div>
+                                    <div className="flex items-center gap-3">
+                                        <button onClick={() => window.open(`/prodotti/${product.id}`, '_blank')} className="icon-action" style={{ color: 'var(--color-primary)' }}>
+                                            <Eye className="w-5 h-5" />
+                                        </button>
+                                        <button onClick={() => router.push(`/admin/prodotti/${product.id}`)} className="icon-action" style={{ color: 'var(--color-primary)' }}>
+                                            <Edit className="w-5 h-5" />
+                                        </button>
+                                        <button onClick={() => deleteProduct(product.id)} className="icon-action text-red-600 hover:text-red-900">
+                                            <Trash2 className="w-5 h-5" />
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+                        ))}
 
-                                        <td className="px-6 py-4">
-                                            <div className="flex items-center space-x-3">
-                                                <button onClick={() => window.open(`/prodotti/${product.id}`, '_blank')}>
-                                                    <Eye className="w-5 h-5" />
-                                                </button>
-
-                                                <button onClick={() => router.push(`/admin/prodotti/${product.id}`)}>
-                                                    <Edit className="w-5 h-5" />
-                                                </button>
-
-                                                <button
-                                                    onClick={() => deleteProduct(product.id)}
-                                                    className="text-red-600"
-                                                >
-                                                    <Trash2 className="w-5 h-5" />
-                                                </button>
-                                            </div>
-                                        </td>
-                                    </tr>
-                                ))}
-                            </tbody>
-                        </table>
+                        {products.length === 0 && (
+                            <div className="empty-state-panel text-center py-12 text-gray-500">
+                                Nessun prodotto trovato. Crea il primo prodotto!
+                            </div>
+                        )}
                     </div>
                 )}
             </div>
         </div>
     );
 }
-<<<<<<< HEAD
-
-=======
->>>>>>> master
