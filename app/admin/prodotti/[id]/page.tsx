@@ -12,12 +12,14 @@ export default function ModificaProdotto() {
 
     const [loading, setLoading] = useState(true);
     const [submitting, setSubmitting] = useState(false);
+    const [uploadingImage, setUploadingImage] = useState(false);
     const [formData, setFormData] = useState({
         name: '',
         description: '',
         price: '',
         category: 'Classici',
         materials: [''],
+        images: [''],
         dimensions: '',
         inStock: true
     });
@@ -43,7 +45,8 @@ export default function ModificaProdotto() {
                     description: product.description,
                     price: product.price.toString(),
                     category: product.category,
-                    materials: product.materials?.map(m => m.name) || [''],
+                    materials: product.materials?.map((m: { name: string }) => m.name) || [''],
+                    images: product.images?.map((img: { url: string }) => img.url) || [''],
                     dimensions: product.dimensions || '',
                     inStock: product.inStock
                 });
@@ -78,6 +81,7 @@ export default function ModificaProdotto() {
                     price: parseFloat(formData.price),
                     category: formData.category,
                     materials: formData.materials.filter(m => m.trim() !== ''),
+                    images: formData.images.filter(i => i.trim() !== ''),
                     dimensions: formData.dimensions,
                     inStock: formData.inStock
                 })
@@ -109,6 +113,63 @@ export default function ModificaProdotto() {
         const newMaterials = [...formData.materials];
         newMaterials[index] = value;
         setFormData({ ...formData, materials: newMaterials });
+    };
+
+    const addImage = () => {
+        setFormData({ ...formData, images: [...formData.images, ''] });
+    };
+
+    const updateImage = (index: number, value: string) => {
+        const newImages = [...formData.images];
+        newImages[index] = value;
+        setFormData({ ...formData, images: newImages });
+    };
+
+    const removeImage = (index: number) => {
+        const nextImages = formData.images.filter((_, i) => i !== index);
+        setFormData({ ...formData, images: nextImages.length ? nextImages : [''] });
+    };
+
+    const handleImageUpload = async (e: React.ChangeEvent<HTMLInputElement>, index: number) => {
+        const file = e.target.files?.[0];
+        if (!file) return;
+
+        if (!file.type.startsWith('image/')) {
+            toast.error('Carica solo file immagine');
+            return;
+        }
+
+        if (file.size > 5 * 1024 * 1024) {
+            toast.error('Immagine troppo grande. Massimo 5MB');
+            return;
+        }
+
+        setUploadingImage(true);
+
+        try {
+            const payload = new FormData();
+            payload.append('file', file);
+
+            const response = await fetch('/api/admin/upload', {
+                method: 'POST',
+                body: payload,
+            });
+
+            const data = await response.json();
+            if (!response.ok || !data.url) {
+                throw new Error(data?.error || 'Upload non riuscito');
+            }
+
+            const newImages = [...formData.images];
+            newImages[index] = data.url;
+            setFormData({ ...formData, images: newImages });
+            toast.success('Immagine caricata su Cloudinary!');
+        } catch (error) {
+            toast.error(error instanceof Error ? error.message : 'Errore nel caricamento immagine');
+        } finally {
+            setUploadingImage(false);
+            e.target.value = '';
+        }
     };
 
     if (loading) {
@@ -222,6 +283,67 @@ export default function ModificaProdotto() {
                                 className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-600"
                                 placeholder="es. 8cm x 3cm"
                             />
+                        </div>
+
+                        <div>
+                            <label className="block text-gray-700 font-semibold mb-2">Immagini Prodotto</label>
+                            {formData.images.map((image, index) => (
+                                <div key={index} className="mb-4 border rounded-lg p-4" style={{ borderColor: 'var(--color-border)' }}>
+                                    <div className="flex items-start space-x-4">
+                                        <div className="flex-1">
+                                            <label className="block text-sm text-gray-600 mb-2">
+                                                Opzione 1: Carica File (Cloudinary)
+                                            </label>
+                                            <input
+                                                type="file"
+                                                accept="image/*"
+                                                onChange={(e) => handleImageUpload(e, index)}
+                                                disabled={uploadingImage}
+                                                className="w-full text-sm"
+                                            />
+                                            <p className="text-xs text-gray-500 mt-1">oppure</p>
+                                            <label className="block text-sm text-gray-600 mt-2 mb-2">
+                                                Opzione 2: URL Immagine
+                                            </label>
+                                            <input
+                                                type="url"
+                                                value={image}
+                                                onChange={(e) => updateImage(index, e.target.value)}
+                                                className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-600"
+                                                placeholder="https://esempio.com/immagine.jpg"
+                                            />
+                                        </div>
+                                        {image && (
+                                            <div className="w-24 h-24 border rounded overflow-hidden">
+                                                <img
+                                                    src={image}
+                                                    alt={`Preview ${index + 1}`}
+                                                    className="w-full h-full object-cover"
+                                                    onError={(e) => {
+                                                        e.currentTarget.style.display = 'none';
+                                                    }}
+                                                />
+                                            </div>
+                                        )}
+                                    </div>
+                                    {formData.images.length > 1 && (
+                                        <button
+                                            type="button"
+                                            onClick={() => removeImage(index)}
+                                            className="text-red-600 hover:text-red-700 text-sm mt-2"
+                                        >
+                                            Rimuovi immagine
+                                        </button>
+                                    )}
+                                </div>
+                            ))}
+                            <button
+                                type="button"
+                                onClick={addImage}
+                                className="text-purple-600 hover:text-purple-700 text-sm"
+                            >
+                                + Aggiungi altra immagine
+                            </button>
                         </div>
 
                         <div className="flex items-center">

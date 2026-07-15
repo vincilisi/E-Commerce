@@ -3,6 +3,7 @@
 import { useState, useEffect, useCallback } from 'react'
 import { ArrowLeft, Shield, FileText, RotateCcw } from 'lucide-react'
 import Link from 'next/link'
+import { useParams } from 'next/navigation'
 
 interface LegalPage {
     id: string
@@ -13,18 +14,20 @@ interface LegalPage {
 
 const icons: Record<string, React.ReactNode> = {
     'privacy': <Shield className="w-8 h-8" />,
-    'terms': <FileText className="w-8 h-8" />,
+    'termini': <FileText className="w-8 h-8" />,
     'resi': <RotateCcw className="w-8 h-8" />
 }
 
-export default function LegalPageComponent({ params }: { params: { slug: string } }) {
+export default function LegalPageComponent() {
+    const params = useParams<{ slug: string }>()
+    const slug = params.slug
     const [page, setPage] = useState<LegalPage | null>(null)
     const [loading, setLoading] = useState(true)
     const [contactEmail, setContactEmail] = useState('info@ildesideriodiunastella.it')
 
     const fetchPage = useCallback(async () => {
         try {
-            const res = await fetch(`/api/legal?slug=${params.slug}`)
+            const res = await fetch(`/api/legal?slug=${slug}`)
             const data = await res.json()
             setPage(data)
         } catch (error) {
@@ -32,7 +35,7 @@ export default function LegalPageComponent({ params }: { params: { slug: string 
         } finally {
             setLoading(false)
         }
-    }, [params.slug])
+    }, [slug])
 
     useEffect(() => {
         fetchPage()
@@ -84,7 +87,7 @@ export default function LegalPageComponent({ params }: { params: { slug: string 
                             className="p-3 rounded-xl"
                             style={{ backgroundColor: 'var(--color-primary)', color: 'white' }}
                         >
-                            {icons[params.slug] || <FileText className="w-8 h-8" />}
+                            {icons[slug] || <FileText className="w-8 h-8" />}
                         </div>
                         <h1 className="text-3xl md:text-4xl font-bold" style={{ color: 'var(--color-text)' }}>
                             {page.title}

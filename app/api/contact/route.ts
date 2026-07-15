@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server';
-import nodemailer from 'nodemailer';
+import { Resend } from 'resend';
 import { z } from 'zod';
 import { prisma } from '@/lib/prisma';
 
@@ -78,86 +78,19 @@ export async function POST(req: NextRequest) {
             );
         }
 
-        const smtpHost = process.env.SMTP_HOST?.trim();
-        const smtpPort = Number(process.env.SMTP_PORT || '587');
-        const smtpUser = process.env.SMTP_USER?.trim();
-        const smtpPass = process.env.SMTP_PASS?.replace(/\s+/g, '').trim();
-        const hasSmtpConfig = Boolean(smtpHost && smtpUser && smtpPass);
-        const allowDevMailbox = process.env.ALLOW_DEV_ETHEREAL === 'true';
-
-        let transporter;
-        let fromUser = smtpUser || '';
-        let usingDevMailbox = false;
-
-        if (hasSmtpConfig) {
-            const smtpTransporter = nodemailer.createTransport({
-                host: smtpHost,
-                port: smtpPort,
-                secure: process.env.SMTP_SECURE === 'true' || smtpPort === 465,
-                auth: {
-                    user: smtpUser,
-                    pass: smtpPass
-                }
-            });
-
-            transporter = smtpTransporter;
-
-            try {
-                await smtpTransporter.verify();
-            } catch (smtpError) {
-                if (process.env.NODE_ENV !== 'production' && allowDevMailbox) {
-                    const testAccount = await nodemailer.createTestAccount();
-                    transporter = nodemailer.createTransport({
-                        host: 'smtp.ethereal.email',
-                        port: 587,
-                        secure: false,
-                        auth: {
-                            user: testAccount.user,
-                            pass: testAccount.pass
-                        }
-                    });
-                    fromUser = testAccount.user;
-                    usingDevMailbox = true;
-                } else {
-                    throw smtpError;
-                }
-            }
-        } else if (process.env.NODE_ENV !== 'production' && allowDevMailbox) {
-            const testAccount = await nodemailer.createTestAccount();
-            transporter = nodemailer.createTransport({
-                host: 'smtp.ethereal.email',
-                port: 587,
-                secure: false,
-                auth: {
-                    user: testAccount.user,
-                    pass: testAccount.pass
-                }
-            });
-            fromUser = testAccount.user;
-            usingDevMailbox = true;
-        } else {
+        const resendApiKey = process.env.RESEND_API_KEY?.trim();
+        if (!resendApiKey) {
             return NextResponse.json(
-                { error: 'Server email non configurato. Imposta SMTP_HOST, SMTP_PORT, SMTP_USER, SMTP_PASS (oppure ALLOW_DEV_ETHEREAL=true solo per test).' },
+                { error: 'Server email non configurato. Imposta RESEND_API_KEY.' },
                 { status: 500 }
             );
         }
 
-        const siteName = settings?.siteName || 'Il Desiderio di una Stella';
-        const smtpFrom = process.env.SMTP_FROM?.trim();
-        const hasPlaceholderFrom = Boolean(smtpFrom && smtpFrom.includes('la-tua-email'));
-        const fromAddress = !smtpFrom || hasPlaceholderFrom
-            ? `"${siteName}" <${fromUser}>`
-            : smtpFrom;
-        const subject = `Contatti: ${oggetto} (da ${nome})`;
+        const resend = new Resend(resendApiKey);
 
-        const text = [
-            `Nome: ${nome}`,
-            `Email: ${email}`,
-            `Oggetto: ${oggetto}`,
-            '',
-            'Messaggio:',
-            messaggio
-        ].join('\n');
+        const siteName = settings?.siteName || 'Il Desiderio di una Stella';
+        const fromAddress = process.env.EMAIL_FROM?.trim() || `${siteName} <onboarding@resend.dev>`;
+        const subject = `Contatti: ${oggetto} (da ${nome})`;
 
         const html = `
             <h2>Nuovo messaggio dal form contatti</h2>
@@ -168,16 +101,14 @@ export async function POST(req: NextRequest) {
             <p style="white-space: pre-line;">${messaggio.replace(/</g, '&lt;').replace(/>/g, '&gt;')}</p>
         `;
 
-        const info = await transporter.sendMail({
+        await resend.emails.send({
             from: fromAddress,
             to: destinationEmail,
+            bcc: process.env.EMAIL_ADMIN_COPY_TO?.trim() || undefined,
             replyTo: email,
             subject,
-            text,
             html
         });
-
-        const previewUrl = usingDevMailbox ? nodemailer.getTestMessageUrl(info) : null;
 
         await prisma.emailLog.create({
             data: {
@@ -190,26 +121,11 @@ export async function POST(req: NextRequest) {
 
         return NextResponse.json({
             message: 'Messaggio inviato con successo',
-            previewUrl,
-            mode: usingDevMailbox ? 'dev-ethereal' : 'smtp'
+            mode: 'resend'
         });
     } catch (error) {
         console.error('Contact form error:', error);
         const errorMessage = error instanceof Error ? error.message : 'Errore sconosciuto';
-
-        const isGmailAuthError =
-            errorMessage.includes('535-5.7.8') ||
-            errorMessage.toLowerCase().includes('username and password not accepted') ||
-            errorMessage.toLowerCase().includes('badcredentials');
-
-        if (isGmailAuthError) {
-            return NextResponse.json(
-                {
-                    error: 'Autenticazione Gmail SMTP fallita. Verifica SMTP_USER e usa una App Password Google valida (16 caratteri), non la password normale dell\'account.'
-                },
-                { status: 500 }
-            );
-        }
 
         return NextResponse.json(
             {

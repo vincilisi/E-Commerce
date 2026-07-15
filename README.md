@@ -39,7 +39,8 @@ Il progetto è stato evoluto come storefront completo con area pubblica, area am
 - Prisma ORM
 - NextAuth / auth personalizzata per autenticazione admin e utenti
 - Zod per validazione payload
-- Nodemailer per email reali via SMTP
+- Resend per email transazionali
+- Cloudinary per upload immagini prodotto
 - pdf-lib per allegati PDF di conferma ordine
 
 ### Pagamenti
@@ -131,7 +132,7 @@ Assicurati di avere installato:
 
 - Node.js 20+
 - npm
-- database compatibile con la configurazione Prisma corrente
+- PostgreSQL (consigliato Neon o Supabase)
 
 ## Installazione
 
@@ -171,22 +172,22 @@ Crea un file `.env` nella root del progetto.
 Esempio minimo:
 
 ```env
-DATABASE_URL="your_database_url"
+DATABASE_URL="postgresql://USER:PASSWORD@HOST:5432/DB?sslmode=require"
 
 JWT_SECRET="replace_with_a_secure_secret"
 NEXT_PUBLIC_SITE_URL="http://localhost:3000"
 NEXT_PUBLIC_URL="http://localhost:3000"
 
-SMTP_HOST="smtp.example.com"
-SMTP_PORT="587"
-SMTP_SECURE="false"
-SMTP_USER="your_email@example.com"
-SMTP_PASS="your_smtp_password"
-SMTP_FROM="Il Desiderio di una Stella <your_email@example.com>"
+RESEND_API_KEY="re_xxxxxxxxx"
+EMAIL_FROM="Il Desiderio di una Stella <onboarding@resend.dev>"
 EMAIL_ADMIN_COPY_TO="owner@example.com"
 EMAIL_FORCE_TO=""
 CONTACT_EMAIL="owner@example.com"
-ALLOW_DEV_ETHEREAL="false"
+
+CLOUDINARY_CLOUD_NAME="your_cloud_name"
+CLOUDINARY_API_KEY="your_api_key"
+CLOUDINARY_API_SECRET="your_api_secret"
+CLOUDINARY_FOLDER="products"
 
 PAYPAL_CLIENT_ID="your_paypal_client_id"
 PAYPAL_CLIENT_SECRET="your_paypal_client_secret"
@@ -196,15 +197,32 @@ PAYPAL_ENVIRONMENT="sandbox"
 ### Note sulle variabili
 
 - `DATABASE_URL`: connessione database usata da Prisma
+- `DATABASE_URL`: URL PostgreSQL (Neon/Supabase consigliati)
 - `JWT_SECRET`: segreto usato per token/auth custom
 - `NEXT_PUBLIC_SITE_URL`: URL pubblico usato nelle email e nei link
 - `NEXT_PUBLIC_URL`: fallback per alcune route checkout
-- `SMTP_*`: configurazione server email reale
+- `RESEND_API_KEY`: chiave API Resend
+- `EMAIL_FROM`: mittente email verificato su Resend
 - `EMAIL_ADMIN_COPY_TO`: copia amministrativa opzionale per alcune email
 - `EMAIL_FORCE_TO`: utile per forzare il destinatario in test
 - `CONTACT_EMAIL`: fallback per modulo contatti
-- `ALLOW_DEV_ETHEREAL`: consente mailbox di sviluppo solo se abilitata esplicitamente
+- `CLOUDINARY_*`: configurazione upload immagini prodotto
 - `PAYPAL_*`: configurazione PayPal sandbox/live
+
+## Migrazione PostgreSQL (Neon/Supabase)
+
+1. configura `DATABASE_URL` con la stringa PostgreSQL del provider
+2. sincronizza schema:
+
+```bash
+npx prisma db push
+```
+
+3. rigenera client Prisma:
+
+```bash
+npx prisma generate
+```
 
 ## Configurazione PayPal
 
@@ -323,7 +341,8 @@ The Wishy Wish is a modern e-commerce application built with Next.js for selling
 - product catalog management
 - PayPal and cash-on-delivery checkout
 - complete admin panel
-- real transactional emails via SMTP
+- real transactional emails via Resend
+- Cloudinary image upload
 - product reviews
 - dynamic content, FAQ, blog, and legal pages
 - multilingual and multi-currency frontend support
@@ -348,7 +367,8 @@ The project has evolved into a full storefront with public pages, admin area, an
 - Prisma ORM
 - NextAuth / custom authentication logic for admin and users
 - Zod for payload validation
-- Nodemailer for real SMTP email delivery
+- Resend for transactional email delivery
+- Cloudinary for image uploads
 - pdf-lib for PDF order confirmation attachments
 
 ### Payments
@@ -393,7 +413,7 @@ The project has evolved into a full storefront with public pages, admin area, an
 - shipping notifications
 - delivered order email
 - newsletter welcome email
-- contact form with real SMTP delivery
+- contact form with Resend delivery
 
 ## Current Payment Status
 
@@ -440,7 +460,7 @@ Make sure you have installed:
 
 - Node.js 20+
 - npm
-- a database compatible with the current Prisma configuration
+- PostgreSQL (Neon or Supabase recommended)
 
 ## Installation
 
@@ -480,22 +500,22 @@ Create a `.env` file in the project root.
 Minimal example:
 
 ```env
-DATABASE_URL="your_database_url"
+DATABASE_URL="postgresql://USER:PASSWORD@HOST:5432/DB?sslmode=require"
 
 JWT_SECRET="replace_with_a_secure_secret"
 NEXT_PUBLIC_SITE_URL="http://localhost:3000"
 NEXT_PUBLIC_URL="http://localhost:3000"
 
-SMTP_HOST="smtp.example.com"
-SMTP_PORT="587"
-SMTP_SECURE="false"
-SMTP_USER="your_email@example.com"
-SMTP_PASS="your_smtp_password"
-SMTP_FROM="Il Desiderio di una Stella <your_email@example.com>"
+RESEND_API_KEY="re_xxxxxxxxx"
+EMAIL_FROM="Il Desiderio di una Stella <onboarding@resend.dev>"
 EMAIL_ADMIN_COPY_TO="owner@example.com"
 EMAIL_FORCE_TO=""
 CONTACT_EMAIL="owner@example.com"
-ALLOW_DEV_ETHEREAL="false"
+
+CLOUDINARY_CLOUD_NAME="your_cloud_name"
+CLOUDINARY_API_KEY="your_api_key"
+CLOUDINARY_API_SECRET="your_api_secret"
+CLOUDINARY_FOLDER="products"
 
 PAYPAL_CLIENT_ID="your_paypal_client_id"
 PAYPAL_CLIENT_SECRET="your_paypal_client_secret"
@@ -505,14 +525,16 @@ PAYPAL_ENVIRONMENT="sandbox"
 ### Variable Notes
 
 - `DATABASE_URL`: database connection used by Prisma
+- `DATABASE_URL`: PostgreSQL connection URL
 - `JWT_SECRET`: secret used for custom token/auth handling
 - `NEXT_PUBLIC_SITE_URL`: public URL used in emails and generated links
 - `NEXT_PUBLIC_URL`: fallback URL for some checkout routes
-- `SMTP_*`: real email server configuration
+- `RESEND_API_KEY`: Resend API key
+- `EMAIL_FROM`: verified sender used by Resend
 - `EMAIL_ADMIN_COPY_TO`: optional admin copy for certain emails
 - `EMAIL_FORCE_TO`: useful to override recipients during testing
 - `CONTACT_EMAIL`: fallback recipient for contact form
-- `ALLOW_DEV_ETHEREAL`: enables development mailbox only when explicitly set
+- `CLOUDINARY_*`: image upload configuration
 - `PAYPAL_*`: PayPal sandbox/live configuration
 
 ## PayPal Setup

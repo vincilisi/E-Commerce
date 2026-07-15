@@ -22,14 +22,14 @@ const defaultPages = [
 <p>La presente informativa descrive le modalità di gestione del sito in riferimento al trattamento dei dati personali degli utenti che lo consultano.</p>
 
 <h3>1. Titolare del trattamento</h3>
-<p>Il Titolare del trattamento è [Nome Azienda], con sede in [Indirizzo].</p>
+<p>Il Titolare del trattamento è Il Desiderio di una Stella, con sede nella sede del titolare.</p>
 
 <h3>2. Dati raccolti</h3>
 <p>Durante la navigazione vengono raccolti i seguenti dati:</p>
 <ul>
     <li>Dati di navigazione (IP, browser, sistema operativo)</li>
     <li>Dati forniti volontariamente (nome, email, indirizzo per ordini)</li>
-    <li>Dati di pagamento (gestiti tramite Stripe/PayPal)</li>
+    <li>Dati di pagamento (gestiti tramite i fornitori di pagamento attivi)</li>
 </ul>
 
 <h3>3. Finalità del trattamento</h3>
@@ -42,29 +42,29 @@ const defaultPages = [
 </ul>
 
 <h3>4. Diritti dell'interessato</h3>
-<p>Hai diritto di accedere, rettificare, cancellare i tuoi dati o opporti al trattamento contattandoci a: [email]</p>`
+<p>Hai diritto di accedere, rettificare, cancellare i tuoi dati o opporti al trattamento contattandoci a: info@ildesideriodiunastella.it</p>`
     },
     {
-        slug: 'terms',
+        slug: 'termini',
         title: 'Termini e Condizioni',
         icon: FileText,
         description: 'Condizioni generali di vendita e utilizzo del sito',
         defaultContent: `<h2>Termini e Condizioni di Vendita</h2>
 
 <h3>1. Premessa</h3>
-<p>I presenti termini regolano la vendita di prodotti tramite il sito [Nome Sito].</p>
+<p>I presenti termini regolano la vendita di prodotti tramite il sito Il Desiderio di una Stella.</p>
 
 <h3>2. Ordini</h3>
 <p>L'ordine si considera accettato al ricevimento della conferma via email. Ci riserviamo il diritto di non accettare ordini incompleti o sospetti.</p>
 
 <h3>3. Prezzi</h3>
-<p>I prezzi indicati sono in Euro e includono l'IVA. Le spese di spedizione sono indicate nel carrello prima del pagamento.</p>
+<p>I prezzi indicati sono in Euro e possono includere imposte applicabili. Le spese di spedizione sono indicate nel carrello prima della conferma dell'ordine.</p>
 
 <h3>4. Pagamenti</h3>
 <p>Accettiamo pagamenti tramite:</p>
 <ul>
-    <li>Carta di credito/debito (Visa, Mastercard, American Express)</li>
     <li>PayPal</li>
+    <li>Pagamento alla consegna</li>
 </ul>
 
 <h3>5. Spedizioni</h3>
@@ -74,7 +74,7 @@ const defaultPages = [
 <p>I nostri prodotti sono realizzati a mano, pertanto piccole variazioni sono normali e rendono ogni pezzo unico.</p>
 
 <h3>7. Contatti</h3>
-<p>Per informazioni: [email] o tramite il modulo contatti sul sito.</p>`
+<p>Per informazioni: info@ildesideriodiunastella.it o tramite il modulo contatti sul sito.</p>`
     },
     {
         slug: 'resi',
@@ -88,7 +88,7 @@ const defaultPages = [
 
 <h3>2. Come Effettuare un Reso</h3>
 <ol>
-    <li>Contattaci via email a [email] indicando il numero ordine</li>
+    <li>Contattaci via email a info@ildesideriodiunastella.it indicando il numero ordine</li>
     <li>Riceverai le istruzioni per il reso</li>
     <li>Imballa accuratamente il prodotto nella confezione originale</li>
     <li>Spedisci all'indirizzo indicato</li>

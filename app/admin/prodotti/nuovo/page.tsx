@@ -39,22 +39,28 @@ export default function NuovoProdotto() {
         setUploadingImage(true);
 
         try {
-            const reader = new FileReader();
-            reader.onloadend = () => {
-                const base64String = reader.result as string;
-                const newImages = [...formData.images];
-                newImages[index] = base64String;
-                setFormData({ ...formData, images: newImages });
-                toast.success('Immagine caricata!');
-            };
-            reader.onerror = () => {
-                toast.error('Errore nel caricamento immagine');
-            };
-            reader.readAsDataURL(file);
+            const payload = new FormData();
+            payload.append('file', file);
+
+            const response = await fetch('/api/admin/upload', {
+                method: 'POST',
+                body: payload,
+            });
+
+            const data = await response.json();
+            if (!response.ok || !data.url) {
+                throw new Error(data?.error || 'Upload non riuscito');
+            }
+
+            const newImages = [...formData.images];
+            newImages[index] = data.url;
+            setFormData({ ...formData, images: newImages });
+            toast.success('Immagine caricata su Cloudinary!');
         } catch (error) {
-            toast.error('Errore nel caricamento immagine');
+            toast.error(error instanceof Error ? error.message : 'Errore nel caricamento immagine');
         } finally {
             setUploadingImage(false);
+            e.target.value = '';
         }
     };
 
@@ -252,7 +258,7 @@ export default function NuovoProdotto() {
                                     <div className="flex items-start space-x-4">
                                         <div className="flex-1">
                                             <label className="block text-sm text-gray-600 mb-2">
-                                                Opzione 1: Carica File
+                                                Opzione 1: Carica File (Cloudinary)
                                             </label>
                                             <input
                                                 type="file"
@@ -267,21 +273,11 @@ export default function NuovoProdotto() {
                                             </label>
                                             <input
                                                 type="url"
-                                                value={image.startsWith('data:') ? '' : image}
+                                                value={image}
                                                 onChange={(e) => updateImage(index, e.target.value)}
-                                                disabled={image.startsWith('data:')}
                                                 className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-600"
                                                 placeholder="https://esempio.com/immagine.jpg"
                                             />
-                                            {image.startsWith('data:') && (
-                                                <button
-                                                    type="button"
-                                                    onClick={() => updateImage(index, '')}
-                                                    className="text-sm text-red-600 hover:text-red-800 mt-1"
-                                                >
-                                                    Rimuovi file e usa URL
-                                                </button>
-                                            )}
                                         </div>
                                         {image && (
                                             <div className="w-24 h-24 border rounded overflow-hidden">

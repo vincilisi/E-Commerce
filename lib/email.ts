@@ -1,6 +1,7 @@
 import { prisma } from '@/lib/prisma';
-import nodemailer from 'nodemailer';
+import { Resend } from 'resend';
 import { PDFDocument, StandardFonts, rgb } from 'pdf-lib';
+import { getSiteUrl } from '@/lib/site';
 
 // Interfaccia per i dati delle email
 interface EmailData {
@@ -513,23 +514,15 @@ async function generateOrderReceiptPdf(order: OrderConfirmationInput) {
 }
 
 // Funzione per inviare email (usa un servizio come Resend, SendGrid, ecc.)
-// Ora invia realmente via SMTP e salva sempre il log.
+// Ora invia realmente via Resend e salva sempre il log.
 export async function sendEmail(data: EmailData): Promise<{ success: boolean; error?: string }> {
     try {
-        const smtpHost = process.env.SMTP_HOST?.trim();
-        const smtpPort = Number(process.env.SMTP_PORT || '587');
-        const smtpUser = process.env.SMTP_USER?.trim();
-        const smtpPass = process.env.SMTP_PASS?.replace(/\s+/g, '').trim();
-
-        if (!smtpHost || !smtpUser || !smtpPass) {
-            const missing = ['SMTP_HOST', 'SMTP_USER', 'SMTP_PASS'].filter((name) => {
-                if (name === 'SMTP_HOST') return !smtpHost;
-                if (name === 'SMTP_USER') return !smtpUser;
-                return !smtpPass;
-            });
-
-            throw new Error(`SMTP non configurato. Variabili mancanti: ${missing.join(', ')}`);
+        const resendApiKey = process.env.RESEND_API_KEY?.trim();
+        if (!resendApiKey) {
+            throw new Error('Resend non configurato. Variabile mancante: RESEND_API_KEY');
         }
+
+        const resend = new Resend(resendApiKey);
 
         const forceRecipient = process.env.EMAIL_FORCE_TO?.trim();
         const settings = await prisma.siteSettings.findFirst({
@@ -539,29 +532,35 @@ export async function sendEmail(data: EmailData): Promise<{ success: boolean; er
         const recipient = forceRecipient || data.to;
         const bcc = adminCopyRecipient && adminCopyRecipient !== recipient ? adminCopyRecipient : undefined;
 
-        const smtpFrom = process.env.SMTP_FROM?.trim();
-        const fromAddress = smtpFrom || `"Il Desiderio di una Stella" <${smtpUser}>`;
+        const fromAddress = process.env.EMAIL_FROM?.trim() || 'Il Desiderio di una Stella <onboarding@resend.dev>';
 
-        const transporter = nodemailer.createTransport({
-            host: smtpHost,
-            port: smtpPort,
-            secure: process.env.SMTP_SECURE === 'true' || smtpPort === 465,
-            auth: {
-                user: smtpUser,
-                pass: smtpPass
-            }
-        });
-
-        await transporter.verify();
-
-        await transporter.sendMail({
+        const resendPayload: {
+            from: string;
+            to: string;
+            subject: string;
+            html: string;
+            bcc?: string;
+            attachments?: Array<{
+                filename: string;
+                content: Buffer;
+                contentType?: string;
+            }>;
+        } = {
             from: fromAddress,
             to: recipient,
-            bcc,
             subject: data.subject,
             html: data.html,
-            attachments: data.attachments
-        });
+        };
+
+        if (bcc) {
+            resendPayload.bcc = bcc;
+        }
+
+        if (data.attachments?.length) {
+            resendPayload.attachments = data.attachments;
+        }
+
+        await resend.emails.send(resendPayload);
 
         // Log dell'email inviata
         await prisma.emailLog.create({
@@ -573,7 +572,7 @@ export async function sendEmail(data: EmailData): Promise<{ success: boolean; er
             }
         });
 
-        console.log(`📧 Email inviata a ${recipient}: ${data.subject}`);
+        console.log(`Email inviata via Resend a ${recipient}: ${data.subject}`);
         return { success: true };
     } catch (error) {
         console.error('Errore invio email:', error);
@@ -596,7 +595,7 @@ export async function sendEmail(data: EmailData): Promise<{ success: boolean; er
 // Funzione per inviare email di conferma ordine
 export async function sendOrderConfirmation(order: OrderConfirmationInput) {
     const template = defaultEmailTemplates.order_confirmation;
-    const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || 'http://localhost:3000';
+    const siteUrl = getSiteUrl();
     const receiptPdf = await generateOrderReceiptPdf(order);
 
     const html = replacePlaceholders(template.body, {
@@ -636,7 +635,7 @@ export async function sendShippingNotification(order: {
     shippingAddress: string;
 }) {
     const template = defaultEmailTemplates.shipping_notification;
-    const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || 'http://localhost:3000';
+    const siteUrl = getSiteUrl();
 
     // Genera URL tracking (esempio con BRT/Bartolini, modifica per il tuo corriere)
     const trackingUrl = `https://vas.brt.it/vas/sped_det_show.htm?bession=&bession_cl=&referer=sped_numspe_par.htm&Ession=&NumSped=${order.trackingNumber}`;
@@ -666,7 +665,7 @@ export async function sendShippingNotification(order: {
 // Funzione per email benvenuto newsletter
 export async function sendNewsletterWelcome(email: string) {
     const template = defaultEmailTemplates.newsletter_welcome;
-    const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || 'http://localhost:3000';
+    const siteUrl = getSiteUrl();
 
     const html = replacePlaceholders(template.body, {
         siteName: 'Il Desiderio di una Stella',
@@ -693,7 +692,7 @@ export async function sendOrderDelivered(order: {
     orderNumber: string;
 }) {
     const template = defaultEmailTemplates.order_delivered;
-    const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || 'http://localhost:3000';
+    const siteUrl = getSiteUrl();
 
     const html = replacePlaceholders(template.body, {
         customerName: order.customerName,

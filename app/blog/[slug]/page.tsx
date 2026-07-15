@@ -1,9 +1,10 @@
 'use client'
 
-import { useState, useEffect, use } from 'react'
+import { useState, useEffect } from 'react'
 import { Calendar, User, Eye, ArrowLeft, Tag, Share2 } from 'lucide-react'
 import Link from 'next/link'
 import Image from 'next/image'
+import { useParams } from 'next/navigation'
 
 interface BlogPost {
     id: string
@@ -18,17 +19,19 @@ interface BlogPost {
     createdAt: string
 }
 
-export default function BlogPostPage({ params }: { params: { slug: string } }) {
+export default function BlogPostPage() {
+    const params = useParams<{ slug: string }>()
+    const slug = params.slug
     const [post, setPost] = useState<BlogPost | null>(null)
     const [loading, setLoading] = useState(true)
     
     useEffect(() => {
         fetchPost()
-    }, [params.slug])
+    }, [slug])
     
     const fetchPost = async () => {
         try {
-            const res = await fetch(`/api/blog?slug=${params.slug}`)
+            const res = await fetch(`/api/blog?slug=${slug}`)
             const data = await res.json()
             setPost(data)
         } catch (error) {
