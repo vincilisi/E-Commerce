@@ -4,12 +4,11 @@ export const dynamic = "force-dynamic";
 import { NextRequest, NextResponse } from 'next/server';
 import Stripe from 'stripe';
 import { prisma } from '@/lib/prisma';
-import { headers } from 'next/headers';
 
- const stripe = new Stripe(process.env.STRIPE_SECRET_KEY!, {
-   apiVersion: '2025-12-15.clover'
+const stripe = new Stripe(process.env.STRIPE_SECRET_KEY!, {
     apiVersion: '2026-02-25.clover'
- }); const webhookSecret = process.env.STRIPE_WEBHOOK_SECRET!;
+});
+const webhookSecret = process.env.STRIPE_WEBHOOK_SECRET!;
 
 export async function POST(req: NextRequest) {
     const body = await req.text();
@@ -41,7 +40,9 @@ export async function POST(req: NextRequest) {
 
             console.log(`Order ${orderId} marked as paid`);
         }
-    } if (event.type === 'payment_intent.payment_failed') {
+    }
+
+    if (event.type === 'payment_intent.payment_failed') {
         const paymentIntent = event.data.object as Stripe.PaymentIntent;
         console.error('Payment failed:', paymentIntent.id);
     }
